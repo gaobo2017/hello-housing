@@ -70,6 +70,14 @@ public interface IHouseCostService {
     //     */
     //    ServiceResult<List<HousingResources>> getHousingResourcesList(Map<String, String> queryMap,
     //                                                                  PagerInfo pager);
+    /**
+     * 根据条件分页查询房源总成本信息，PagerInfo传null取全部数据
+     * @param queryMap
+     * @param pager
+     * @return
+     */
+    ServiceResult<List<HousingCostVO>> getHousingCostDetailList(Map<String, String> queryMap,
+                                                                PagerInfo pager);
 
     /**
      * 根据条件分页查询房源总成本信息，PagerInfo传null取全部数据

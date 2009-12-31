@@ -52,7 +52,7 @@
 		});
 		
 		$("#btn-gridAdd").click(function(){
-	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/add";
+	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/costdetail/manage/add";
 		});
 		
 		$("#btn-gridEdit").click(function(){
@@ -65,7 +65,7 @@
 				$.messager.alert('提示','只能修改房 未出租的房源。');
 				return;
 			}
-	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/edit?id="+selected.id;
+	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/costdetail/manage/edit?id="+selected.id;
 		});
 	});
 
@@ -88,7 +88,67 @@
     }
     
     
+   //操作
+    function handler(value,row,index){
+        var html ="";
+        
+        if(row.isTop==1){
+            html += "<a href='javascript:;' onclick='recommond("+row.id+
+                    ",true,"+row.state+")'>推荐</a>&nbsp;&nbsp;<a href='javascript:;' onclick='del("+
+                    row.id+")'>删除";
+        } else{
+            html += "&nbsp;&nbsp;<a href='javascript:;' onclick='del("+
+                    row.id+")'>删除";
+        }
+        html += "</a>";
+        return html;
+    }
+
+    //推荐/取消推荐
+    function recommond(id,isRec,status){
+        if(status==5){
+            $.messager.alert('提示','该商品已被删除');
+            return;
+        }
+        try{
+            $.ajax({
+                url:'${currentBaseUrl}/recommond?id='+id+'&isRec='+isRec,
+                success:function(e){
+                    $.messager.show({
+                        title:'提示',
+                        msg:e,
+                        showType:'show'
+                    });
+                    $('#dataGrid').datagrid('reload');
+                }
+            });
+        } catch(e){
+            throw new Error(e);
+        }
+    }
+
+    function del(id){
     
+        $.messager.confirm('确认', '确定删除该成本明细吗？', function(r){
+            if (r){
+                $.messager.progress({text:"提交中..."});
+                $.ajax({
+                    type:"get",
+                    url: "${currentBaseUrl}/delete?id="+id,
+                    success:function(e){
+                     
+                        $.messager.show({
+                            title:'提示',
+                            msg:e,
+                            showType:'show'
+                        });
+                        $.messager.progress('close');
+                        $('#dataGrid').datagrid('reload');
+                    }
+                });
+            }
+        });
+    } 
     
 </script>
 
@@ -105,18 +165,17 @@
 						<label class="lab-item">房源编号 :</label> <input type="text"
 							class="txt" id="q_roomCodeNo" name="q_roomCodeNo" value="${q_roomCodeNo!''}" />
 					</p>
+		
 					<p class="p4 p-item">
-						<label class="lab-item">房源名称 :</label> <input type="text"
-							class="txt" id="q_houseName" name="q_houseName" value="${q_houseName!''}" />
+						<label class="lab-item">成本编号 :</label> <input type="text"
+							class="txt" id="q_id" name="q_id" value="${q_id!''}" />
 					</p>
+					
 					<p class="p4 p-item">
-						<label class="lab-item">出租状态 :</label> <@cont.select id="q_sold_state"
-						codeDiv="HOUSE_SOLD_STATE" name="q_sold_state" style="width:100px"/>
+						<label class="lab-item">费用类型 :</label> <@cont.select id="q_cost_type"
+						codeDiv="HOUSE_COST_TYPE" name="q_cost_type" style="width:100px"/>
 					</p>
-					<p class="p4 p-item">
-						<label class="lab-item">房源状态 :</label> <@cont.select id="q_used_state"
-						codeDiv="HOUSE_USED_STATE" name="q_used_state" style="width:100px"/>
-					</p>
+					
 				</div>
 			</form>
 		</div>
@@ -141,33 +200,18 @@
     					,method:'post'">
 		<thead>
 			<tr>
-				<th field="id" hidden="hidden"></th>
-				
+				<th field="id" width="100" align="center">成本编号</th>
+				<th field="costId" hidden="hidden">总成本id</th>
 				<th field="houseId" hidden="hidden"></th>
 				<th field="roomCodeNo" width="100" align="center" formatter="proTitle">房源编号</th>
 				<th field="houseName" width="100" align="center">房源名称</th>
 				<th field="costType" width="90" align="center" formatter="getCostType">费用类型</th>
 				
-				<th field="renovationCostSum" width="100" align="center">装修成本</th>
-				<th field="otherCostSum" width="100" align="center">其他成本</th>
-				<th field="dayRentCost" width="100" align="center">每天房租成本</th>
-				<th field="vacancyDays" width="120" align="center">空闲总天数</th>
-				<th field="vacancyDay" width="120" align="center">最近一次空闲天数</th>
-				<th field="vacancyFeeSumt" width="100" align="center">空闲费用总计</th>
-				
-				<th field="allCostSum" width="100" align="center">成本总计</th>
-				<th field="monthlyRent" width="100" align="center">月租</th>
-				
-<th field="handler" width="90" align="center" formatter="handler">操作</th>
-				
-				<th field="contractStartTime" width="100" align="center">合同开始时间</th>
-				<th field="contractEndTime" width="100" align="center">合同结束时间</th>	
-				<th field="lastSoldTime" width="100" align="center">最近租出时间</th>
-				<th field="pricesSum" width="100" align="center">房源总价</th>
-				
-				<th field="gainTime" width="100" align="center">收房时间</th>
-				
-				<th field="operationName" width="100" align="center">登记人名字</th>
+				<th field="money" width="100" align="center">发生金额</th>
+				<th field="remark" width="100" align="center">备注</th>
+				<th field="createTime" width="100" align="center">发生时间</th>
+				<th field="handler" width="90" align="center" formatter="handler">操作</th>
+				<th field="operationName" width="100" align="center">操作人</th>
 								
 			</tr>
 		</thead>

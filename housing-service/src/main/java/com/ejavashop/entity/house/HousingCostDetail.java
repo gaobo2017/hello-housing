@@ -4,34 +4,44 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class HousingCostDetail implements Serializable{
+public class HousingCostDetail implements Serializable {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1506851343261830419L;
+     * 
+     */
+    private static final long serialVersionUID = 1506851343261830419L;
 
-	private Integer id;
+    private Integer           id;
 
-    private Integer costId;
+    private Integer           costId;
 
-    private Integer houseId;
+    private String            roomCodeNo;
 
-    private Integer costType;
+    private Integer           houseId;
 
-    private BigDecimal money;
+    private Integer           costType;
 
-    private String operationName;
+    private BigDecimal        money;
 
-    private Integer operationId;
+    private String            operationName;
 
-    private String remark;
+    private Integer           operationId;
 
-    private Date createTime;
+    private String            remark;
 
-    private Date updateTime;
+    private Date              createTime;
+
+    private Date              updateTime;
 
     public Integer getId() {
         return id;
+    }
+
+    public String getRoomCodeNo() {
+        return roomCodeNo;
+    }
+
+    public void setRoomCodeNo(String roomCodeNo) {
+        this.roomCodeNo = roomCodeNo;
     }
 
     public void setId(Integer id) {

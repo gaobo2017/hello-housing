@@ -17,6 +17,7 @@ import com.ejavashop.core.PagerInfo;
 import com.ejavashop.core.ServiceResult;
 import com.ejavashop.core.WebUtil;
 import com.ejavashop.core.exception.BusinessException;
+import com.ejavashop.entity.house.HousingCostDetail;
 import com.ejavashop.service.house.IHouseCostService;
 import com.ejavashop.vo.house.HousingCostVO;
 import com.ejavashop.web.controller.BaseController;
@@ -61,7 +62,7 @@ public class HouseCostDetailController extends BaseController {
         Map<String, String> queryMap = WebUtil.handlerQueryMap(request);
         PagerInfo pager = WebUtil.handlerPagerInfo(request, dataMap);
         ServiceResult<List<HousingCostVO>> serviceResult = houseCostService
-            .getHousingCostList(queryMap, pager);
+            .getHousingCostDetailList(queryMap, pager);
 
         if (!serviceResult.getSuccess()) {
             if (ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR.equals(serviceResult.getCode())) {
@@ -79,17 +80,21 @@ public class HouseCostDetailController extends BaseController {
     }
 
     /**
-     * 添加房源页面
+     * 添加成本明細页面
      * @param dataMap
      * @param id
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "add", method = { RequestMethod.GET })
-    public String add(Map<String, Object> dataMap) throws Exception {
+    public String add(Map<String, Object> dataMap, Integer costId, Integer houseId,
+                      String roomCodeNo) throws Exception {
 
-        //        ServiceResult<List<HousingResources>> provinceResult = regionsService.getRegionsByParentId(0);
-        //        dataMap.put("provinceList", provinceResult.getResult());
+        HousingCostDetail hcd = new HousingCostDetail();
+        hcd.setCostId(costId);
+        hcd.setHouseId(houseId);
+        hcd.setRoomCodeNo(roomCodeNo);
+        dataMap.put("housingCostDetail", hcd);
 
         return "admin/house/cost/costdetailadd";
     }
@@ -227,19 +232,19 @@ public class HouseCostDetailController extends BaseController {
      * @return
      * @throws Exception
      */
-    //    @RequestMapping(value = "delete", method = { RequestMethod.GET })
-    //    public @ResponseBody HttpJsonResult<Boolean> delete(HttpServletResponse response, Integer id) {
-    //
-    //        ServiceResult<Boolean> serviceResult = houseManageService.deleteHousingResources(id);
-    //        HttpJsonResult<Boolean> jsonResult = null;
-    //        if (serviceResult.getSuccess()) {
-    //            jsonResult = new HttpJsonResult<Boolean>();
-    //        } else {
-    //            jsonResult = new HttpJsonResult<Boolean>(serviceResult.getMessage());
+    //        @RequestMapping(value = "delete", method = { RequestMethod.GET })
+    //        public @ResponseBody HttpJsonResult<Boolean> delete(HttpServletResponse response, Integer id) {
+    //    
+    //            ServiceResult<Boolean> serviceResult = houseManageService.deleteHousingResources(id);
+    //            HttpJsonResult<Boolean> jsonResult = null;
+    //            if (serviceResult.getSuccess()) {
+    //                jsonResult = new HttpJsonResult<Boolean>();
+    //            } else {
+    //                jsonResult = new HttpJsonResult<Boolean>(serviceResult.getMessage());
+    //            }
+    //    
+    //            return jsonResult;
     //        }
-    //
-    //        return jsonResult;
-    //    }
 
     //    @RequestMapping(value = "delete", method = { RequestMethod.GET })
     //    public void del(HttpServletRequest request, HttpServletResponse response, Integer id) {

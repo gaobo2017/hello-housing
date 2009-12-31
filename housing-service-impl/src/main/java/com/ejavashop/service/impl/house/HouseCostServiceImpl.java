@@ -56,6 +56,35 @@ public class HouseCostServiceImpl implements IHouseCostService {
         return serviceResult;
     }
 
+    @Override
+    public ServiceResult<List<HousingCostVO>> getHousingCostDetailList(Map<String, String> queryMap,
+                                                                       PagerInfo pager) {
+        ServiceResult<List<HousingCostVO>> serviceResult = new ServiceResult<List<HousingCostVO>>();
+        try {
+            Integer start = 0, size = 0;
+            if (pager != null) {
+                pager.setRowsCount(houseCostModel.getHousingCostDetailCount(queryMap));
+                start = pager.getStart();
+                size = pager.getPageSize();
+            }
+
+            List<HousingCostVO> list = houseCostModel.getHousingCostDetailList(queryMap, start,
+                size);
+            serviceResult.setResult(list);
+        } catch (BusinessException e) {
+            serviceResult.setMessage(e.getMessage());
+            serviceResult.setSuccess(Boolean.FALSE);
+            log.error(
+                "[HouseCostService][getHousingCostList]根据条件分页查询房源成本信息时出现异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR,
+                ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[HouseCostService][getHousingCostList] param1:" + JSON.toJSONString(queryMap)
+                      + " &param2:" + JSON.toJSONString(pager));
+            log.error("[HouseCostService][getHousingCostList] exception:", e);
+        }
+        return serviceResult;
+    }
     //    @Override
     //    public ServiceResult<List<HousingResources>> getHousingResourcesList(Map<String, String> queryMap,
     //                                                                         PagerInfo pager) {

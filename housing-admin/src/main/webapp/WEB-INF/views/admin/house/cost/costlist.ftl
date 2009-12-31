@@ -51,8 +51,14 @@
 			$('#dataGrid').datagrid('reload',queryParamsHandler());
 		});
 		
-		$("#btn-gridAdd").click(function(){
-	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/add";
+		$("#btn-gridAdd").click(function(){  
+		var selected = $('#dataGrid').datagrid('getSelected');
+			if(!selected) {
+				$.messager.alert('提示','请选择一個房源。');
+				return;
+			}
+			                      
+	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/costdetail/manage/add?costId="+selected.id+"&houseId="+selected.houseId+"&roomCodeNo="+selected.roomCodeNo;
 		});
 		
 		$("#btn-gridEdit").click(function(){
@@ -65,7 +71,8 @@
 				$.messager.alert('提示','只能修改房 未出租的房源。');
 				return;
 			}
-	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/edit?id="+selected.id;
+	 		//window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/edit?id="+selected.id;
+	 		window.open("${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/edit?id="+selected.id);
 		});
 	});
 
@@ -98,7 +105,7 @@
 <div id="searchbar" data-options="region:'north'" style="margin:0 auto;"
 	border="false">
 	<h2 class="h2-title">
-		成本管理列表 <span class="s-poar"><a class="a-extend" href="#">收起</a></span>
+		每个房源对应一条成本记录 <span class="s-poar"><a class="a-extend" href="#">收起</a></span>
 	</h2>
 	<div id="searchbox" class="head-seachbox">
 		<div class="w-p99 marauto searchCont">
@@ -151,8 +158,8 @@
 				<th field="houseName" width="100" align="center">房源名称</th>
 				<th field="isSold" width="90" align="center" formatter="getSoldState">出租状态</th>
 				<th field="status" width="90" align="center" formatter="getUsedState">房子状态</th>
-				<th field="renovationCostSum" width="100" align="center">装修成本</th>
-				<th field="otherCostSum" width="100" align="center">其他成本</th>
+				<th field="renovationCostSum" width="100" align="center">装修总成本</th>
+				<th field="otherCostSum" width="100" align="center">其他总成本</th>
 				<th field="dayRentCost" width="100" align="center">每天房租成本</th>
 				<th field="vacancyDays" width="120" align="center">空闲总天数</th>
 				<th field="vacancyDay" width="120" align="center">最近一次空闲天数</th>
@@ -177,15 +184,11 @@
 
 	<div id="gridTools">
 
-		<@shiro.hasPermission name="/admin/cost/manage/add">
-		<a id="btn-gridAdd" href="/admin/cost/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
+		<@shiro.hasPermission name="/admin/costdetail/manage/add">
+		<a id="btn-gridAdd" href="/admin/costdetail/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增成本明細</a>
 		</@shiro.hasPermission>
-		<@shiro.hasPermission name="/admin/house/manage/edit">
-		<a id="btn-gridEdit" href="/admin/house/manage/edit" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
-		</@shiro.hasPermission>
-		<@shiro.hasPermission name="/admin/house/manage/del">
-		<a id="btn_del" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-delete" plain="true">删除</a>
-		</@shiro.hasPermission>
+
+
 		
 		<a id="btn-gridSearch" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
 		<div></div>

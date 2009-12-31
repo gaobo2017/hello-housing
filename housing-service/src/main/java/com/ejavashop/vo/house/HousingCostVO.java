@@ -12,7 +12,13 @@ public class HousingCostVO extends HousingCost {
      */
     private static final long serialVersionUID = 6539783751425364594L;
 
-    private String            roomCodeNo;
+    private Integer           costId;                                 //成本主表id
+
+    private Integer           costType;                               //成本类型
+
+    private BigDecimal        money;                                  //发生金额
+
+    private String            roomCodeNo;                             //房间编号
 
     private String            houseName;
 
@@ -31,6 +37,30 @@ public class HousingCostVO extends HousingCost {
     private BigDecimal        pricesSum;
 
     private Date              lastSoldTime;
+
+    public Integer getCostId() {
+        return costId;
+    }
+
+    public void setCostId(Integer costId) {
+        this.costId = costId;
+    }
+
+    public Integer getCostType() {
+        return costType;
+    }
+
+    public void setCostType(Integer costType) {
+        this.costType = costType;
+    }
+
+    public BigDecimal getMoney() {
+        return money;
+    }
+
+    public void setMoney(BigDecimal money) {
+        this.money = money;
+    }
 
     public String getRoomCodeNo() {
         return roomCodeNo;

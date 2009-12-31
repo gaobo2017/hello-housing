@@ -1,8 +1,13 @@
 package com.ejavashop.dao.shop.write.house;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.ejavashop.entity.house.HousingCostDetail;
+
 @Repository
 public interface HousingCostDetailWriteDao {
     int deleteByPrimaryKey(Integer id);
@@ -16,4 +21,23 @@ public interface HousingCostDetailWriteDao {
     int updateByPrimaryKeySelective(HousingCostDetail record);
 
     int updateByPrimaryKey(HousingCostDetail record);
+
+    /**
+     * 分页查询
+     * @param queryMap
+     * @param start
+     * @param size
+     * @return
+     */
+    List<HousingCostDetail> getHousingCostDetailList(@Param("queryMap") Map<String, String> queryMap,
+                                                     @Param("start") Integer start,
+                                                     @Param("size") Integer size);
+
+    /**
+     * 根据条件查询count
+     * @param queryMap
+     * @return
+     */
+    Integer getHousingCostDetailCount(@Param("queryMap") Map<String, String> queryMap);
+
 }

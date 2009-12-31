@@ -3,6 +3,7 @@
 <mapper namespace="com.ejavashop.dao.shop.read.house.HousingCostDetailReadDao">
   <resultMap id="HousingCostDetailResult" type="com.ejavashop.entity.house.HousingCostDetail">
     <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="room_code_no" jdbcType="VARCHAR" property="roomCodeNo" />
     <result column="cost_id" jdbcType="INTEGER" property="costId" />
     <result column="house_id" jdbcType="INTEGER" property="houseId" />
     <result column="cost_type" jdbcType="INTEGER" property="costType" />
@@ -14,7 +15,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, cost_id, house_id, cost_type, money, operation_name, operation_id, remark, create_time, 
+    id, cost_id, house_id, roomCodeNo,cost_type, money, operation_name, operation_id, remark, create_time, 
     update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingCostDetailResult">
@@ -28,11 +29,11 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.ejavashop.entity.house.HousingCostDetail">
-    insert into housing_cost_detail (id, cost_id, house_id, 
+    insert into housing_cost_detail (id, cost_id, house_id, room_code_no,
       cost_type, money, operation_name, 
       operation_id, remark, create_time, 
       update_time)
-    values (#{id,jdbcType=INTEGER}, #{costId,jdbcType=INTEGER}, #{houseId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{costId,jdbcType=INTEGER},#{roomCodeNo,jdbcType=VARCHAR}, #{houseId,jdbcType=INTEGER}, 
       #{costType,jdbcType=INTEGER}, #{money,jdbcType=DECIMAL}, #{operationName,jdbcType=VARCHAR}, 
       #{operationId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
@@ -45,6 +46,10 @@
       </if>
       <if test="costId != null">
         cost_id,
+      </if>
+      
+      <if test="roomCodeNo != null">
+        room_code_no,
       </if>
       <if test="houseId != null">
         house_id,
@@ -78,6 +83,10 @@
       <if test="costId != null">
         #{costId,jdbcType=INTEGER},
       </if>
+       <if test="roomCodeNo != null">
+        #{roomCodeNo,jdbcType=VARCHAR},
+      </if>     
+
       <if test="houseId != null">
         #{houseId,jdbcType=INTEGER},
       </if>
@@ -113,6 +122,10 @@
       <if test="houseId != null">
         house_id = #{houseId,jdbcType=INTEGER},
       </if>
+        <if test="roomCodeNo != null">
+        room_code_no = #{operationName,jdbcType=VARCHAR},
+      </if>
+            
       <if test="costType != null">
         cost_type = #{costType,jdbcType=INTEGER},
       </if>
@@ -141,6 +154,7 @@
     update housing_cost_detail
     set cost_id = #{costId,jdbcType=INTEGER},
       house_id = #{houseId,jdbcType=INTEGER},
+      room_code_no = #{roomCodeNo,jdbcType=VARCHAR},
       cost_type = #{costType,jdbcType=INTEGER},
       money = #{money,jdbcType=DECIMAL},
       operation_name = #{operationName,jdbcType=VARCHAR},

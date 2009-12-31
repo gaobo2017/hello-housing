@@ -10,9 +10,11 @@ import javax.annotation.Resource;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.stereotype.Component;
 
+import com.ejavashop.dao.shop.write.house.HousingCostDetailWriteDao;
 import com.ejavashop.dao.shop.write.house.HousingCostWriteDao;
 import com.ejavashop.dao.shop.write.house.HousingResourcesWriteDao;
 import com.ejavashop.entity.house.HousingCost;
+import com.ejavashop.entity.house.HousingCostDetail;
 import com.ejavashop.entity.house.HousingResources;
 import com.ejavashop.vo.house.HousingCostVO;
 
@@ -20,13 +22,20 @@ import com.ejavashop.vo.house.HousingCostVO;
 public class HouseCostModel {
 
     @Resource
-    private HousingResourcesWriteDao housingResourcesWriteDao;
+    private HousingResourcesWriteDao  housingResourcesWriteDao;
 
     @Resource
-    private HousingCostWriteDao      housingCostWriteDao;
+    private HousingCostDetailWriteDao housingCostDetailWriteDao;
+
+    @Resource
+    private HousingCostWriteDao       housingCostWriteDao;
 
     public Integer getHousingCostCount(Map<String, String> queryMap) {
         return housingCostWriteDao.getHousingCostCount(queryMap);
+    }
+
+    public Integer getHousingCostDetailCount(Map<String, String> queryMap) {
+        return housingCostDetailWriteDao.getHousingCostDetailCount(queryMap);
     }
 
     public List<HousingCostVO> getHousingCostList(Map<String, String> queryMap, Integer start,
@@ -39,6 +48,31 @@ public class HouseCostModel {
         List<HousingCost> list = housingCostWriteDao.getHousingCostList(queryMap, start, size);
 
         for (HousingCost cost : list) {
+
+            HousingResources hr = housingResourcesWriteDao.get(cost.getHouseId());
+
+            HousingCostVO vo = new HousingCostVO();
+
+            PropertyUtils.copyProperties(vo, hr);
+
+            PropertyUtils.copyProperties(vo, cost);
+
+            volist.add(vo);
+        }
+        return volist;
+    }
+
+    public List<HousingCostVO> getHousingCostDetailList(Map<String, String> queryMap, Integer start,
+                                                        Integer size) throws IllegalAccessException,
+                                                                      InvocationTargetException,
+                                                                      NoSuchMethodException {
+
+        List<HousingCostVO> volist = new ArrayList<HousingCostVO>();
+
+        List<HousingCostDetail> list = housingCostDetailWriteDao.getHousingCostDetailList(queryMap,
+            start, size);
+
+        for (HousingCostDetail cost : list) {
 
             HousingResources hr = housingResourcesWriteDao.get(cost.getHouseId());
 

@@ -232,13 +232,13 @@
 	<div id="gridTools">
 
 		<@shiro.hasPermission name="/admin/house/manage/add">
-		<a id="btn-gridAdd" href="/admin/house/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
+		<a id="btn-gridAdd" href="/admin/house/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增房源</a>
 		</@shiro.hasPermission>
 		<@shiro.hasPermission name="/admin/house/manage/edit">
 		<a id="btn-gridEdit" href="/admin/house/manage/edit" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
 		</@shiro.hasPermission>
-		<@shiro.hasPermission name="/admin/house/manage/deete">
-		<a id="btn_del" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-delete" plain="true">删除</a>
+		<@shiro.hasPermission name="/admin/house/manage/add">
+		<a id="btn-gridAdd" href="/admin/house/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增租房</a>
 		</@shiro.hasPermission>
 		
 		<a id="btn-gridSearch" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
