@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.read.coupon.CouponUserReadDao">
+	<resultMap id="CouponUserResult" type="com.ejavashop.entity.promotion.coupon.CouponUser">
+			<result property="id" column="id" />
+			<result property="memberId" column="member_id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="couponId" column="coupon_id" />
+			<result property="couponSn" column="coupon_sn" />
+			<result property="password" column="password" />
+			<result property="canUse" column="can_use" />
+			<result property="receiveTime" column="receive_time" />
+			<result property="orderId" column="order_id" />
+			<result property="useTime" column="use_time" />
+			<result property="useStartTime" column="use_start_time" />
+			<result property="useEndTime" column="use_end_time" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="CouponUserResult">
+		select
+		   *
+		from `coupon_user`
+		where `id` = #{id}
+	</select>
+	
+	<sql id="getCondition">
+        <where>
+            <if test="queryMap.q_memberId != null and queryMap.q_memberId !=''">
+                and `member_id` = #{queryMap.q_memberId}
+            </if>
+            <if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''">
+                and `seller_id` = #{queryMap.q_sellerId}
+            </if>
+            <if test="queryMap.q_couponId != null and queryMap.q_couponId !=''">
+                and `coupon_id` = #{queryMap.q_couponId}
+            </if>
+            <if test="queryMap.q_couponSn != null and queryMap.q_couponSn !=''">
+                and `coupon_sn` = #{queryMap.q_couponSn}
+            </if>
+            <if test="queryMap.q_orderId != null and queryMap.q_orderId !=''">
+                and `orderId` = #{queryMap.q_orderId}
+            </if>
+            <if test="queryMap.q_receiveTimeStart != null and queryMap.q_receiveTimeStart !=''">
+                and `receive_time` &gt;= #{queryMap.q_receiveTimeStart}
+            </if>
+            <if test="queryMap.q_receiveTimeEnd != null and queryMap.q_receiveTimeEnd !=''">
+                and `receive_time` &lt;= #{queryMap.q_receiveTimeEnd}
+            </if>
+            <if test="queryMap.q_useTimeStart != null and queryMap.q_useTimeStart !=''">
+                and `use_time` &gt;= #{queryMap.q_useTimeStart}
+            </if>
+            <if test="queryMap.q_useTimeEnd != null and queryMap.q_useTimeEnd !=''">
+                and `use_time` &lt;= #{queryMap.q_useTimeEnd}
+            </if>
+        </where>
+    </sql>
+    
+	<select id="getCouponUsersCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `coupon_user`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getCouponUsers" parameterType="java.util.Map" resultMap="CouponUserResult">
+		select
+		   *
+		from `coupon_user`
+		<include refid="getCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+    
+	<select id="getCouponUserByMemberIdCount" resultType="Integer">
+		select
+		   count(*)
+		from `coupon_user`
+		where `member_id` = #{memberId}
+	</select>
+	
+	<select id="getCouponUserByMemberIdAndUseCount" resultType="Integer">
+		select
+		   count(*)
+		from `coupon_user`
+		where `member_id` = #{memberId}
+		and `can_use` = #{canUse}
+	</select>
+	
+	<select id="getCouponUserByMemberId" resultMap="CouponUserResult">
+		select
+		   *
+		from `coupon_user`
+		where `member_id` = #{memberId}
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="getCouponUserByMemberIdAndUse" resultMap="CouponUserResult">
+		select
+		   *
+		from `coupon_user`
+		where `member_id` = #{memberId}
+		and `can_use` = #{canUse}
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="getCouponUserByCouponSn" resultMap="CouponUserResult">
+		select
+		   *
+		from `coupon_user`
+		where `coupon_sn` = #{couponSn}
+		and `seller_id` = #{sellerId}
+	</select>
+	
+	<select id="getEffectiveByMemberIdAndSellerId" resultMap="CouponUserResult">
+		select
+		   *
+		from `coupon_user`
+		where `member_id` = #{memberId}
+		and `seller_id` = #{sellerId}
+		and `can_use` &gt; 0
+		and `use_start_time` &lt; now()
+		and `use_end_time` &gt; now()
+	</select>
+	
+	<select id="getCouponUserOnlyByCouponSn" resultMap="CouponUserResult">
+		select
+		   *
+		from `coupon_user`
+		where `coupon_sn` = #{couponSn}
+	</select>
+	
+	
+</mapper>

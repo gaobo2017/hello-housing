@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.product.ProductCommentsWriteDao">
+	<resultMap id="ProductCommentsResult" type="com.ejavashop.entity.product.ProductComments">
+			<result property="id" column="id" />
+			<result property="userId" column="user_id" />
+			<result property="userName" column="user_name" />
+			<result property="grade" column="grade" />
+			<result property="content" column="content" />
+			<result property="sellerAttitude" column="seller_attitude" />
+			<result property="createTime" column="create_time" />
+			<result property="productId" column="product_id" />
+			<result property="productGoodsId" column="product_goods_id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="orderSn" column="order_sn" />
+			<result property="replyId" column="reply_id" />
+			<result property="replyName" column="reply_name" />
+			<result property="replyContent" column="reply_content" />
+			<result property="state" column="state" />
+			<result property="adminId" column="admin_id" />
+			<result property="description" column="description" />
+			<result property="serviceAttitude" column="service_attitude" />
+			<result property="productSpeed" column="product_speed" />
+			<result property="logisticsSpeed" column="logistics_speed" />
+			<result property="expressAttitude" column="express_attitude" />
+	</resultMap>
+
+	<select id="get" parameterType="Integer" resultMap="ProductCommentsResult">
+		select
+		   *
+		from `product_comments`
+		where `id` = #{id}
+	</select>
+
+	<insert id="insert" parameterType="com.ejavashop.entity.product.ProductComments" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `product_comments`
+		(
+			`user_id`,
+			`user_name`,
+			`grade`,
+			`content`,
+			`seller_attitude`,
+			`create_time`,
+			`product_id`,
+			`product_goods_id`,
+			`seller_id`,
+			`order_sn`,
+			`reply_id`,
+			`reply_name`,
+			`reply_content`,
+			`state`,
+			`admin_id`,
+			`description`,
+			`service_attitude`,
+			`product_speed`,
+			`logistics_speed`,
+			`express_attitude`
+		)
+		values
+		(
+			#{userId},
+			#{userName},
+			#{grade},
+			#{content},
+			#{sellerAttitude},
+			now(),
+			#{productId},
+			#{productGoodsId},
+			#{sellerId},
+			#{orderSn},
+			#{replyId},
+			#{replyName},
+			#{replyContent},
+			#{state},
+			#{adminId},
+			#{description},
+			#{serviceAttitude},
+			#{productSpeed},
+			#{logisticsSpeed},
+			#{expressAttitude}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.ejavashop.entity.product.ProductComments">
+        update `product_comments` 
+    	<set>
+			<!-- <if test="id != null">
+				`id`= #{id},
+			</if> -->
+			<if test="userId != null">
+				`user_id`= #{userId},
+			</if>
+			<if test="userName != null">
+				`user_name`= #{userName},
+			</if>
+			<if test="grade != null">
+				`grade`= #{grade},
+			</if>
+			<if test="content != null">
+				`content`= #{content},
+			</if>
+			<if test="sellerAttitude != null">
+				`seller_attitude`= #{sellerAttitude},
+			</if>
+			<if test="productId != null">
+				`product_id`= #{productId},
+			</if>
+			<if test="productGoodsId != null">
+				`product_goods_id`= #{productGoodsId},
+			</if>
+			<if test="sellerId != null">
+				`seller_id`= #{sellerId},
+			</if>
+			<if test="orderSn != null">
+				`order_sn`= #{orderSn},
+			</if>
+			<if test="replyId != null">
+				`reply_id`= #{replyId},
+			</if>
+			<if test="replyName != null">
+				`reply_name`= #{replyName},
+			</if>
+			<if test="replyContent != null">
+				`reply_content`= #{replyContent},
+			</if>
+			<if test="state != null">
+				`state`= #{state},
+			</if>
+			<if test="adminId != null">
+				`admin_id`= #{adminId},
+			</if>
+			<if test="description != null">
+				`description`= #{description},
+			</if>
+			<if test="serviceAttitude != null">
+				`service_attitude`= #{serviceAttitude},
+			</if>
+			<if test="productSpeed != null">
+				`product_speed`= #{productSpeed},
+			</if>
+			<if test="logisticsSpeed != null">
+				`logistics_speed`= #{logisticsSpeed},
+			</if>
+			<if test="expressAttitude != null">
+				`express_attitude`= #{expressAttitude}
+			</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+
+	<!-- 商品评论管理 列表总数-->
+	<select id="getProductCommentsCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from product_comments 
+		<include refid="getProductCommentsCondition"/>
+	</select>
+	
+	<!-- 查询商品评论管理列表 -->
+	<select id="getProductComments" parameterType="java.util.Map" resultMap="ProductCommentsResult">
+		select 
+		 * 
+		from product_comments 
+		<include refid="getProductCommentsCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+
+	<!-- 查询条件 -->
+	<sql id="getProductCommentsCondition">
+		<where>
+			<if test="queryMap.q_id != null and queryMap.q_id != ''" >
+			    and `id` =  #{queryMap.q_id}
+			</if>
+			<if test="queryMap.q_userId != null and queryMap.q_userId != ''" >
+			    and `user_id` =  #{queryMap.q_userId}
+			</if>
+			<if test="queryMap.q_userName != null and queryMap.q_userName != ''" >
+			    and `user_name` like CONCAT('%', #{queryMap.q_userName}, '%')
+			</if>
+			<if test="queryMap.q_grades != null and queryMap.q_grades !='' and queryMap.q_grades == 'high'">
+				and `grade` &gt; 3
+			</if>
+			<if test="queryMap.q_grades != null and queryMap.q_grades !='' and queryMap.q_grades == 'middle'">
+				and `grade` = 3
+			</if>
+			<if test="queryMap.q_grades != null and queryMap.q_grades !='' and queryMap.q_grades == 'low'">
+				and `grade` &lt; 3
+			</if>
+			<!-- <if test="queryMap.q_grades != null and queryMap.q_grades != ''" >
+			    and `grade` in #{queryMap.q_grades}
+				<foreach item="item" index="index" collection="queryMap.grades" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if> -->
+			<if test="queryMap.q_productId != null and queryMap.q_productId != ''" >
+			    and `product_id` =  #{queryMap.q_productId}
+			</if>
+			<if test="queryMap.q_productGoodsId != null and queryMap.q_productGoodsId !=''"  >
+			 	and `product_goods_id`= #{queryMap.q_productGoodsId}
+			 </if>
+			<if test="queryMap.q_sellerId != null and queryMap.q_sellerId != ''" >
+			    and `seller_id` =  #{queryMap.q_sellerId}
+			</if>
+			<if test="queryMap.q_orderSn != null and queryMap.q_orderSn != ''" >
+			    and `order_sn` =  #{queryMap.q_orderSn}
+			</if>
+			<if test="queryMap.q_replyId != null and queryMap.q_replyId != ''" >
+			    and `reply_id` =  #{queryMap.q_replyId}
+			</if>
+			<if test="queryMap.q_state != null and queryMap.q_state != ''" >
+			    and `state` =  #{queryMap.q_state}
+			</if>
+			<if test="queryMap.q_adminId != null and queryMap.q_adminId != ''" >
+			    and `admin_id` =  #{queryMap.q_adminId}
+			</if>
+		</where>
+	</sql>
+
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:properties-config/jdbc.properties</value>
+                <value>classpath:properties-config/config.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <context:component-scan base-package="com.ejavashop.service,com.ejavashop.model,com.ejavashop.util">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <import resource="spring-datasources-shop.xml"/>
+    <import resource="spring-datasources-analysis.xml"/>
+    <import resource="spring-datasources-m.xml"/>
+    <import resource="spring-datasources-promotion.xml"/>
+    <import resource="spring-scheduler.xml"/>
+    <import resource="shiro-context.xml"/>
+
+    <bean id="domainUrlUtil" class="com.ejavashop.core.freemarkerutil.DomainUrlUtil">
+        <property name="EJS_URL_RESOURCES" value="${ejs.url.resources}"/>
+        <property name="EJS_FRONT_URL" value="${ejs.front.url}"/>
+        <property name="EJS_H5_URL" value="${ejs.h5.url}"/>
+        <property name="EJS_STATIC_RESOURCES" value="${ejs.static.resources}"/>
+        <property name="EJS_IMAGE_RESOURCES" value="${ejs.image.resources}"/>
+        <property name="EJS_COOKIE_DOMAIN" value="${ejs.cookie.domain}"/>
+        <property name="EJS_SOLR_URL" value="${search.solr.url}"/>
+        <property name="EJS_SOLR_SERVER" value="${search.solr.server}"/>
+    </bean>
+
+</beans>

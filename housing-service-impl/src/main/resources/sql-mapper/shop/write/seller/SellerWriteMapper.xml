@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.seller.SellerWriteDao">
+	<resultMap id="SellerResult" type="com.ejavashop.entity.seller.Seller">
+			<result property="id" column="id" />
+			<result property="memberId" column="member_id" />
+			<result property="name" column="name" />
+			<result property="sellerName" column="seller_name" />
+			<result property="sellerLogo" column="seller_logo" />
+			<result property="sellerGrade" column="seller_grade" />
+			<result property="scoreService" column="score_service" />
+			<result property="scoreDeliverGoods" column="score_deliver_goods" />
+			<result property="scoreDescription" column="score_description" />
+			<result property="productNumber" column="product_number" />
+			<result property="collectionNumber" column="collection_number" />
+			<result property="createTime" column="create_time" />
+			<result property="saleMoney" column="sale_money" />
+			<result property="orderCount" column="order_count" />
+			<result property="orderCountOver" column="order_count_over" />
+			<result property="sellerKeyword" column="seller_keyword" />
+			<result property="sellerDes" column="seller_des" />
+			<result property="auditStatus" column="audit_status" />
+			<result property="storeSlide" column="store_slide" />
+	</resultMap>
+	
+	<delete id="deleteByMemberId" parameterType="Integer">
+        delete from `seller` where `member_id` = #{memberId}
+    </delete>
+
+    <update id="auditSeller">
+        update `seller` 
+    	set `audit_status` = #{auditStatus}
+        where `member_id` = #{memberId}
+	</update>
+    
+	<delete id="deleteByMemberIds">
+        delete from `seller` 
+       	where `member_id` in 
+		<foreach collection="memberIds" item="item" index="index" open="(" separator="," close=")">  
+		  #{item}  
+		</foreach>  
+    </delete>
+	
+	<select id="getSellerByMemberId" parameterType="Integer" resultMap="SellerResult">
+		select
+			*
+		from `seller`
+		where `member_id` = #{memberId}
+		limit 1
+	</select>
+	
+	<select id="get" parameterType="Integer" resultMap="SellerResult">
+		select
+		   *
+		from `seller`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.seller.Seller">
+        update `seller` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="name != null">`name`= #{name},</if>
+			<if test="sellerName != null">`seller_name`= #{sellerName},</if>
+			<if test="sellerLogo != null">`seller_logo`= #{sellerLogo},</if>
+			<if test="sellerGrade != null">`seller_grade`= #{sellerGrade},</if>
+			<if test="scoreService != null">`score_service`= #{scoreService},</if>
+			<if test="scoreDeliverGoods != null">`score_deliver_goods`= #{scoreDeliverGoods},</if>
+			<if test="scoreDescription != null">`score_description`= #{scoreDescription},</if>
+			<if test="productNumber != null">`product_number`= #{productNumber},</if>
+			<if test="collectionNumber != null">`collection_number`= #{collectionNumber},</if>
+			<!-- <if test="createTime != null">`create_time`= #{createTime},</if> -->
+			<if test="saleMoney != null">`sale_money`= #{saleMoney},</if>
+			<if test="orderCount != null">`order_count`= #{orderCount},</if>
+			<if test="orderCountOver != null">`order_count_over`= #{orderCountOver},</if>
+			<if test="sellerKeyword != null">`seller_keyword`= #{sellerKeyword},</if>
+			<if test="sellerDes != null">`seller_des`= #{sellerDes},</if>
+			<if test="auditStatus != null">`audit_status`= #{auditStatus},</if>
+			<if test="storeSlide != null">`store_slide`= #{storeSlide}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="save" parameterType="com.ejavashop.entity.seller.Seller" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `seller`
+		(
+			`member_id`,
+			`name`,
+			`seller_name`,
+			`seller_logo`,
+			`seller_grade`,
+			`score_service`,
+			`score_deliver_goods`,
+			`score_description`,
+			`product_number`,
+			`collection_number`,
+			`create_time`,
+			`sale_money`,
+			`order_count`,
+			`order_count_over`,
+			`seller_keyword`,
+			`seller_des`,
+			`audit_status`,
+			`store_slide`
+		)
+		values
+		(
+			#{memberId},
+			#{name},
+			#{sellerName},
+			#{sellerLogo},
+			#{sellerGrade},
+			#{scoreService},
+			#{scoreDeliverGoods},
+			#{scoreDescription},
+			#{productNumber},
+			#{collectionNumber},
+			now(),
+			#{saleMoney},
+			#{orderCount},
+			#{orderCountOver},
+			#{sellerKeyword},
+			#{sellerDes},
+			#{auditStatus},
+			#{storeSlide}
+		)
+	</insert>
+	
+	<select id="getSellersCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from seller
+		<include refid="getSellersCondition" />
+	</select>
+	
+	<select id="getSellers" resultType="com.ejavashop.entity.seller.Seller">
+		select * from seller
+		<include refid="getSellersCondition" />
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<sql id="getSellersCondition">
+		<where>
+			<if test="queryMap.q_name != null and queryMap.q_name != ''">
+				and `name` like CONCAT('%',#{queryMap.q_name},'%')
+			</if>
+			<if test="queryMap.q_auditStatus != null and queryMap.q_auditStatus != ''">
+				and `audit_status` = #{queryMap.q_auditStatus}
+			</if>
+			<if test="queryMap.q_sellerName != null and queryMap.q_sellerName != ''">
+				and `seller_name` like CONCAT('%',#{queryMap.q_sellerName},'%')
+			</if>
+		</where>
+	</sql>
+
+	<!-- 冻结（auditStatus=3）、解冻商家（auditStatus=2） -->
+	<update id="freezeSeller">
+        update `seller` 
+    	set `audit_status` = #{auditStatus}
+        where `id` = #{id}
+	</update>
+	
+	<select id="getSellerByName" resultType="com.ejavashop.entity.seller.Seller">
+		select * from seller
+		where `name` = #{name}
+	</select>
+
+	<select id="getSellerBySellerName" resultType="com.ejavashop.entity.seller.Seller">
+		select * from seller
+		where `seller_name` = #{sellerName}
+	</select>
+
+</mapper>

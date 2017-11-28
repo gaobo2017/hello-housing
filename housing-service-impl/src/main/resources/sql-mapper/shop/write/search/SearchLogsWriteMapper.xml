@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.search.SearchLogsWriteDao">
+	<resultMap id="SearchLogsResult" type="com.ejavashop.entity.search.SearchLogs">
+			<result property="id" column="id" />
+			<result property="keyword" column="keyword" />
+			<result property="ip" column="ip" />
+			<result property="siteCookie" column="site_cookie" />
+			<result property="memberId" column="member_id" />
+			<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SearchLogsResult">
+		select
+		   *
+		from `search_logs`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.search.SearchLogs">
+        update `search_logs` 
+    	<set>
+			<if test="id != null">`id`= #{id},</if>
+			<if test="keyword != null">`keyword`= #{keyword},</if>
+			<if test="ip != null">`ip`= #{ip},</if>
+			<if test="siteCookie != null">`site_cookie`= #{siteCookie},</if>
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="createTime != null">`create_time`= #{createTime}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<update id="updateByKeyWordCookie" parameterType="com.ejavashop.entity.search.SearchLogs">
+        update `search_logs` 
+    	set `create_time` = now()
+        where `keyword` = #{keyword} and `site_cookie` = #{siteCookie}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.search.SearchLogs" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`search_logs`
+		(
+			`keyword`,
+			`ip`,
+			`site_cookie`,
+			`member_id`,
+			`create_time`
+		)
+		values
+		(
+			#{keyword},
+			#{ip},
+			#{siteCookie},
+			#{memberId},
+			now()
+		)
+	</insert>
+	
+	<select id="countByKeyWordCookie" resultType="java.lang.Integer">
+        select count(1) from `search_logs` t1
+        where `keyword` = #{keyword} and `site_cookie` = #{siteCookie}
+    </select>
+    
+</mapper>

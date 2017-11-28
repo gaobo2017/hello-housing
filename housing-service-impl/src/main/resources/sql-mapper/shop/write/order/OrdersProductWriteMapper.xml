@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.order.OrdersProductWriteDao">
+	<resultMap id="OrdersProductResult" type="com.ejavashop.entity.order.OrdersProduct">
+			<result property="id" column="id" />
+			<result property="ordersId" column="orders_id" />
+			<result property="ordersSn" column="orders_sn" />
+			<result property="sellerId" column="seller_id" />
+			<result property="productCateId" column="product_cate_id" />
+			<result property="productId" column="product_id" />
+			<result property="productGoodsId" column="product_goods_id" />
+			<result property="specInfo" column="spec_info" />
+			<result property="productName" column="product_name" />
+			<result property="productSku" column="product_sku" />
+			<result property="packageGroupsId" column="package_groups_id" />
+			<result property="mallGroupsId" column="mall_groups_id" />
+			<result property="giftId" column="gift_id" />
+			<result property="isGift" column="is_gift" />
+			<result property="moneyPrice" column="money_price" />
+			<result property="number" column="number" />
+			<result property="moneyAmount" column="money_amount" />
+			<result property="moneyActSingle" column="money_act_single" />
+			<result property="actSingleId" column="act_single_id" />
+			<result property="actGroupId" column="act_group_id" />
+			<result property="actFlashSaleId" column="act_flash_sale_id" />
+			<result property="actFlashSaleProductId" column="act_flash_sale_product_id" />
+			<result property="logisticsId" column="logistics_id" />
+			<result property="logisticsName" column="logistics_name" />
+			<result property="logisticsNumber" column="logistics_number" />
+			<result property="shippingTime" column="shipping_time" />
+			<result property="closeTime" column="close_time" />
+			<result property="systemRemark" column="system_remark" />
+			<result property="memberProductBackId" column="member_product_back_id" />
+			<result property="memberProductExchangeId" column="member_product_exchange_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<select id="get" parameterType="Integer" resultMap="OrdersProductResult">
+		select
+		   *
+		from `orders_product`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getByOrderIdAndSellerId" parameterType="Integer" resultType="com.ejavashop.entity.order.OrdersProduct">
+		select * from `orders_product`
+		where `orders_id` = #{ordersId}
+			and `seller_id` = #{sellerId}
+	</select>
+
+	<select id="getByOrderId" parameterType="Integer" resultType="com.ejavashop.entity.order.OrdersProduct">
+		select * from `orders_product`
+		where `orders_id` = #{ordersId}
+	</select>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.order.OrdersProduct" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `orders_product`
+		(
+			`orders_id`,
+			`orders_sn`,
+			`seller_id`,
+			`product_cate_id`,
+			`product_id`,
+			`product_goods_id`,
+			`spec_info`,
+			`product_name`,
+			`product_sku`,
+			`package_groups_id`,
+			`mall_groups_id`,
+			`gift_id`,
+			`is_gift`,
+			`money_price`,
+			`number`,
+			`money_amount`,
+			`money_act_single`,
+			`act_single_id`,
+			`act_group_id`,
+			`act_flash_sale_id`,
+			`act_flash_sale_product_id`,
+			`logistics_id`,
+			`logistics_name`,
+			`logistics_number`,
+			`shipping_time`,
+			`close_time`,
+			`system_remark`,
+			`member_product_back_id`,
+			`member_product_exchange_id`,
+			`create_time`,
+			`update_time`
+		)
+		values
+		(
+			#{ordersId},
+			#{ordersSn},
+			#{sellerId},
+			#{productCateId},
+			#{productId},
+			#{productGoodsId},
+			#{specInfo},
+			#{productName},
+			#{productSku},
+			#{packageGroupsId},
+			#{mallGroupsId},
+			#{giftId},
+			#{isGift},
+			#{moneyPrice},
+			#{number},
+			#{moneyAmount},
+			#{moneyActSingle},
+			#{actSingleId},
+			#{actGroupId},
+			#{actFlashSaleId},
+			#{actFlashSaleProductId},
+			#{logisticsId},
+			#{logisticsName},
+			#{logisticsNumber},
+			#{shippingTime},
+			#{closeTime},
+			#{systemRemark},
+			#{memberProductBackId},
+			#{memberProductExchangeId},
+			now(),
+			now()
+		)
+	</insert>
+
+	<update id="update" parameterType="com.ejavashop.entity.order.OrdersProduct">
+        update `orders_product` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="ordersId != null">`orders_id`= #{ordersId},</if>
+			<if test="ordersSn != null">`orders_sn`= #{ordersSn},</if>
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="productCateId != null">`product_cate_id`= #{productCateId},</if>
+			<if test="productId != null">`product_id`= #{productId},</if>
+			<if test="productGoodsId != null">`product_goods_id`= #{productGoodsId},</if>
+			<if test="specInfo != null">`spec_info`= #{specInfo},</if>
+			<if test="productName != null">`product_name`= #{productName},</if>
+			<if test="productSku != null">`product_sku`= #{productSku},</if>
+			<if test="packageGroupsId != null">`package_groups_id`= #{packageGroupsId},</if>
+			<if test="mallGroupsId != null">`mall_groups_id`= #{mallGroupsId},</if>
+			<if test="giftId != null">`gift_id`= #{giftId},</if>
+			<if test="isGift != null">`is_gift`= #{isGift},</if>
+			<if test="moneyPrice != null">`money_price`= #{moneyPrice},</if>
+			<if test="number != null">`number`= #{number},</if>
+			<if test="moneyAmount != null">`money_amount`= #{moneyAmount},</if>
+			<if test="moneyActSingle != null">`money_act_single`= #{moneyActSingle},</if>
+			<if test="actSingleId != null">`act_single_id`= #{actSingleId},</if>
+			<if test="actGroupId != null">`act_group_id`= #{actGroupId},</if>
+			<if test="actFlashSaleId != null">`act_flash_sale_id`= #{actFlashSaleId},</if>
+			<if test="actFlashSaleProductId != null">`act_flash_sale_product_id`= #{actFlashSaleProductId},</if>
+			<if test="logisticsId != null">`logistics_id`= #{logisticsId},</if>
+			<if test="logisticsName != null">`logistics_name`= #{logisticsName},</if>
+			<if test="logisticsNumber != null">`logistics_number`= #{logisticsNumber},</if>
+			<if test="shippingTime != null">`shipping_time`= #{shippingTime},</if>
+			<if test="closeTime != null">`close_time`= #{closeTime},</if>
+			<if test="systemRemark != null">`system_remark`= #{systemRemark},</if>
+			<if test="memberProductBackId != null">`member_product_back_id`= #{memberProductBackId},</if>
+			<if test="memberProductExchangeId != null">`member_product_exchange_id`= #{memberProductExchangeId},</if>
+			<!-- <if test="createTime != null">`create_time`= #{createTime},</if> -->
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+
+	<select id="list" resultType="com.ejavashop.entity.order.OrdersProduct">
+		select * from `orders_product` t1
+		order by id
+	</select>
+
+	<delete id="del">
+        delete from `orders_product` where `id` = #{id}
+	</delete>
+	
+	<select id="getCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from `orders_product` t1
+		<include refid="whereConditions" />
+	</select>
+	
+	<select id="page" resultType="com.ejavashop.entity.order.OrdersProduct">
+		select * from `orders_product` t1
+		<include refid="whereConditions" />
+		order by id
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="id != null and id !=''"  > and `id`= #{id}</if>
+			<if test="ordersId != null and ordersId !=''"  > and `orders_id`= #{ordersId}</if>
+			<if test="ordersSn != null and ordersSn !=''"  > and `orders_sn`= #{ordersSn}</if>
+			<if test="sellerId != null and sellerId !=''"  > and `seller_id`= #{sellerId}</if>
+			<if test="productCateId != null and productCateId !=''"  > and `product_cate_id`= #{productCateId}</if>
+			<if test="productId != null and productId !=''"  > and `product_id`= #{productId}</if>
+			<if test="productGoodsId != null and productGoodsId !=''"  > and `product_goods_id`= #{productGoodsId}</if>
+			<if test="productName != null and productName !=''"  > and `product_name`= #{productName}</if>
+			<if test="productSku != null and productSku !=''"  > and `product_sku`= #{productSku}</if>
+			<if test="packageGroupsId != null and packageGroupsId !=''"  > and `package_groups_id`= #{packageGroupsId}</if>
+			<if test="mallGroupsId != null and mallGroupsId !=''"  > and `mall_groups_id`= #{mallGroupsId}</if>
+			<if test="giftId != null and giftId !=''"  > and `gift_id`= #{giftId}</if>
+			<if test="isGift != null and isGift !=''"  > and `is_gift`= #{isGift}</if>
+			<if test="moneyPrice != null and moneyPrice !=''"  > and `money_price`= #{moneyPrice}</if>
+			<if test="number != null and number !=''"  > and `number`= #{number}</if>
+			<if test="moneyAmount != null and moneyAmount !=''"  > and `money_amount`= #{moneyAmount}</if>
+			<if test="moneyActSingle != null and moneyActSingle !=''"  > and `money_act_single`= #{moneyActSingle}</if>
+			<if test="actSingleId != null and actSingleId !=''"  > and `act_single_id`= #{actSingleId}</if>
+			<if test="actGroupId != null and actGroupId !=''"  > and `act_group_id`= #{actGroupId}</if>
+			<if test="actFlashSaleId != null and actFlashSaleId !=''"  > and `act_flash_sale_id`= #{actFlashSaleId}</if>
+			<if test="actFlashSaleProductId != null and actFlashSaleProductId !=''"  > and `act_flash_sale_product_id`= #{actFlashSaleProductId}</if>
+			<if test="logisticsId != null and logisticsId !=''"  > and `logistics_id`= #{logisticsId}</if>
+			<if test="logisticsName != null and logisticsName !=''"  > and `logistics_name`= #{logisticsName}</if>
+			<if test="logisticsNumber != null and logisticsNumber !=''"  > and `logistics_number`= #{logisticsNumber}</if>
+			<if test="shippingTime != null and shippingTime !=''"  > and `shipping_time`= #{shippingTime}</if>
+			<if test="closeTime != null and closeTime !=''"  > and `close_time`= #{closeTime}</if>
+			<if test="systemRemark != null and systemRemark !=''"  > and `system_remark`= #{systemRemark}</if>
+			<if test="memberProductBackId != null and memberProductBackId !=''"  > and `member_product_back_id`= #{memberProductBackId}</if>
+			<if test="memberProductExchangeId != null and memberProductExchangeId !=''"  > and `member_product_exchange_id`= #{memberProductExchangeId}</if>
+			<if test="createTime != null and createTime !=''"  > and `create_time`= #{createTime}</if>
+			<if test="updateTime != null and updateTime !=''"  > and `update_time`= #{updateTime}</if>
+		</trim>
+	</sql>
+	
+</mapper>

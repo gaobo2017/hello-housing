@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.product.ProductTypeAttrWriteDao">
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into `product_type_attr`(
+            `name`,
+            `value`,
+            `product_type_id`,
+            `type`,
+            `create_id`,
+            `create_time`
+        )
+        values(
+            #{name},
+            #{value},
+            #{productTypeId},
+            #{type},
+            #{createId},
+            now()
+        )
+    </insert>
+    <update id="update">
+        update `product_type_attr`
+        <set>
+            <if test = "null != id and '' != id">`id`= #{id},</if>
+            <if test = "null != name and '' != name">`name`= #{name},</if>
+            <if test = "null != value and '' != value">`value`= #{value},</if>
+            <if test = "null != productTypeId and '' != productTypeId">`product_type_id`= #{productTypeId},</if>
+            <if test = "null != type and '' != type">`type`= #{type},</if>
+            <if test = "null != createId and '' != createId">`create_id`= #{createId},</if>
+            <if test = "null != createTime and '' != createTime">`create_time`= #{createTime},</if>
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="del">
+        delete from `product_type_attr` where `id` = #{id}
+    </delete>
+    <delete id="delByTypeId">
+        delete from `product_type_attr` where `product_type_id` = #{id}
+    </delete>
+
+    <select id="get" resultType="com.ejavashop.entity.product.ProductTypeAttr">
+        select
+        <include refid="selectColumn"/>
+        from `product_type_attr`
+        where `id` = #{id}
+    </select>
+    <select id="getByTypeId" resultType="com.ejavashop.entity.product.ProductTypeAttr">
+        select
+        <include refid="selectColumn"/>
+        from `product_type_attr`
+        where `product_type_id` = #{id}
+    </select>
+    <select id="page" resultType="com.ejavashop.vo.product.ProductTypeAttrVO">
+        select
+        <include refid="selectColumn"/>
+        from `product_type_attr`
+        <include refid="whereConditions"/>
+        order by id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from `product_type_attr`
+        <include refid="whereConditions"/>
+    </select>
+
+    <sql id="selectColumn">
+        `id`,
+        `name`,
+        `value`,
+        `product_type_id`,
+        `type`,
+        `create_id`,
+        `create_time`
+    </sql>
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_id != null and '' != param1.id">
+                and `id`= #{param1.id}
+            </if>
+            <if test="param1.q_name != null and '' != param1.q_name">
+                and `name` like CONCAT('%',#{param1.q_name},'%')
+            </if>
+            <if test="param1.q_value != null and '' != param1.q_value">
+                and `value`= #{param1.q_value}
+            </if>
+            <if test="param1.q_productTypeId != null and '' != param1.q_productTypeId">
+                and `product_type_id`= #{param1.q_productTypeId}
+            </if>
+            <if test="param1.q_type != null and '' != param1.q_type">
+                and `type`= #{param1.q_type}
+            </if>
+            <if test="param1.q_createId != null and '' != param1.q_createId">
+                and `create_id`= #{param1.q_createId}
+            </if>
+            <if test="param1.q_createTime != null and '' != param1.q_createTime">
+                and `create_time`= #{param1.q_createTime}
+            </if>
+        </where>
+    </sql>
+</mapper>

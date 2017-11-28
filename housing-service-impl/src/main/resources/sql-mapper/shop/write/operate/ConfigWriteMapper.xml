@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.operate.ConfigWriteDao">
+	<resultMap id="ConfigResult" type="com.ejavashop.entity.operate.Config">
+			<result property="id" column="id" />
+			<result property="integralScale" column="integral_scale" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ConfigResult">
+		select
+		   *
+		from `config`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.operate.Config">
+        update `config` 
+    	<set>
+			<if test="id != null">`id`= #{id},</if>
+			<if test="integralScale != null">`integral_scale`= #{integralScale}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.operate.Config" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into  `config`
+		(
+			`integral_scale`
+		)
+		values
+		(
+			#{integralScale}
+		)
+	</insert>
+	
+</mapper>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.seller.SellerManageCateWriteDao">
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into `seller_manage_cate`(
+            `seller`,
+            `create_id`,
+            `create_time`,
+            `product_cate_id`,
+            `product_cate_name`,
+            `state`<!--,
+            `opt_id`,
+            `opt_time`,
+            `stop_id`,
+            `stop_time`,
+            `stop_reason`-->
+        )
+        values(
+            #{seller},
+            #{createId},
+            now(),
+            #{productCateId},
+            #{productCateName},
+            #{state}<!--,
+            #{optId},
+            #{optTime},
+            #{stopId},
+            #{stopTime},
+            #{stopReason}-->
+        )
+    </insert>
+    <update id="update">
+        update `seller_manage_cate`
+        <set>
+            <if test = "null != id and '' != id">`id`= #{id},</if>
+            <if test = "null != seller and '' != seller">`seller`= #{seller},</if>
+            <if test = "null != createId and '' != createId">`create_id`= #{createId},</if>
+            <if test = "null != createTime and '' != createTime">`create_time`= #{createTime},</if>
+            <if test = "null != productCateId and '' != productCateId">`product_cate_id`= #{productCateId},</if>
+            <if test = "null != productCateName and '' != productCateName">`product_cate_name`= #{productCateName},</if>
+            <if test = "null != state and '' != state">`state`= #{state},</if>
+            <if test = "null != optId">`opt_id`= #{optId},</if>
+            <if test = "null != optTime and '' != optTime">`opt_time`= #{optTime},</if>
+            <if test = "null != stopId and '' != stopId">`stop_id`= #{stopId},</if>
+            <if test = "null != stopTime and '' != stopTime">`stop_time`= #{stopTime},</if>
+            <if test = "null != stopReason and '' != stopReason">`stop_reason`= #{stopReason},</if>
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="del">
+        delete from `seller_manage_cate` where `id` = #{id}
+    </delete>
+
+    <select id="get" resultType="com.ejavashop.entity.seller.SellerManageCate">
+        select
+        <include refid="selectColumn"/>
+        from `seller_manage_cate`
+        where `id` = #{id}
+    </select>
+    <select id="getCateBySellerId" resultType="com.ejavashop.entity.seller.SellerManageCate">
+        select
+        *
+        from `seller_manage_cate`
+        where `product_cate_id` = #{cateId} and seller = #{seller}
+    </select>
+    <select id="page" resultType="com.ejavashop.entity.seller.SellerManageCate">
+        select
+        <include refid="selectColumn"/>
+        from `seller_manage_cate`
+        <include refid="whereConditions"/>
+        order by id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from `seller_manage_cate`
+        <include refid="whereConditions"/>
+    </select>
+
+    <sql id="selectColumn">
+        `id`,
+        `seller`,
+        `create_id`,
+        `create_time`,
+        `product_cate_id`,
+        `product_cate_name`,
+        `state`,
+        `opt_id`,
+        `opt_time`,
+        `stop_id`,
+        `stop_time`,
+        `stop_reason`
+    </sql>
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_id != null and '' != param1.q_id">
+                and `id`= #{param1.q_id}
+            </if>
+            <if test="param1.q_seller != null and '' != param1.q_seller">
+                and `seller`= #{param1.q_seller}
+            </if>
+            <if test="param1.q_createId != null and '' != param1.q_createId">
+                and `create_id`= #{param1.q_createId}
+            </if>
+            <if test="param1.q_createTime != null and '' != param1.q_createTime">
+                and `create_time`= #{param1.q_createTime}
+            </if>
+            <if test="param1.q_productCateId != null and '' != param1.q_productCateId">
+                and `product_cate_id`= #{param1.q_productCateId}
+            </if>
+            <if test="param1.q_productCateName != null and '' != param1.q_productCateName">
+                and `product_cate_name`like CONCAT('%',#{param1.q_productCateName},'%')
+            </if>
+            <if test="param1.q_state != null and '' != param1.q_state">
+                and `state`= #{param1.q_state}
+            </if>
+            <if test="param1.q_optId != null and '' != param1.q_optId">
+                and `opt_id`= #{param1.q_optId}
+            </if>
+            <if test="param1.q_optTime != null and '' != param1.q_optTime">
+                and `opt_time`= #{param1.q_optTime}
+            </if>
+            <if test="param1.q_stopId != null and '' != param1.q_stopId">
+                and `stop_id`= #{param1.q_stopId}
+            </if>
+            <if test="param1.q_stopTime != null and '' != param1.q_stopTime">
+                and `stop_time`= #{param1.q_stopTime}
+            </if>
+            <if test="param1.q_stopReason != null and '' != param1.q_stopReason">
+                and `stop_reason`= #{param1.q_stopReason}
+            </if>
+        </where>
+    </sql>
+</mapper>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.seller.SellerUserWriteDao">
+	<resultMap id="SellerUserResult" type="com.ejavashop.entity.seller.SellerUser">
+			<result property="id" column="id" />
+			<result property="name" column="name" />
+			<result property="password" column="password" />
+			<result property="code" column="code" />
+			<result property="realName" column="real_name" />
+			<result property="phone" column="phone" />
+			<result property="job" column="job" />
+			<result property="sellerId" column="seller_id" />
+			<result property="roleId" column="role_id" />
+			<result property="state" column="state" />
+			<result property="createId" column="create_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateId" column="update_id" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SellerUserResult">
+		select
+		   *
+		from `seller_user`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.seller.SellerUser">
+        update `seller_user` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="name != null">`name`= #{name},</if>
+			<if test="password != null">`password`= #{password},</if>
+			<if test="code != null">`code`= #{code},</if>
+			<if test="realName != null">`real_name`= #{realName},</if>
+			<if test="phone != null">`phone`= #{phone},</if>
+			<if test="job != null">`job`= #{job},</if>
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="roleId != null">`role_id`= #{roleId},</if>
+			<if test="state != null">`state`= #{state},</if>
+			<!-- <if test="createId != null">`create_id`= #{createId},</if>
+			<if test="createTime != null">`create_time`= #{createTime},</if> -->
+			<if test="updateId != null">`update_id`= #{updateId},</if>
+			<!-- <if test="updateTime != null">`update_time`= #{updateTime}</if> -->
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.seller.SellerUser" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `seller_user`
+		(
+			`name`,
+			`password`,
+			`code`,
+			`real_name`,
+			`phone`,
+			`job`,
+			`seller_id`,
+			`role_id`,
+			`state`,
+			`create_id`,
+			`create_time`,
+			`update_id`,
+			`update_time`
+		)
+		values
+		(
+			#{name},
+			#{password},
+			#{code},
+			#{realName},
+			#{phone},
+			#{job},
+			#{sellerId},
+			#{roleId},
+			#{state},
+			#{createId},
+			now(),
+			#{updateId},
+			now()
+		)
+	</insert>
+	
+	<delete id="del">
+        delete from `seller_user` where `id` = #{id}
+	</delete>
+	
+	
+	
+	<select id="getByNamePwd" parameterType="java.lang.String" resultMap="SellerUserResult">
+		select * 
+		from `seller_user`
+		where `name` = #{name} and password = #{password}
+		and `status`=1
+		limit 1
+	</select>
+	
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from `seller_user` t1
+		<include refid="whereConditions" />
+	</select>
+	
+	<select id="page"  parameterType="java.util.Map" resultType="com.ejavashop.entity.seller.SellerUser">
+		select * from `seller_user` t1
+		<include refid="whereConditions" />
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="list" resultType="com.ejavashop.entity.seller.SellerUser">
+		select * from `seller_user` t1
+		order by id
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		<where>
+			<if test="queryMap.q_id != null and queryMap.q_id !=''"  > and `id`= #{queryMap.q_id}</if>
+			<if test="queryMap.q_name != null and queryMap.q_name !=''"  > and `name` like CONCAT('%',#{queryMap.q_name},'%')</if>
+			<if test="queryMap.q_password != null and queryMap.q_password !=''"  > and `password`= #{queryMap.q_password}</if>
+			<if test="queryMap.q_code != null and queryMap.q_code !=''"  > and `code`= #{queryMap.q_code}</if>
+			<if test="queryMap.q_realName != null and queryMap.q_realName !=''"  > and `real_name` like CONCAT('%',#{queryMap.q_realName},'%')</if>
+			<if test="queryMap.q_phone != null and queryMap.q_phone !=''"  > and `phone`= #{queryMap.q_phone}</if>
+			<if test="queryMap.q_job != null and queryMap.q_job !=''"  > and `job`= #{queryMap.q_job}</if>
+			<if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''"  > and `seller_id`= #{queryMap.q_sellerId}</if>
+			<if test="queryMap.q_roleId != null and queryMap.q_roleId !=''"  > and `role_id`= #{queryMap.q_roleId}</if>
+			<if test="queryMap.q_createTime != null and queryMap.q_createTime !=''"  > and `create_time`= #{queryMap.q_createTime}</if>
+			<if test="queryMap.q_createUser != null and queryMap.q_createUser !=''"  > and `create_user`= #{queryMap.q_createUser}</if>
+			<if test="queryMap.q_tel != null and queryMap.q_tel !=''"  > and `tel`= #{queryMap.q_tel}</if>
+			<if test="queryMap.q_state != null and queryMap.q_state !=''"  > and `state`= #{queryMap.q_state}</if>
+		</where>
+	</sql>
+	
+	
+</mapper>

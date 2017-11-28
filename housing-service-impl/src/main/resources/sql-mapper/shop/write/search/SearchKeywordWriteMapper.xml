@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.search.SearchKeywordWriteDao">
+	<resultMap id="SearchKeywordResult" type="com.ejavashop.entity.search.SearchKeyword">
+			<result property="id" column="id" />
+			<result property="keyword" column="keyword" />
+			<result property="createTime" column="create_time" />
+			<result property="createId" column="create_id" />
+			<result property="createName" column="create_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SearchKeywordResult">
+		select
+		   *
+		from `search_keyword`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.search.SearchKeyword">
+        update `search_keyword` 
+    	<set>
+			<if test="id != null">`id`= #{id},</if>
+			<if test="keyword != null">`keyword`= #{keyword},</if>
+			<if test="createTime != null">`create_time`= #{createTime},</if>
+			<if test="createId != null">`create_id`= #{createId},</if>
+			<if test="createName != null">`create_name`= #{createName},</if>
+			`update_time` = now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<delete id="del" parameterType="Integer">
+		delete from `search_keyword` where `id` = #{id}
+	</delete>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.search.SearchKeyword" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`search_keyword`
+		(
+			`keyword`,
+			`create_time`,
+			`create_id`,
+			`create_name`,
+			`update_time`
+		)
+		values
+		(
+			#{keyword},
+			now(),
+			#{createId},
+			#{createName},
+			now()
+		)
+	</insert>
+	
+	<select id="count" resultType="java.lang.Integer">
+        select count(1) from `search_keyword` t1
+        <include refid="whereConditions"/>
+    </select>
+
+    <select id="getSearchKeywords" resultType="com.ejavashop.entity.search.SearchKeyword">
+        select * from `search_keyword` t1
+        <include refid="whereConditions"/>
+        order by id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_keyword != null and param1.q_keyword != ''">
+                and t1.`keyword` like CONCAT('%',#{param1.q_keyword},'%')
+            </if>
+        </where>
+    </sql>
+	
+</mapper>

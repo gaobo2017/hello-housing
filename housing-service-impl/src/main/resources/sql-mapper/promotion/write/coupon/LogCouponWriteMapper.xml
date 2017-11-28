@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.write.coupon.LogCouponWriteDao">
+	<resultMap id="LogCouponResult" type="com.ejavashop.entity.promotion.coupon.LogCoupon">
+			<result property="id" column="id" />
+			<result property="optType" column="opt_type" />
+			<result property="optUserId" column="opt_user_id" />
+			<result property="optUserName" column="opt_user_name" />
+			<result property="optTime" column="opt_time" />
+			<result property="couponId" column="coupon_id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="couponName" column="coupon_name" />
+			<result property="prefix" column="prefix" />
+			<result property="couponValue" column="coupon_value" />
+			<result property="minAmount" column="min_amount" />
+			<result property="sendStartTime" column="send_start_time" />
+			<result property="sendEndTime" column="send_end_time" />
+			<result property="useStartTime" column="use_start_time" />
+			<result property="useEndTime" column="use_end_time" />
+			<result property="personLimitNum" column="person_limit_num" />
+			<result property="totalLimitNum" column="total_limit_num" />
+			<result property="receivedNum" column="received_num" />
+			<result property="type" column="type" />
+			<result property="channel" column="channel" />
+			<result property="status" column="status" />
+			<result property="auditOpinion" column="audit_opinion" />
+			<result property="remark" column="remark" />
+			<result property="auditUserId" column="audit_user_id" />
+			<result property="auditUserName" column="audit_user_name" />
+			<result property="auditTime" column="audit_time" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<!-- <select id="get" parameterType="Integer" resultMap="LogCouponResult">
+		select
+		   *
+		from `log_coupon`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.promotion.entity.LogCoupon">
+        update `log_coupon` 
+    	<set>
+			<if test="id != null">`id`= #{id},</if>
+			<if test="optType != null">`opt_type`= #{optType},</if>
+			<if test="optUserId != null">`opt_user_id`= #{optUserId},</if>
+			<if test="optUserName != null">`opt_user_name`= #{optUserName},</if>
+			<if test="optTime != null">`opt_time`= #{optTime},</if>
+			<if test="couponId != null">`coupon_id`= #{couponId},</if>
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="couponName != null">`coupon_name`= #{couponName},</if>
+			<if test="prefix != null">`prefix`= #{prefix},</if>
+			<if test="couponValue != null">`coupon_value`= #{couponValue},</if>
+			<if test="minAmount != null">`min_amount`= #{minAmount},</if>
+			<if test="sendStartTime != null">`send_start_time`= #{sendStartTime},</if>
+			<if test="sendEndTime != null">`send_end_time`= #{sendEndTime},</if>
+			<if test="useStartTime != null">`use_start_time`= #{useStartTime},</if>
+			<if test="useEndTime != null">`use_end_time`= #{useEndTime},</if>
+			<if test="personLimitNum != null">`person_limit_num`= #{personLimitNum},</if>
+			<if test="totalLimitNum != null">`total_limit_num`= #{totalLimitNum},</if>
+			<if test="receivedNum != null">`received_num`= #{receivedNum},</if>
+			<if test="type != null">`type`= #{type},</if>
+			<if test="channel != null">`channel`= #{channel},</if>
+			<if test="status != null">`status`= #{status},</if>
+			<if test="auditOpinion != null">`audit_opinion`= #{auditOpinion},</if>
+			<if test="remark != null">`remark`= #{remark},</if>
+			<if test="auditUserId != null">`audit_user_id`= #{auditUserId},</if>
+			<if test="auditUserName != null">`audit_user_name`= #{auditUserName},</if>
+			<if test="auditTime != null">`audit_time`= #{auditTime},</if>
+			<if test="createUserId != null">`create_user_id`= #{createUserId},</if>
+			<if test="createUserName != null">`create_user_name`= #{createUserName},</if>
+			<if test="createTime != null">`create_time`= #{createTime},</if>
+			<if test="updateUserId != null">`update_user_id`= #{updateUserId},</if>
+			<if test="updateUserName != null">`update_user_name`= #{updateUserName},</if>
+			<if test="updateTime != null">`update_time`= #{updateTime}</if>
+	    </set>
+        where `id` = #{id}
+	</update> -->
+	
+	<!-- <insert id="insert" parameterType="com.ejavashop.entity.promotion.coupon.LogCoupon" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`log_coupon`
+		(
+			`opt_type`,
+			`opt_user_id`,
+			`opt_user_name`,
+			`opt_time`,
+			`coupon_id`,
+			`seller_id`,
+			`coupon_name`,
+			`prefix`,
+			`coupon_value`,
+			`min_amount`,
+			`send_start_time`,
+			`send_end_time`,
+			`use_start_time`,
+			`use_end_time`,
+			`person_limit_num`,
+			`total_limit_num`,
+			`received_num`,
+			`type`,
+			`channel`,
+			`status`,
+			`audit_opinion`,
+			`remark`,
+			`audit_user_id`,
+			`audit_user_name`,
+			`audit_time`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`,
+			`update_user_id`,
+			`update_user_name`,
+			`update_time`
+		)
+		values
+		(
+			
+			#{optType},
+			#{optUserId},
+			#{optUserName},
+			#{optTime},
+			#{couponId},
+			#{sellerId},
+			#{couponName},
+			#{prefix},
+			#{couponValue},
+			#{minAmount},
+			#{sendStartTime},
+			#{sendEndTime},
+			#{useStartTime},
+			#{useEndTime},
+			#{personLimitNum},
+			#{totalLimitNum},
+			#{receivedNum},
+			#{type},
+			#{channel},
+			#{status},
+			#{auditOpinion},
+			#{remark},
+			#{auditUserId},
+			#{auditUserName},
+			#{auditTime},
+			#{createUserId},
+			#{createUserName},
+			#{createTime},
+			#{updateUserId},
+			#{updateUserName},
+			#{updateTime}
+		)
+	</insert> -->
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.promotion.coupon.LogCoupon" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`log_coupon`
+		(
+			`opt_type`,
+			`opt_user_id`,
+			`opt_user_name`,
+			`opt_time`,
+			`coupon_id`,
+			`seller_id`,
+			`coupon_name`,
+			`prefix`,
+			`coupon_value`,
+			`min_amount`,
+			`send_start_time`,
+			`send_end_time`,
+			`use_start_time`,
+			`use_end_time`,
+			`person_limit_num`,
+			`total_limit_num`,
+			`received_num`,
+			`type`,
+			`channel`,
+			`status`,
+			`audit_opinion`,
+			`remark`,
+			`audit_user_id`,
+			`audit_user_name`,
+			`audit_time`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`,
+			`update_user_id`,
+			`update_user_name`,
+			`update_time`
+		) select 
+			#{optType},
+			#{optUserId},
+			#{optUserName},
+			now(),
+			`id`,
+			`seller_id`,
+			`coupon_name`,
+			`prefix`,
+			`coupon_value`,
+			`min_amount`,
+			`send_start_time`,
+			`send_end_time`,
+			`use_start_time`,
+			`use_end_time`,
+			`person_limit_num`,
+			`total_limit_num`,
+			`received_num`,
+			`type`,
+			`channel`,
+			`status`,
+			`audit_opinion`,
+			`remark`,
+			`audit_user_id`,
+			`audit_user_name`,
+			`audit_time`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`,
+			`update_user_id`,
+			`update_user_name`,
+			`update_time`
+		from `coupon` coupon where coupon.`id` = #{couponId}
+	</insert>
+	
+</mapper>

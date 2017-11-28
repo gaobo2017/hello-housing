@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.order.OrderLogWriteDao">
+	<resultMap id="OrderLogResult" type="com.ejavashop.entity.order.OrderLog">
+			<result property="id" column="id" />
+			<result property="operatingId" column="operating_id" />
+			<result property="operatingName" column="operating_name" />
+			<result property="ordersId" column="orders_id" />
+			<result property="ordersSn" column="orders_sn" />
+			<result property="content" column="content" />
+			<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="OrderLogResult">
+		select
+		   *
+		from `order_log`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from `order_log` t1
+		<include refid="whereConditions" />
+	</select>
+	
+	<delete id="del">
+        delete from `order_log` where `id` = #{id}
+	</delete>
+	
+	<select id="page" resultType="com.ejavashop.entity.order.OrderLog">
+		select * from `order_log` t1
+		<include refid="whereConditions" />
+		order by id
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="list" resultType="com.ejavashop.entity.order.OrderLog">
+		select * from `order_log` t1
+		order by id
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="id != null and id !=''"  > and `id`= #{id}</if>
+			<if test="operatingId != null and operatingId !=''"  > and `operating_id`= #{operatingId}</if>
+			<if test="operatingName != null and operatingName !=''"  > and `operating_name`= #{operatingName}</if>
+			<if test="ordersId != null and ordersId !=''"  > and `orders_id`= #{ordersId}</if>
+			<if test="ordersSn != null and ordersSn !=''"  > and `orders_sn`= #{ordersSn}</if>
+			<if test="content != null and content !=''"  > and `content`= #{content}</if>
+			<if test="createTime != null and createTime !=''"  > and `create_time`= #{createTime}</if>
+		</trim>
+	</sql>
+	
+	<update id="update" parameterType="com.ejavashop.entity.order.OrderLog">
+        update `order_log` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="operatingId != null">`operating_id`= #{operatingId},</if>
+			<if test="operatingName != null">`operating_name`= #{operatingName},</if>
+			<if test="ordersId != null">`orders_id`= #{ordersId},</if>
+			<if test="ordersSn != null">`orders_sn`= #{ordersSn},</if>
+			<if test="content != null">`content`= #{content},</if>
+			<!-- <if test="createTime != null">`create_time`= #{createTime}</if> -->
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="save" parameterType="com.ejavashop.entity.order.OrderLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `order_log`
+		(
+			`operating_id`,
+			`operating_name`,
+			`orders_id`,
+			`orders_sn`,
+			`content`,
+			`create_time`
+		)
+		values
+		(
+			#{operatingId},
+			#{operatingName},
+			#{ordersId},
+			#{ordersSn},
+			#{content},
+			now()
+		)
+	</insert>
+	
+</mapper>

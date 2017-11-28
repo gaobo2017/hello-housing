@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.seller.SellerQqReadDao">
+	<resultMap id="SellerQqResult" type="com.ejavashop.entity.seller.SellerQq">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="name" column="name" />
+			<result property="qq" column="qq" />
+			<result property="createId" column="create_id" />
+			<result property="createTime" column="create_time" />
+			<result property="state" column="state" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="SellerQqResult">
+		select
+		   *
+		from `seller_qq`
+		where `id` = #{id}
+	</select>
+
+	<select id="getCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from seller_qq t1
+		<include refid="whereConditions" />
+	</select>
+	
+	<select id="page" resultType="com.ejavashop.entity.seller.SellerQq">
+		select * from seller_qq t1
+		<include refid="whereConditions" />
+		order by create_time desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="list" resultType="com.ejavashop.entity.seller.SellerQq">
+		select * from seller_qq t1
+		order by create_time desc
+	</select>
+	
+	<sql id="whereConditions">
+		<where>
+			1=1
+			<if test="param1.q_qq != null and param1.q_qq != ''">
+				and t1.`qq` = #{param1.q_qq}
+			</if>
+			<if test="param1.sellerId != null and param1.sellerId != ''">
+				and t1.`seller_id` = #{param1.sellerId}
+			</if>
+			<if test="param1.q_state != null and param1.q_state != ''">
+				and t1.`state` = #{param1.q_state}
+			</if>
+		</where>
+	</sql>
+	
+</mapper>

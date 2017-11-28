@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.analysis.write.BrowseLogMobileWriteDao">
+	<resultMap id="BrowseLogMobileResult" type="com.ejavashop.entity.analysis.BrowseLogMobile">
+			<result property="id" column="id" />
+			<result property="siteCookie" column="site_cookie" />
+			<result property="sessionId" column="session_id" />
+			<result property="userAgent" column="user_agent" />
+			<result property="ipAddress" column="ip_address" />
+			<result property="accessedPage" column="accessed_page" />
+			<result property="urlReferer" column="url_referer" />
+			<result property="createTime" column="create_time" />
+			<result property="browseName" column="browse_name" />
+			<result property="browserVersion" column="browser_version" />
+			<result property="memberId" column="member_id" />
+			<result property="ebi" column="ebi" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="BrowseLogMobileResult">
+		select
+		   *
+		from `browse_log_mobile`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.analysis.BrowseLogMobile">
+        update `browse_log_mobile` 
+    	<set>
+			<if test="id != null">`id`= #{id},</if>
+			<if test="siteCookie != null">`site_cookie`= #{siteCookie},</if>
+			<if test="sessionId != null">`session_id`= #{sessionId},</if>
+			<if test="userAgent != null">`user_agent`= #{userAgent},</if>
+			<if test="ipAddress != null">`ip_address`= #{ipAddress},</if>
+			<if test="accessedPage != null">`accessed_page`= #{accessedPage},</if>
+			<if test="urlReferer != null">`url_referer`= #{urlReferer},</if>
+			<if test="createTime != null">`create_time`= #{createTime},</if>
+			<if test="browseName != null">`browse_name`= #{browseName},</if>
+			<if test="browserVersion != null">`browser_version`= #{browserVersion},</if>
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="ebi != null">`ebi`= #{ebi}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.analysis.BrowseLogMobile" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`browse_log_mobile`
+		(
+			`site_cookie`,
+			`session_id`,
+			`user_agent`,
+			`ip_address`,
+			`accessed_page`,
+			`url_referer`,
+			`create_time`,
+			`browse_name`,
+			`browser_version`,
+			`member_id`,
+			`ebi`
+		)
+		values
+		(
+			#{siteCookie},
+			#{sessionId},
+			#{userAgent},
+			#{ipAddress},
+			#{accessedPage},
+			#{urlReferer},
+			now(),
+			#{browseName},
+			#{browserVersion},
+			#{memberId},
+			#{ebi}
+		)
+	</insert>
+	
+</mapper>

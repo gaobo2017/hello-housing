@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.product.ProductWriteDao">
+
+	<update id="freezeProductsBySellerId" parameterType="Integer">
+        update `product`
+        set 
+        	`seller_state`= #{sellerState},
+			`update_time`= now()
+        where `seller_id`= #{sellerId}
+    </update>
+    
+	<update id="updateState" parameterType="Integer">
+        update `product`
+        set
+        	`state`= #{state},
+			`update_time`= now()
+        where `id`= #{id}
+    </update>
+    
+	<update id="updateRecommend" parameterType="Integer">
+        update `product`
+        set
+        	`is_top`= #{isTop},
+			`update_time`= now()
+        where `id`= #{id}
+    </update>
+
+	<update id="updateStock">
+		update `product`
+        set `product_stock`= `product_stock` - #{number},
+            `update_time`= now()
+        where `id` = #{id}
+	</update>
+
+	<update id="updateActualSales">
+		update `product`
+        set `actual_sales`= `actual_sales` + #{number},
+            `update_time`= now()
+        where `id` = #{id}
+	</update>
+
+    <select id="countByCateId" resultType="Integer">
+		select
+        	count(1)
+        from `product`
+        where 
+        `seller_state` = 1
+        and `state` = 6
+        and `product_cate_state` = 1
+        and `product_cate_id` = #{productCateId}
+    </select>
+
+	<select id="countBySellerCateId" resultType="Integer">
+		select
+        	count(1)
+        from `product`
+        where 
+        `seller_state` = 1
+        and `state` = 6
+        and `product_cate_state` = 1
+        and `seller_cate_id` = #{sellerCateId}
+    </select>
+
+
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into `product`(
+        `product_cate_id`,
+        `name1`,
+        `name2`,
+        `keyword`,
+        `product_brand_id`,
+        `is_self`,
+        `cost_price`,
+        `protected_price`,
+        `market_price`,
+        `mall_pc_price`,
+        `mal_mobile_price`,
+        `virtual_sales`,
+        `actual_sales`,
+        `product_stock`,
+        `is_norm`,
+        `norm_ids`,
+        `norm_name`,
+        `state`,
+        `is_top`,
+        `up_time`,
+        `description`,
+        `packing`,
+        `seller_id`,
+        `create_id`,
+        `create_time`,
+        `update_time`,
+        `seller_cate_id`,
+        `seller_is_top`,
+        `seller_state`,
+        `product_cate_state`,
+        `is_invented_product`,
+        `comments_number`,
+        `product_code`,
+        `master_img`
+        )
+        values(
+        #{productCateId},
+        #{name1},
+        #{name2},
+        #{keyword},
+        #{productBrandId},
+        #{isSelf},
+        #{costPrice},
+        #{protectedPrice},
+        #{marketPrice},
+        #{mallPcPrice},
+        #{malMobilePrice},
+        #{virtualSales},
+        #{actualSales},
+        #{productStock},
+        #{isNorm},
+        #{normIds},
+        #{normName},
+        #{state},
+        #{isTop},
+        #{upTime},
+        #{description},
+        #{packing},
+        #{sellerId},
+        #{createId},
+        now(),
+        now(),
+        #{sellerCateId},
+        #{sellerIsTop},
+        #{sellerState},
+        #{productCateState},
+        #{isInventedProduct},
+        #{commentsNumber},
+        #{productCode},
+        #{masterImg}
+        )
+    </insert>
+    <update id="update">
+        update `product`
+        <set>
+            <!-- <if test = "null != id">`id`= #{id},</if> -->
+            <if test = "null != productCateId">`product_cate_id`= #{productCateId},</if>
+            <if test = "null != name1 and '' != name1">`name1`= #{name1},</if>
+            <if test = "null != name2 and '' != name2">`name2`= #{name2},</if>
+            <if test = "null != keyword and '' != keyword">`keyword`= #{keyword},</if>
+            <if test = "null != productBrandId">`product_brand_id`= #{productBrandId},</if>
+            <if test = "null != isSelf">`is_self`= #{isSelf},</if>
+            <if test = "null != costPrice">`cost_price`= #{costPrice},</if>
+            <if test = "null != protectedPrice">`protected_price`= #{protectedPrice},</if>
+            <if test = "null != marketPrice">`market_price`= #{marketPrice},</if>
+            <if test = "null != mallPcPrice">`mall_pc_price`= #{mallPcPrice},</if>
+            <if test = "null != malMobilePrice">`mal_mobile_price`= #{malMobilePrice},</if>
+            <if test = "null != virtualSales">`virtual_sales`= #{virtualSales},</if>
+            <if test = "null != actualSales">`actual_sales`= #{actualSales},</if>
+            <if test = "null != productStock">`product_stock`= #{productStock},</if>
+            <if test = "null != isNorm">`is_norm`= #{isNorm},</if>
+            <if test = "null != normIds and '' != normIds">`norm_ids`= #{normIds},</if>
+            <if test = "null != normName and '' != normName">`norm_name`= #{normName},</if>
+            <if test = "null != state">`state`= #{state},</if>
+            <if test = "null != isTop">`is_top`= #{isTop},</if>
+            <if test = "null != upTime">`up_time`= #{upTime},</if>
+            <if test = "null != description and '' != description">`description`= #{description},</if>
+            <if test = "null != packing">`packing`= #{packing},</if>
+            <if test = "null != sellerId">`seller_id`= #{sellerId},</if>
+            <!-- <if test = "null != createId and '' != createId">`create_id`= #{createId},</if> -->
+            <!-- <if test = "null != createTime and '' != createTime">`create_time`= #{createTime},</if> -->
+            <!-- <if test = "null != updateTime and '' != updateTime">`update_time`= #{updateTime},</if> -->
+            <if test = "null != sellerCateId">`seller_cate_id`= #{sellerCateId},</if>
+            <if test = "null != sellerIsTop">`seller_is_top`= #{sellerIsTop},</if>
+            <if test = "null != sellerState">`seller_state`= #{sellerState},</if>
+            <if test = "null != productCateState">`product_cate_state`= #{productCateState},</if>
+            <if test = "null != isInventedProduct">`is_invented_product`= #{isInventedProduct},</if>
+            <if test = "null != commentsNumber">`comments_number`= #{commentsNumber},</if>
+            <if test = "null != productCode and '' != productCode">`product_code`= #{productCode},</if>
+            <if test = "null != masterImg and '' != masterImg">`master_img`= #{masterImg},</if>
+            `update_time` = now()
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="del">
+        delete from `product` where `id` = #{id}
+    </delete>
+
+    <select id="get" resultType="com.ejavashop.entity.product.Product">
+        select
+        	*
+        from `product`
+        where `id` = #{id}
+    </select>
+    <select id="page" resultType="com.ejavashop.entity.product.Product">
+        select
+        	*
+        from `product`
+        <include refid="whereConditions"/>
+        order by id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    <select id="page1" resultType="com.ejavashop.entity.product.Product">
+        select
+        	*
+        from `product`
+        <include refid="whereConditions1"/>
+        order by id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    
+    <select id="getProductsBySellerId" resultType="com.ejavashop.entity.product.Product">
+        select
+        	*
+        from `product`
+      	where seller_id = #{sellerid}
+        order by id desc
+    </select>
+    
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from `product`
+        <include refid="whereConditions"/>
+    </select>
+    <select id="count1" resultType="java.lang.Integer">
+        select count(1) from `product`
+        <include refid="whereConditions1"/>
+    </select>
+
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_id != null and '' != param1.q_id">
+                and `id`= #{param1.q_id}
+            </if>
+            <if test="param1.q_productCateId != null and '' != param1.q_productCateId">
+                and `product_cate_id`= #{param1.q_productCateId}
+            </if>
+            <if test="param1.q_name1 != null and '' != param1.q_name1">
+                and `name1`= #{param1.q_name1}
+            </if>
+            <if test="param1.q_name2 != null and '' != param1.q_name2">
+                and `name2`= #{param1.q_name2}
+            </if>
+            <if test="param1.q_keyword != null and '' != param1.q_keyword">
+                and `keyword`= #{param1.q_keyword}
+            </if>
+            <if test="param1.q_productBrandId != null and '' != param1.q_productBrandId">
+                and `product_brand_id`= #{param1.q_productBrandId}
+            </if>
+            <if test="param1.q_isSelf != null and '' != param1.q_isSelf">
+                and `is_self`= #{param1.q_isSelf}
+            </if>
+            <if test="param1.q_costPrice != null and '' != param1.q_costPrice">
+                and `cost_price`= #{param1.q_costPrice}
+            </if>
+            <if test="param1.q_protectedPrice != null and '' != param1.q_protectedPrice">
+                and `protected_price`= #{param1.q_protectedPrice}
+            </if>
+            <if test="param1.q_marketPrice != null and '' != param1.q_marketPrice">
+                and `market_price`= #{param1.q_marketPrice}
+            </if>
+            <if test="param1.q_mallPcPrice != null and '' != param1.q_mallPcPrice">
+                and `mall_pc_price`= #{param1.q_mallPcPrice}
+            </if>
+            <if test="param1.q_malMobilePrice != null and '' != param1.q_malMobilePrice">
+                and `mal_mobile_price`= #{param1.q_malMobilePrice}
+            </if>
+            <if test="param1.q_virtualSales != null and '' != param1.q_virtualSales">
+                and `virtual_sales`= #{param1.q_virtualSales}
+            </if>
+            <if test="param1.q_actualSales != null and '' != param1.q_actualSales">
+                and `actual_sales`= #{param1.q_actualSales}
+            </if>
+            <if test="param1.q_productStock != null and '' != param1.q_productStock">
+                and `product_stock`= #{param1.q_productStock}
+            </if>
+            <if test="param1.q_isNorm != null and '' != param1.q_isNorm">
+                and `is_norm`= #{param1.q_isNorm}
+            </if>
+            <if test="param1.q_normIds != null and '' != param1.q_normIds">
+                and `norm_ids`= #{param1.q_normIds}
+            </if>
+            <if test="param1.q_normName != null and '' != param1.q_normName">
+                and `norm_name`= #{param1.q_normName}
+            </if>
+            <if test="param1.q_state != null and '' != param1.q_state">
+                and `state`= #{param1.q_state}
+            </if>
+            <if test="param1.q_isTop != null and '' != param1.q_isTop">
+                and `is_top`= #{param1.q_isTop}
+            </if>
+            <if test="param1.q_upTime != null and '' != param1.q_upTime">
+                and `up_time`= #{param1.q_upTime}
+            </if>
+            <if test="param1.q_description != null and '' != param1.q_description">
+                and `description`= #{param1.q_description}
+            </if>
+            <if test="param1.q_packing != null and '' != param1.q_packing">
+                and `packing`= #{param1.q_packing}
+            </if>
+            <if test="param1.q_sellerId != null and '' != param1.q_sellerId">
+                and `seller_id`= #{param1.q_sellerId}
+            </if>
+            <if test="param1.q_createId != null and '' != param1.q_createId">
+                and `create_id`= #{param1.q_createId}
+            </if>
+            <if test="param1.q_createTime != null and '' != param1.q_createTime">
+                and `create_time`= #{param1.q_createTime}
+            </if>
+            <if test="param1.q_updateTime != null and '' != param1.q_updateTime">
+                and `update_time`= #{param1.q_updateTime}
+            </if>
+            <if test="param1.q_sellerCateId != null and '' != param1.q_sellerCateId">
+                and `seller_cate_id`= #{param1.q_sellerCateId}
+            </if>
+            <if test="param1.q_sellerIsTop != null and '' != param1.q_sellerIsTop">
+                and `seller_is_top`= #{param1.q_sellerIsTop}
+            </if>
+            <if test="param1.q_sellerState != null and '' != param1.q_sellerState">
+                and `seller_state`= #{param1.q_sellerState}
+            </if>
+            <if test="param1.q_productCateState != null and '' != param1.q_productCateState">
+                and `product_cate_state`= #{param1.q_productCateState}
+            </if>
+            <if test="param1.q_isInventedProduct != null and '' != param1.q_isInventedProduct">
+                and `is_invented_product`= #{param1.q_isInventedProduct}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="whereConditions1">
+        <where>
+            <if test="param1.q_id != null and '' != param1.q_id">
+                and `id`= #{param1.q_id}
+            </if>
+            <if test="param1.q_productCateId != null and '' != param1.q_productCateId">
+                and `product_cate_id`= #{param1.q_productCateId}
+            </if>
+            <if test="param1.q_name1 != null and '' != param1.q_name1">
+                and `name1`= #{param1.q_name1}
+            </if>
+            <if test="param1.q_name2 != null and '' != param1.q_name2">
+                and `name2`= #{param1.q_name2}
+            </if>
+            <if test="param1.q_keyword != null and '' != param1.q_keyword">
+                and `keyword`= #{param1.q_keyword}
+            </if>
+            <if test="param1.q_productBrandId != null and '' != param1.q_productBrandId">
+                and `product_brand_id`= #{param1.q_productBrandId}
+            </if>
+            <if test="param1.q_isSelf != null and '' != param1.q_isSelf">
+                and `is_self`= #{param1.q_isSelf}
+            </if>
+            <if test="param1.q_costPrice != null and '' != param1.q_costPrice">
+                and `cost_price`= #{param1.q_costPrice}
+            </if>
+            <if test="param1.q_protectedPrice != null and '' != param1.q_protectedPrice">
+                and `protected_price`= #{param1.q_protectedPrice}
+            </if>
+            <if test="param1.q_marketPrice != null and '' != param1.q_marketPrice">
+                and `market_price`= #{param1.q_marketPrice}
+            </if>
+            <if test="param1.q_mallPcPrice != null and '' != param1.q_mallPcPrice">
+                and `mall_pc_price`= #{param1.q_mallPcPrice}
+            </if>
+            <if test="param1.q_malMobilePrice != null and '' != param1.q_malMobilePrice">
+                and `mal_mobile_price`= #{param1.q_malMobilePrice}
+            </if>
+            <if test="param1.q_virtualSales != null and '' != param1.q_virtualSales">
+                and `virtual_sales`= #{param1.q_virtualSales}
+            </if>
+            <if test="param1.q_actualSales != null and '' != param1.q_actualSales">
+                and `actual_sales`= #{param1.q_actualSales}
+            </if>
+            <if test="param1.q_productStock != null and '' != param1.q_productStock">
+                and `product_stock`= #{param1.q_productStock}
+            </if>
+            <if test="param1.q_isNorm != null and '' != param1.q_isNorm">
+                and `is_norm`= #{param1.q_isNorm}
+            </if>
+            <if test="param1.q_normIds != null and '' != param1.q_normIds">
+                and `norm_ids`= #{param1.q_normIds}
+            </if>
+            <if test="param1.q_normName != null and '' != param1.q_normName">
+                and `norm_name`= #{param1.q_normName}
+            </if>
+            <if test="param1.q_state != null and '' != param1.q_state">
+                and `state` in(${param1.q_state})
+            </if>
+            <if test="param1.q_isTop != null and '' != param1.q_isTop">
+                and `is_top`= #{param1.q_isTop}
+            </if>
+            <if test="param1.q_upTime != null and '' != param1.q_upTime">
+                and `up_time`= #{param1.q_upTime}
+            </if>
+            <if test="param1.q_description != null and '' != param1.q_description">
+                and `description`= #{param1.q_description}
+            </if>
+            <if test="param1.q_packing != null and '' != param1.q_packing">
+                and `packing`= #{param1.q_packing}
+            </if>
+            <if test="param1.q_sellerId != null and '' != param1.q_sellerId">
+                and `seller_id`= #{param1.q_sellerId}
+            </if>
+            <if test="param1.q_createId != null and '' != param1.q_createId">
+                and `create_id`= #{param1.q_createId}
+            </if>
+            <if test="param1.q_createTime != null and '' != param1.q_createTime">
+                and `create_time`= #{param1.q_createTime}
+            </if>
+            <if test="param1.q_updateTime != null and '' != param1.q_updateTime">
+                and `update_time`= #{param1.q_updateTime}
+            </if>
+            <if test="param1.q_sellerCateId != null and '' != param1.q_sellerCateId">
+                and `seller_cate_id`= #{param1.q_sellerCateId}
+            </if>
+            <if test="param1.q_sellerIsTop != null and '' != param1.q_sellerIsTop">
+                and `seller_is_top`= #{param1.q_sellerIsTop}
+            </if>
+            <if test="param1.q_sellerState != null and '' != param1.q_sellerState">
+                and `seller_state`= #{param1.q_sellerState}
+            </if>
+            <if test="param1.q_productCateState != null and '' != param1.q_productCateState">
+                and `product_cate_state`= #{param1.q_productCateState}
+            </if>
+            <if test="param1.q_isInventedProduct != null and '' != param1.q_isInventedProduct">
+                and `is_invented_product`= #{param1.q_isInventedProduct}
+            </if>
+        </where>
+    </sql>
+    
+	<update id="updateByIds">
+       update `product`
+        <set>
+            <if test = "param1.state != null and '' != param1.state">`state`= #{param1.state},</if>
+            <if test = "param1.isTop != null and '' != param1.isTop">`is_top`= #{param1.isTop},</if>
+            `update_time` = now()
+        </set>
+        where `id` in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            ${item}
+       	</foreach>
+    </update>
+    
+</mapper>

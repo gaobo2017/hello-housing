@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.member.MemberProductExchangeReadDao">
+	<resultMap id="MemberProductExchangeResult" type="com.ejavashop.entity.member.MemberProductExchange">
+			<result property="id" column="id" />
+			<result property="seller" column="seller" />
+			<result property="orderId" column="order_id" />
+			<result property="orderProductId" column="order_product_id" />
+			<result property="productId" column="product_id" />
+			<result property="memberId" column="member_id" />
+			<result property="memberName" column="member_name" />
+			<result property="provinceId2" column="province_id2" />
+			<result property="cityId2" column="city_id2" />
+			<result property="areaId2" column="area_id2" />
+			<result property="addressAll2" column="address_all2" />
+			<result property="addressInfo2" column="address_info2" />
+			<result property="phone2" column="phone2" />
+			<result property="changeName2" column="change_name2" />
+			<result property="provinceId" column="province_id" />
+			<result property="cityId" column="city_id" />
+			<result property="areaId" column="area_id" />
+			<result property="addressAll" column="address_all" />
+			<result property="addressInfo" column="address_info" />
+			<result property="changeName" column="change_name" />
+			<result property="phone" column="phone" />
+			<result property="email" column="email" />
+			<result property="zipCode" column="zip_code" />
+			<result property="question" column="question" />
+			<result property="image" column="image" />
+			<result property="name" column="name" />
+			<result property="state" column="state" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+			<result property="optId" column="opt_id" />
+			<result property="remark" column="remark" />
+			<result property="addressResult" column="address_result" />
+	</resultMap>
+	
+	
+	   
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="id != null and id !=''"  > and `id`= #{id}</if>
+			<if test="seller != null and seller !=''"  > and `seller`= #{seller}</if>
+			<if test="orderId != null and orderId !=''"  > and `order_id`= #{orderId}</if>
+			<if test="orderProductId != null and orderProductId !=''"  > and `order_product_id`= #{orderProductId}</if>
+			<if test="productId != null and productId !=''"  > and `product_id`= #{productId}</if>
+			<if test="memberId != null and memberId !=''"  > and `member_id`= #{memberId}</if>
+			<if test="memberName != null and memberName !=''"  > and `member_name`= #{memberName}</if>
+			<if test="provinceId2 != null and provinceId2 !=''"  > and `province_id2`= #{provinceId2}</if>
+			<if test="cityId2 != null and cityId2 !=''"  > and `city_id2`= #{cityId2}</if>
+			<if test="areaId2 != null and areaId2 !=''"  > and `area_id2`= #{areaId2}</if>
+			<if test="addressAll2 != null and addressAll2 !=''"  > and `address_all2`= #{addressAll2}</if>
+			<if test="addressInfo2 != null and addressInfo2 !=''"  > and `address_info2`= #{addressInfo2}</if>
+			<if test="phone2 != null and phone2 !=''"  > and `phone2`= #{phone2}</if>
+			<if test="changeName2 != null and changeName2 !=''"  > and `change_name2`= #{changeName2}</if>
+			<if test="provinceId != null and provinceId !=''"  > and `province_id`= #{provinceId}</if>
+			<if test="cityId != null and cityId !=''"  > and `city_id`= #{cityId}</if>
+			<if test="areaId != null and areaId !=''"  > and `area_id`= #{areaId}</if>
+			<if test="addressAll != null and addressAll !=''"  > and `address_all`= #{addressAll}</if>
+			<if test="addressInfo != null and addressInfo !=''"  > and `address_info`= #{addressInfo}</if>
+			<if test="changeName != null and changeName !=''"  > and `change_name`= #{changeName}</if>
+			<if test="phone != null and phone !=''"  > and `phone`= #{phone}</if>
+			<if test="email != null and email !=''"  > and `email`= #{email}</if>
+			<if test="zipCode != null and zipCode !=''"  > and `zip_code`= #{zipCode}</if>
+			<if test="question != null and question !=''"  > and `question`= #{question}</if>
+			<if test="image != null and image !=''"  > and `image`= #{image}</if>
+			<if test="name != null and name !=''"  > and `name`= #{name}</if>
+			<if test="state != null and state !=''"  > and `state`= #{state}</if>
+			<if test="createTime != null and createTime !=''"  > and `create_time`= #{createTime}</if>
+			<if test="updateTime != null and updateTime !=''"  > and `update_time`= #{updateTime}</if>
+			<if test="optId != null and optId !=''"  > and `opt_id`= #{optId}</if>
+			<if test="remark != null and remark !=''"  > and `remark`= #{remark}</if>
+			<if test="addressResult != null and addressResult !=''"  > and `address_result`= #{addressResult}</if>
+		</trim>
+	</sql>
+	
+	
+	<select id="get" parameterType="Integer" resultMap="MemberProductExchangeResult">
+		select
+		   *
+		from `member_product_exchange`
+		where `id` = #{id}
+	</select>
+	
+	<!-- 用户换货 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from member_product_exchange
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询用户换货列表 -->
+	<select id="queryList" resultMap="MemberProductExchangeResult"  parameterType="map">
+		select 
+		  * 
+		from member_product_exchange 
+		<include refid="Where_Clause"/>
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

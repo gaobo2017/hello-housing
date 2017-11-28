@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.member.MemberCollectionProductReadDao">
+	<resultMap id="MemberCollectionProductResult" type="com.ejavashop.entity.member.MemberCollectionProduct">
+			<result property="id" column="id" />
+			<result property="memberId" column="member_id" />
+			<result property="productId" column="product_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+			<result property="state" column="state" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="MemberCollectionProductResult">
+		select
+		   *
+		from `member_collection_product`
+		where `id` = #{id}
+	</select>
+	
+	
+		<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+		<if test="id != null and id != ''" >
+			    and id =  #{id}
+			</if>
+		<if test="memberId != null and memberId != ''" >
+			    and member_id =  #{memberId}
+			</if>
+		<if test="productId != null and productId != ''" >
+			    and product_id =  #{productId}
+			</if>
+		<if test="state != null and state != ''" >
+			    and state =  #{state}
+			</if>
+		</trim>
+	</sql>
+	
+	
+	<!-- 会员收藏商品表 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from member_collection_product 
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询会员收藏商品表列表 -->
+	<select id="queryList" resultMap="MemberCollectionProductResult"  parameterType="map">
+		select 
+			* 
+		from member_collection_product 
+		<include refid="Where_Clause"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

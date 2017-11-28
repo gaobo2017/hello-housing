@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.product.ProductCommentsReadDao">
+	<resultMap id="ProductCommentsResult" type="com.ejavashop.entity.product.ProductComments">
+			<result property="id" column="id" />
+			<result property="userId" column="user_id" />
+			<result property="userName" column="user_name" />
+			<result property="grade" column="grade" />
+			<result property="content" column="content" />
+			<result property="sellerAttitude" column="seller_attitude" />
+			<result property="createTime" column="create_time" />
+			<result property="productId" column="product_id" />
+			<result property="productGoodsId" column="product_goods_id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="orderSn" column="order_sn" />
+			<result property="replyId" column="reply_id" />
+			<result property="replyName" column="reply_name" />
+			<result property="replyContent" column="reply_content" />
+			<result property="state" column="state" />
+			<result property="adminId" column="admin_id" />
+			<result property="description" column="description" />
+			<result property="serviceAttitude" column="service_attitude" />
+			<result property="productSpeed" column="product_speed" />
+			<result property="logisticsSpeed" column="logistics_speed" />
+			<result property="expressAttitude" column="express_attitude" />
+	</resultMap>
+	
+	<select id="getSellerScoreSum" parameterType="Integer" resultType="com.ejavashop.dto.CommentsDto">
+		select
+		   sum(`grade`) as grade,
+		   sum(`description`) as description,
+		   sum(`service_attitude`) as serviceAttitude,
+		   sum(`product_speed`) as productSpeed,
+		   sum(`logistics_speed`) as logisticsSpeed,
+		   sum(`express_attitude`) as expressAttitude,
+		   count(1) as number
+		from `product_comments`
+		where `seller_id` = #{sellerId}
+		and `state` = 2
+	</select>
+		
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+		<if test="id != null and id != ''" >
+			    and id =  #{id}
+			</if>
+		<if test="userId != null and userId != ''" >
+			    and user_id =  #{userId}
+			</if>
+		<if test="grades != null and grades != ''" >
+			    and grade in 
+			<foreach item="item" index="index" collection="grades" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="productId != null and productId != ''" >
+			    and product_id =  #{productId}
+			</if>
+		<if test="productGoodsId != null and productGoodsId !=''"  >
+			 	and `product_goods_id`= #{productGoodsId}
+		 </if>
+		<if test="sellerId != null and sellerId != ''" >
+			    and seller_id =  #{sellerId}
+			</if>
+		<if test="orderSn != null and orderSn != ''" >
+			    and order_sn =  #{orderSn}
+			</if>
+		<if test="replyId != null and replyId != ''" >
+			    and reply_id =  #{replyId}
+			</if>
+		<if test="state != null and state != ''" >
+			    and state =  #{state}
+			</if>
+		<if test="adminId != null and adminId != ''" >
+			    and admin_id =  #{adminId}
+			</if>
+		</trim>
+	</sql>
+	
+	
+	<select id="get" parameterType="Integer" resultMap="ProductCommentsResult">
+		select
+		   *
+		from `product_comments`
+		where `id` = #{id}
+	</select>
+	
+	<!-- 商品评论管理 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from product_comments 
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询商品评论管理列表 -->
+	<select id="queryList" resultMap="ProductCommentsResult"  parameterType="map">
+		select 
+		 * 
+		from product_comments 
+		<include refid="Where_Clause"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

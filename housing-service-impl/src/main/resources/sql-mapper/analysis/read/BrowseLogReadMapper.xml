@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.analysis.read.BrowseLogReadDao">
+	<resultMap id="BrowseLogResult" type="com.ejavashop.entity.analysis.BrowseLog">
+			<result property="id" column="id" />
+			<result property="siteCookie" column="site_cookie" />
+			<result property="sessionId" column="session_id" />
+			<result property="userAgent" column="user_agent" />
+			<result property="ipAddress" column="ip_address" />
+			<result property="accessedPage" column="accessed_page" />
+			<result property="urlReferer" column="url_referer" />
+			<result property="createTime" column="create_time" />
+			<result property="browseName" column="browse_name" />
+			<result property="browserVersion" column="browser_version" />
+			<result property="memberId" column="member_id" />
+			<result property="ebi" column="ebi" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="BrowseLogResult">
+		select
+		   *
+		from `browse_log`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getProductPV" resultType="com.ejavashop.dto.PVDto">
+		SELECT
+			*
+		FROM
+			browse_log p
+		WHERE
+			p.accessed_page LIKE '%/product/%.html'
+			<if test="year != null"  > 
+				AND Year(p.create_time) = #{year}
+			</if>
+			<if test="month != null"  >
+			 	AND Year(p.create_time) = #{year} and Month(p.create_time) = #{month}
+			</if>
+		UNION ALL
+			SELECT
+				*
+			FROM
+				browse_log_mobile m
+			WHERE
+				m.accessed_page LIKE '%/product/%.html'
+				<if test="year != null"  > 
+					AND Year(m.create_time) = #{year}
+				</if>
+				<if test="month != null"  >
+				 	AND Year(m.create_time) = #{year} and Month(m.create_time) = #{month}
+				</if>
+	</select>
+	
+</mapper>

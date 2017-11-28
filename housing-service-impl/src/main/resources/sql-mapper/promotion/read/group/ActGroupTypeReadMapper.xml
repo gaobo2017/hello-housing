@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.read.group.ActGroupTypeReadDao">
+	<resultMap id="ActGroupTypeResult" type="com.ejavashop.entity.promotion.group.ActGroupType">
+			<result property="id" column="id" />
+			<result property="name" column="name" />
+			<result property="sort" column="sort" />
+			<result property="state" column="state" />
+			<result property="createId" column="create_id" />
+			<result property="createName" column="create_name" />
+			<result property="updateId" column="update_id" />
+			<result property="updateName" column="update_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ActGroupTypeResult">
+		select
+		   *
+		from `act_group_type`
+		where `id` = #{id}
+	</select>
+	
+	<select id="count" resultType="java.lang.Integer">
+        select count(1) from `act_group_type` t1
+        <include refid="whereConditions"/>
+    </select>
+
+    <select id="getActGroupTypes" resultType="com.ejavashop.entity.promotion.group.ActGroupType">
+        select * from `act_group_type` t1
+        <include refid="whereConditions"/>
+        order by sort desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    
+    <select id="getAll" resultType="com.ejavashop.entity.promotion.group.ActGroupType">
+        select * from `act_group_type` t1
+        where t1.state = 1
+        order by sort desc
+    </select>
+    
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_name != null and param1.q_name != ''">
+                and t1.`name` like CONCAT('%',#{param1.q_name},'%')
+            </if>
+        </where>
+    </sql>
+    
+</mapper>

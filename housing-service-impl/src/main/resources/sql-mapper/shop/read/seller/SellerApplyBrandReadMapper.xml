@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.seller.SellerApplyBrandReadDao">
+	<resultMap id="SellerApplyBrandResult" type="com.ejavashop.entity.seller.SellerApplyBrand">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="name" column="name" />
+			<result property="nameFirst" column="name_first" />
+			<result property="image" column="image" />
+			<result property="createId" column="create_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateId" column="update_id" />
+			<result property="updateTime" column="update_time" />
+			<result property="explainInfo" column="explain_info" />
+			<result property="state" column="state" />
+	</resultMap>
+	
+	
+	   
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="q_id != null and q_id !=''"  > and `id`= #{q_id}</if>
+			<if test="q_sellerId != null and q_sellerId !=''"  > and `seller_id`= #{q_sellerId}</if>
+			<if test="q_name != null and q_name !=''"  > and `name`= #{q_name}</if>
+			<if test="q_nameFirst != null and q_nameFirst !=''"  > and `name_first`= #{q_nameFirst}</if>
+			<if test="q_image != null and q_image !=''"  > and `image`= #{q_image}</if>
+			<if test="q_createId != null and q_createId !=''"  > and `create_id`= #{q_createId}</if>
+			<if test="q_createTime != null and q_createTime !=''"  > and `create_time`= #{q_createTime}</if>
+			<if test="q_updateId != null and q_updateId !=''"  > and `update_id`= #{q_updateId}</if>
+			<if test="q_updateTime != null and q_updateTime !=''"  > and `update_time`= #{q_updateTime}</if>
+			<if test="q_explainInfo != null and q_explainInfo !=''"  > and `explain_info`= #{q_explainInfo}</if>
+			<if test="q_state != null and q_state !=''"  > and `state`= #{q_state}</if>
+		</trim>
+	</sql>
+	
+	
+	<select id="get" parameterType="Integer" resultMap="SellerApplyBrandResult">
+		select
+		   *
+		from `seller_apply_brand`
+		where `id` = #{id}
+	</select>
+	
+	
+	<!-- 商家品牌申请表 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from seller_apply_brand
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询商家品牌申请表列表 -->
+	<select id="queryList" resultMap="SellerApplyBrandResult"  parameterType="map">
+		select 
+		  * 
+		from seller_apply_brand 
+		<include refid="Where_Clause"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

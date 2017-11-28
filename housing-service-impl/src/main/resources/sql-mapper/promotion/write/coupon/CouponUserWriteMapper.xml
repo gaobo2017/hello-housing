@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.write.coupon.CouponUserWriteDao">
+	<resultMap id="CouponUserResult" type="com.ejavashop.entity.promotion.coupon.CouponUser">
+			<result property="id" column="id" />
+			<result property="memberId" column="member_id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="couponId" column="coupon_id" />
+			<result property="couponSn" column="coupon_sn" />
+			<result property="password" column="password" />
+			<result property="canUse" column="can_use" />
+			<result property="receiveTime" column="receive_time" />
+			<result property="orderId" column="order_id" />
+			<result property="useTime" column="use_time" />
+			<result property="useStartTime" column="use_start_time" />
+			<result property="useEndTime" column="use_end_time" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="CouponUserResult">
+		select
+		   *
+		from `coupon_user`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.promotion.coupon.CouponUser">
+        update `coupon_user` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="couponId != null">`coupon_id`= #{couponId},</if>
+			<if test="couponSn != null">`coupon_sn`= #{couponSn},</if>
+			<if test="password != null">`password`= #{password},</if>
+			<if test="canUse != null">`can_use`= #{canUse},</if>
+			<if test="receiveTime != null">`receive_time`= #{receiveTime},</if>
+			<if test="orderId != null">`order_id`= #{orderId},</if>
+			<if test="useTime != null">`use_time`= #{useTime},</if>
+			<if test="useStartTime != null">`use_start_time`= #{useStartTime},</if>
+			<if test="useEndTime != null">`use_end_time`= #{useEndTime},</if>
+			<!-- <if test="createUserId != null">`create_user_id`= #{createUserId},</if>
+			<if test="createUserName != null">`create_user_name`= #{createUserName},</if>
+			<if test="createTime != null">`create_time`= #{createTime},</if> -->
+			<if test="updateUserId != null">`update_user_id`= #{updateUserId},</if>
+			<if test="updateUserName != null">`update_user_name`= #{updateUserName},</if>
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.promotion.coupon.CouponUser" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`coupon_user`
+		(
+			`member_id`,
+			`seller_id`,
+			`coupon_id`,
+			`coupon_sn`,
+			`password`,
+			`can_use`,
+			`receive_time`,
+			`order_id`,
+			`use_time`,
+			`use_start_time`,
+			`use_end_time`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`,
+			`update_user_id`,
+			`update_user_name`,
+			`update_time`
+		)
+		values
+		(
+			#{memberId},
+			#{sellerId},
+			#{couponId},
+			#{couponSn},
+			#{password},
+			#{canUse},
+			#{receiveTime},
+			#{orderId},
+			#{useTime},
+			#{useStartTime},
+			#{useEndTime},
+			#{createUserId},
+			#{createUserName},
+			now(),
+			#{updateUserId},
+			#{updateUserName},
+			now()
+		)
+	</insert>
+	
+	<delete id="delete">
+        delete from `coupon_user` where `id` = #{id}
+	</delete>
+	
+	<update id="updateCanUse">
+        update `coupon_user`
+        set `can_use` = `can_use` - 1,
+        	`member_id` = #{memberId},
+        	`use_time` = now(),
+        	`order_id` = #{orderId},
+        	`update_time`= now()
+        where `id` = #{couponUserId}
+	</update>
+	
+	<select id="getNumByMemberIdAndCouponId" resultType="Integer">
+		select
+		   count(1)
+		from `coupon_user`
+		where `member_id` = #{memberId}
+		and `coupon_id` = #{couponId}
+	</select>
+	
+	<update id="backCouponUser">
+        update `coupon_user`
+        set `can_use` = `can_use` + 1,
+        	`update_time`= now()
+        where `id` = #{couponUserId}
+        	and `member_id` = #{memberId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.order.OrdersWriteDao">
+	<resultMap id="OrdersResult" type="com.ejavashop.entity.order.Orders">
+			<result property="id" column="id" />
+			<result property="orderSn" column="order_sn" />
+			<result property="relationOrderSn" column="relation_order_sn" />
+			<result property="orderType" column="order_type" />
+			<result property="sellerId" column="seller_id" />
+			<result property="memberId" column="member_id" />
+			<result property="memberName" column="member_name" />
+			<result property="orderState" column="order_state" />
+			<result property="payTime" column="pay_time" />
+			<result property="paymentStatus" column="payment_status" />
+			<result property="invoiceStatus" column="invoice_status" />
+			<result property="invoiceTitle" column="invoice_title" />
+			<result property="invoiceType" column="invoice_type" />
+			<result property="moneyProduct" column="money_product" />
+			<result property="moneyLogistics" column="money_logistics" />
+			<result property="moneyOrder" column="money_order" />
+			<result property="moneyPaidBalance" column="money_paid_balance" />
+			<result property="moneyPaidReality" column="money_paid_reality" />
+			<result property="moneyCoupon" column="money_coupon" />
+			<result property="moneyActFull" column="money_act_full" />
+			<result property="moneyDiscount" column="money_discount" />
+			<result property="moneyBack" column="money_back" />
+			<result property="moneyIntegral" column="money_integral" />
+			<result property="integral" column="integral" />
+			<result property="couponUserId" column="coupon_user_id" />
+			<result property="actFullId" column="act_full_id" />
+			<result property="ip" column="ip" />
+			<result property="paymentName" column="payment_name" />
+			<result property="paymentCode" column="payment_code" />
+			<result property="name" column="name" />
+			<result property="provinceId" column="province_id" />
+			<result property="cityId" column="city_id" />
+			<result property="areaId" column="area_id" />
+			<result property="addressAll" column="address_all" />
+			<result property="addressInfo" column="address_info" />
+			<result property="mobile" column="mobile" />
+			<result property="email" column="email" />
+			<result property="zipCode" column="zip_code" />
+			<result property="remark" column="remark" />
+			<result property="deliverTime" column="deliver_time" />
+			<result property="finishTime" column="finish_time" />
+			<result property="tradeSn" column="trade_sn" />
+			<result property="source" column="source" />
+			<result property="logisticsId" column="logistics_id" />
+			<result property="logisticsName" column="logistics_name" />
+			<result property="logisticsNumber" column="logistics_number" />
+			<result property="isCodconfim" column="is_codconfim" />
+			<result property="codconfirmId" column="codconfirm_id" />
+			<result property="codconfirmName" column="codconfirm_name" />
+			<result property="codconfirmTime" column="codconfirm_time" />
+			<result property="codconfirmRemark" column="codconfirm_remark" />
+			<result property="codconfirmState" column="codconfirm_state" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<resultMap id="goodsReturnMap" type="com.ejavashop.dto.OrdersReturnDto">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="memberId" column="member_id" />
+			<result property="orderState" column="order_state" />
+			<result property="payTime" column="pay_time" />
+			<result property="paymentStatus" column="payment_status" />
+			<result property="stateMoney" column="state_money" />
+			<result property="finishTime" column="finish_time" />
+	</resultMap>
+	
+	<resultMap id="productSaleMap" type="com.ejavashop.dto.ProductSaleDto">
+			<result property="orderState" column="order_state" />
+			<result property="moneyOrder" column="money_order" />
+			<result property="productName" column="product_name" />
+			<result property="specInfo" column="spec_info" />
+			<result property="isNorm" column="is_norm" />
+			<result property="payTime" column="pay_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="OrdersResult">
+		select
+		   *
+		from `orders`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getOrderStateComment" resultType="java.lang.String">
+		SELECT DISTINCT
+			c.column_comment
+		FROM
+			INFORMATION_SCHEMA. COLUMNS c
+		WHERE
+			c.table_name = 'orders'
+		AND c.TABLE_SCHEMA = 'ejavashop'
+		AND c.COLUMN_NAME = 'order_state'
+	</select>
+	
+	<select id="getProductByOrderId" resultType="com.ejavashop.entity.product.Product">
+		SELECT
+			*
+		FROM
+			product p
+		WHERE
+			p.id IN(
+				SELECT
+					op.product_id
+				FROM
+					orders_product op
+				WHERE
+					op.orders_id = #{orderid}
+			)
+	</select>
+	
+	<select id="getProductSale" resultMap="productSaleMap">
+		SELECT
+			o.order_state AS order_state,
+			o.money_order AS money_order,
+			p.name1 AS product_name,
+			op.spec_info AS spec_info,
+			p.is_norm AS is_norm,
+			o.pay_time as pay_time
+		FROM
+			orders o
+		LEFT OUTER JOIN orders_product op ON o.id = op.orders_id
+		LEFT OUTER JOIN product_goods g ON op.product_goods_id = g.id
+		LEFT OUTER JOIN product p ON g.product_id = p.id
+		WHERE 1=1
+		<if test="productId != null"  > 
+			AND p.id = #{productId}
+		</if>
+		<if test="year != null"  > 
+			AND Year(o.pay_time) = #{year}
+		</if>
+		<if test="month != null"  >
+		 	AND Year(o.pay_time) = #{year} AND Month(o.pay_time) = #{month}
+		 </if>
+		<if test="sellerId != null"  > 
+			AND o.seller_id = #{sellerId}
+		</if>
+		<if test="s_status != null"  > 
+			AND o.order_state in 
+			 <foreach item="item" index="index" collection="s_status" open="(" separator="," close=")">  
+			  #{item}  
+			 </foreach>  
+		</if>
+	</select>
+	
+	<select id="goodsReturnRate" parameterType="Integer" resultMap="goodsReturnMap">
+		SELECT o.seller_id, 
+			o.member_id, 
+			o.order_state, 
+			o.pay_time, 
+			o.payment_status, 
+			o.id, 
+			m.state_money, 
+			o.finish_time
+		FROM orders o LEFT OUTER JOIN member_product_back m ON o.id = m.order_id
+		WHERE o.order_state = 5
+		AND o.payment_status = 1
+		<if test="q_sellerId != null"  > 
+			AND o.seller_id = #{q_sellerId}
+		</if>
+		<if test="year != null"  > 
+			AND Year(o.finish_time) = #{year}
+		</if>
+		<if test="month != null"  >
+		 	AND Year(o.finish_time) = #{year} and Month(o.finish_time) = #{month}
+		 </if>
+	</select>
+	
+	<select id="getByOrderSn" parameterType="String" resultMap="OrdersResult">
+		select
+		   *
+		from `orders`
+		where `order_sn` = #{orderSn}
+	</select>
+
+	<insert id="insert" parameterType="com.ejavashop.entity.order.Orders" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `orders`
+		(
+			`order_sn`,
+			`relation_order_sn`,
+			`order_type`,
+			`seller_id`,
+			`member_id`,
+			`member_name`,
+			`order_state`,
+			`pay_time`,
+			`payment_status`,
+			`invoice_status`,
+			`invoice_title`,
+			`invoice_type`,
+			`money_product`,
+			`money_logistics`,
+			`money_order`,
+			`money_paid_balance`,
+			`money_paid_reality`,
+			`money_coupon`,
+			`money_act_full`,
+			`money_discount`,
+			`money_back`,
+			`money_integral`,
+			`integral`,
+			`coupon_user_id`,
+			`act_full_id`,
+			`ip`,
+			`payment_name`,
+			`payment_code`,
+			`name`,
+			`province_id`,
+			`city_id`,
+			`area_id`,
+			`address_all`,
+			`address_info`,
+			`mobile`,
+			`email`,
+			`zip_code`,
+			`remark`,
+			`deliver_time`,
+			`finish_time`,
+			`trade_sn`,
+			`source`,
+			`logistics_id`,
+			`logistics_name`,
+			`logistics_number`,
+			`is_codconfim`,
+			`codconfirm_id`,
+			`codconfirm_name`,
+			`codconfirm_time`,
+			`codconfirm_remark`,
+			`codconfirm_state`,
+			`create_time`,
+			`update_time`
+		)
+		values
+		(
+			#{orderSn},
+			#{relationOrderSn},
+			#{orderType},
+			#{sellerId},
+			#{memberId},
+			#{memberName},
+			#{orderState},
+			#{payTime},
+			#{paymentStatus},
+			#{invoiceStatus},
+			#{invoiceTitle},
+			#{invoiceType},
+			#{moneyProduct},
+			#{moneyLogistics},
+			#{moneyOrder},
+			#{moneyPaidBalance},
+			#{moneyPaidReality},
+			#{moneyCoupon},
+			#{moneyActFull},
+			#{moneyDiscount},
+			#{moneyBack},
+			#{moneyIntegral},
+			#{integral},
+			#{couponUserId},
+			#{actFullId},
+			#{ip},
+			#{paymentName},
+			#{paymentCode},
+			#{name},
+			#{provinceId},
+			#{cityId},
+			#{areaId},
+			#{addressAll},
+			#{addressInfo},
+			#{mobile},
+			#{email},
+			#{zipCode},
+			#{remark},
+			#{deliverTime},
+			#{finishTime},
+			#{tradeSn},
+			#{source},
+			#{logisticsId},
+			#{logisticsName},
+			#{logisticsNumber},
+			#{isCodconfim},
+			#{codconfirmId},
+			#{codconfirmName},
+			#{codconfirmTime},
+			#{codconfirmRemark},
+			#{codconfirmState},
+			now(),
+			now()
+		)
+	</insert>
+
+	<update id="update" parameterType="com.ejavashop.entity.order.Orders">
+        update `orders` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="orderSn != null">`order_sn`= #{orderSn},</if>
+			<if test="relationOrderSn != null">`relation_order_sn`= #{relationOrderSn},</if>
+			<if test="orderType != null">`order_type`= #{orderType},</if>
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="memberName != null">`member_name`= #{memberName},</if>
+			<if test="orderState != null">`order_state`= #{orderState},</if>
+			<if test="payTime != null">`pay_time`= #{payTime},</if>
+			<if test="paymentStatus != null">`payment_status`= #{paymentStatus},</if>
+			<if test="invoiceStatus != null">`invoice_status`= #{invoiceStatus},</if>
+			<if test="invoiceTitle != null">`invoice_title`= #{invoiceTitle},</if>
+			<if test="invoiceType != null">`invoice_type`= #{invoiceType},</if>
+			<if test="moneyProduct != null">`money_product`= #{moneyProduct},</if>
+			<if test="moneyLogistics != null">`money_logistics`= #{moneyLogistics},</if>
+			<if test="moneyOrder != null">`money_order`= #{moneyOrder},</if>
+			<if test="moneyPaidBalance != null">`money_paid_balance`= #{moneyPaidBalance},</if>
+			<if test="moneyPaidReality != null">`money_paid_reality`= #{moneyPaidReality},</if>
+			<if test="moneyCoupon != null">`money_coupon`= #{moneyCoupon},</if>
+			<if test="moneyActFull != null">`money_act_full`= #{moneyActFull},</if>
+			<if test="moneyDiscount != null">`money_discount`= #{moneyDiscount},</if>
+			<if test="moneyBack != null">`money_back`= #{moneyBack},</if>
+			<if test="moneyIntegral != null">`money_integral`= #{moneyIntegral},</if>
+			<if test="integral != null">`integral`= #{integral},</if>
+			<if test="couponUserId != null">`coupon_user_id`= #{couponUserId},</if>
+			<if test="actFullId != null">`act_full_id`= #{actFullId},</if>
+			<if test="ip != null">`ip`= #{ip},</if>
+			<if test="paymentName != null">`payment_name`= #{paymentName},</if>
+			<if test="paymentCode != null">`payment_code`= #{paymentCode},</if>
+			<if test="name != null">`name`= #{name},</if>
+			<if test="provinceId != null">`province_id`= #{provinceId},</if>
+			<if test="cityId != null">`city_id`= #{cityId},</if>
+			<if test="areaId != null">`area_id`= #{areaId},</if>
+			<if test="addressAll != null">`address_all`= #{addressAll},</if>
+			<if test="addressInfo != null">`address_info`= #{addressInfo},</if>
+			<if test="mobile != null">`mobile`= #{mobile},</if>
+			<if test="email != null">`email`= #{email},</if>
+			<if test="zipCode != null">`zip_code`= #{zipCode},</if>
+			<if test="remark != null">`remark`= #{remark},</if>
+			<if test="deliverTime != null">`deliver_time`= #{deliverTime},</if>
+			<if test="finishTime != null">`finish_time`= #{finishTime},</if>
+			<if test="tradeSn != null">`trade_sn`= #{tradeSn},</if>
+			<if test="source != null">`source`= #{source},</if>
+			<if test="logisticsId != null">`logistics_id`= #{logisticsId},</if>
+			<if test="logisticsName != null">`logistics_name`= #{logisticsName},</if>
+			<if test="logisticsNumber != null">`logistics_number`= #{logisticsNumber},</if>
+			<if test="isCodconfim != null">`is_codconfim`= #{isCodconfim},</if>
+			<if test="codconfirmId != null">`codconfirm_id`= #{codconfirmId},</if>
+			<if test="codconfirmName != null">`codconfirm_name`= #{codconfirmName},</if>
+			<if test="codconfirmTime != null">`codconfirm_time`= #{codconfirmTime},</if>
+			<if test="codconfirmRemark != null">`codconfirm_remark`= #{codconfirmRemark},</if>
+			<if test="codconfirmState != null">`codconfirm_state`= #{codconfirmState},</if>
+			<!-- <if test="createTime != null">`create_time`= #{createTime},</if> -->
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+
+	<delete id="delete">
+        delete from `orders` where `id` = #{id}
+	</delete>
+
+	<select id="getOrdersCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from `orders`
+		<include refid="getOrdersCondition" />
+	</select>
+
+	<select id="getOrders" parameterType="java.util.Map" resultType="com.ejavashop.entity.order.Orders">
+		select * from `orders`
+		<include refid="getOrdersCondition" />
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+
+	<!-- 查询条件 -->
+	<sql id="getOrdersCondition">
+		<where>
+			<if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''"  >
+				and `seller_id`= #{queryMap.q_sellerId}
+			</if>
+			<if test="queryMap.q_memberId != null and queryMap.q_memberId !=''"  >
+				and `member_id`= #{queryMap.q_memberId}
+			</if>
+			<if test="queryMap.q_orderSn != null and queryMap.q_orderSn !=''"  >
+				and `order_sn` like CONCAT('%',#{queryMap.q_orderSn},'%')
+			</if>
+			<if test="queryMap.q_orderType != null and queryMap.q_orderType != ''" >
+				and order_type =  #{queryMap.q_orderType}
+			</if>
+			<if test="queryMap.q_orderState != null and queryMap.q_orderState !=''"  >
+				and `order_state`= #{queryMap.q_orderState}
+			</if>
+			<if test="queryMap.q_paymentCode != null and queryMap.q_paymentCode !=''"  >
+				and `payment_code`= #{queryMap.q_paymentCode}
+			</if>
+			<if test="queryMap.q_finishStartTime != null and queryMap.q_finishStartTime !=''"  >
+				and `finish_time` &gt;= #{queryMap.q_finishStartTime}
+			</if>
+			<if test="queryMap.q_finishEndTime != null and queryMap.q_finishEndTime !=''"  >
+				and `finish_time` &lt;= #{queryMap.q_finishEndTime}
+			</if>
+			 
+			<if test="queryMap.year != null and queryMap.year !=''"  > 
+				and Year(finish_time) = #{queryMap.year}
+			</if>
+			<if test="queryMap.month != null and queryMap.month !=''"  >
+			 	and Year(finish_time) = #{queryMap.year} and Month(finish_time) = #{queryMap.month}
+			 </if>
+			<if test="queryMap.startTime != null and queryMap.endTime != null"  >
+			 	and `create_time` BETWEEN #{queryMap.startTime} and #{queryMap.endTime}
+			 </if>
+			<if test="queryMap.s_status != null and queryMap.s_status !=''"  >
+			 	and `order_state` in 
+			 	 <foreach item="item" index="index" collection="queryMap.s_status" open="(" separator="," close=")">  
+				  #{item}  
+				 </foreach>  
+			</if>
+		</where>
+	</sql>
+
+	<update id="updateMoneyBack">
+        update `orders` 
+        set
+        	money_back = money_back + #{moneyBack},
+        	`update_time`= now()
+        where `id` = #{id}
+	</update>
+
+	<select id="list" resultType="com.ejavashop.entity.order.Orders">
+		select * from `orders` t1
+		order by id
+	</select>
+
+
+</mapper>

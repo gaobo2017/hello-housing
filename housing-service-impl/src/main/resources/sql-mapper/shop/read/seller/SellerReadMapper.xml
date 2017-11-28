@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.seller.SellerReadDao">
+	<resultMap id="SellerResult" type="com.ejavashop.entity.seller.Seller">
+			<result property="id" column="id" />
+			<result property="memberId" column="member_id" />
+			<result property="name" column="name" />
+			<result property="sellerName" column="seller_name" />
+			<result property="sellerLogo" column="seller_logo" />
+			<result property="sellerGrade" column="seller_grade" />
+			<result property="scoreService" column="score_service" />
+			<result property="scoreDeliverGoods" column="score_deliver_goods" />
+			<result property="scoreDescription" column="score_description" />
+			<result property="productNumber" column="product_number" />
+			<result property="collectionNumber" column="collection_number" />
+			<result property="createTime" column="create_time" />
+			<result property="saleMoney" column="sale_money" />
+			<result property="orderCount" column="order_count" />
+			<result property="orderCountOver" column="order_count_over" />
+			<result property="sellerKeyword" column="seller_keyword" />
+			<result property="sellerDes" column="seller_des" />
+			<result property="auditStatus" column="audit_status" />
+			<result property="storeSlide" column="store_slide" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SellerResult">
+		select
+		   *
+		from `seller`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getSettlementSeller" resultMap="SellerResult">
+		select
+		   *
+		from `seller`
+		where `audit_status` > 1
+	</select>
+	
+	<select id="getByMemberId" parameterType="Integer" resultMap="SellerResult">
+		select
+		   *
+		from `seller`
+		where `member_id` = #{memberId}
+	</select>
+	
+	<select id="getSellersCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from seller
+		<include refid="getSellersCondition" />
+	</select>
+	
+	<select id="getSellers" resultType="com.ejavashop.entity.seller.Seller">
+		select * from seller
+		<include refid="getSellersCondition" />
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<sql id="getSellersCondition">
+		<where>
+			<if test="queryMap.q_name != null and queryMap.q_name != ''">
+				and `name` like CONCAT('%',#{queryMap.q_name},'%')
+			</if>
+			<if test="queryMap.q_auditStatus != null and queryMap.q_auditStatus != ''">
+				and `audit_Status` = #{queryMap.q_auditStatus}
+			</if>
+			<if test="queryMap.q_sellerName != null and queryMap.q_sellerName != ''">
+				and `seller_Name` like CONCAT('%',#{queryMap.q_sellerName},'%')
+			</if>
+		</where>
+	</sql>
+</mapper>

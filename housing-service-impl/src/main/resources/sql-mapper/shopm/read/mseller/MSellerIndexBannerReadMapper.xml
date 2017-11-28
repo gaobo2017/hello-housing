@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shopm.read.mseller.MSellerIndexBannerReadDao">
+	<resultMap id="MSellerIndexBannerResult" type="com.ejavashop.entity.shopm.MSellerIndexBanner">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="title" column="title" />
+			<result property="linkUrl" column="link_url" />
+			<result property="image" column="image" />
+			<result property="orderNo" column="order_no" />
+			<result property="startTime" column="start_time" />
+			<result property="endTime" column="end_time" />
+			<result property="status" column="status" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="MSellerIndexBannerResult">
+		select
+		   *
+		from `m_seller_index_banner`
+		where `id` = #{id}
+	</select>
+	
+	<sql id="getCondition">
+        <where>
+            <if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''">
+                and `seller_id` = #{queryMap.q_sellerId}
+            </if>
+            <if test="queryMap.q_title != null and queryMap.q_title !=''">
+                and `title` like CONCAT('%', #{queryMap.q_title}, '%')
+            </if>
+            <if test="queryMap.q_status != null and queryMap.q_status !=''">
+                and `status` = #{queryMap.q_status}
+            </if>
+            <if test="queryMap.q_time != null and queryMap.q_time !=''">
+                and `start_time` &lt;= #{queryMap.q_time}
+                and `end_time` &gt;= #{queryMap.q_time}
+            </if>
+        </where>
+    </sql>
+    
+	<select id="getMSellerIndexBannersCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `m_seller_index_banner`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getMSellerIndexBanners" parameterType="java.util.Map" resultMap="MSellerIndexBannerResult">
+		select
+		   *
+		from `m_seller_index_banner`
+		<include refid="getCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="getMSellerIndexBannersForView" parameterType="java.util.Map" resultMap="MSellerIndexBannerResult">
+		select
+		   *
+		from `m_seller_index_banner`
+		<include refid="getCondition"/>
+		order by `order_no`
+	</select>
+</mapper>

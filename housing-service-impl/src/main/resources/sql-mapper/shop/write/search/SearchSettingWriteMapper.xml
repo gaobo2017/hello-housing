@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.search.SearchSettingWriteDao">
+	<resultMap id="SearchSettingResult" type="com.ejavashop.entity.search.SearchSetting">
+			<result property="id" column="id" />
+			<result property="keyword" column="keyword" />
+			<result property="keywordFilter" column="keyword_filter" />
+			<result property="indexProductId" column="index_product_id" />
+			<result property="indexProductTime" column="index_product_time" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SearchSettingResult">
+		select
+		   *
+		from `search_setting`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.search.SearchSetting">
+        update `search_setting` 
+    	<set>
+			<if test="id != null">`id`= #{id},</if>
+			<if test="keyword != null">`keyword`= #{keyword},</if>
+			<if test="keywordFilter != null">`keyword_filter`= #{keywordFilter},</if>
+			<if test="indexProductId != null">`index_product_id`= #{indexProductId},</if>
+			<if test="indexProductTime != null">`index_product_time`= #{indexProductTime},</if>
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.search.SearchSetting" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`search_setting`
+		(
+			`keyword`,
+			`keyword_filter`,
+			`index_product_id`,
+			`index_product_time`,
+			`update_time`
+		)
+		values
+		(
+			#{keyword},
+			#{keywordFilter},
+			#{indexProductId},
+			now(),
+			now()
+		)
+	</insert>
+	
+	<update id="updateKeyword" parameterType="Integer">
+        update `search_setting` 
+    	<set>
+			`keyword`= #{keyword},
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<update id="updateKeywordFilter" parameterType="Integer">
+        update `search_setting` 
+    	<set>
+			`keyword_filter`= #{keywordFilter},
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<update id="updateIndexProductId" parameterType="Integer">
+        update `search_setting` 
+    	<set>
+			`index_product_id`= #{indexProductId},
+			`index_product_time` = now(),
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<update id="updateIndexProductTime" parameterType="Integer">
+        update `search_setting` 
+    	<set>
+    		`index_product_time` = now(),
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+</mapper>

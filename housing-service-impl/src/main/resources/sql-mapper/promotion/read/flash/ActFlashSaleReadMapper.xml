@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.read.flash.ActFlashSaleReadDao">
+	<resultMap id="ActFlashSaleResult" type="com.ejavashop.entity.promotion.flash.ActFlashSale">
+			<result property="id" column="id" />
+			<result property="actFlashSaleName" column="act_flash_sale_name" />
+			<result property="actDate" column="act_date" />
+			<result property="pcImage" column="pc_image" />
+			<result property="mobileImage" column="mobile_image" />
+			<result property="channel" column="channel" />
+			<result property="status" column="status" />
+			<result property="auditOpinion" column="audit_opinion" />
+			<result property="auditRule" column="audit_rule" />
+			<result property="remark" column="remark" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	<resultMap id="ActFlashSaleStageResult" type="com.ejavashop.entity.promotion.flash.ActFlashSaleStage">
+			<result property="id" column="id" />
+			<result property="actFlashSaleId" column="act_flash_sale_id" />
+			<result property="startTime" column="start_time" />
+			<result property="endTime" column="end_time" />
+			<result property="remark" column="remark" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ActFlashSaleResult">
+		select
+		   *
+		from `act_flash_sale`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getActFlashSaleStage" parameterType="Integer" resultMap="ActFlashSaleStageResult">
+		select
+		   *
+		from `act_flash_sale_stage`
+		where `act_flash_sale_id` = #{actFlashSaleId}
+		order by `end_time`
+	</select>
+	
+	<sql id="getCondition">
+        <where>
+            <if test="queryMap.q_actFlashSaleName != null and queryMap.q_actFlashSaleName !=''">
+                and `act_flash_sale_name` like CONCAT('%', #{queryMap.q_actFlashSaleName}, '%')
+            </if>
+            <if test="queryMap.q_actDate != null and queryMap.q_actDate !=''">
+                and `act_date` = #{queryMap.q_actDate}
+            </if>
+            <if test="queryMap.q_channel != null and queryMap.q_channel !=''">
+                and `channel` = #{queryMap.q_channel}
+            </if>
+            <if test="queryMap.q_status != null and queryMap.q_status !=''">
+                and `status` = #{queryMap.q_status}
+            </if>
+            <if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''">
+            	<!-- 商家ID用来判断查询是否来自商家端，商家端只能查看新建状态之外的活动 -->
+                and `status` > 1
+            </if>
+        </where>
+    </sql>
+    
+	<select id="countByActDateAndStatus" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `act_flash_sale`
+		where act_date=#{actDate} and status=#{status}
+	</select>
+	
+	<!-- <select id="getByActDate" resultMap="ActFlashSaleResult">
+		select
+		   *
+		from `act_flash_sale`
+		where act_date=#{actDate} and status=#{status}
+		limit 1
+	</select> -->
+	
+	<select id="getActFlashSalesCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `act_flash_sale`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getActFlashSales" parameterType="java.util.Map" resultMap="ActFlashSaleResult">
+		select
+		   *
+		from `act_flash_sale`
+		<include refid="getCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="getEffectiveActFlashSale" resultMap="ActFlashSaleResult">
+		select
+		   *
+		from `act_flash_sale`
+		where `act_date` = #{actDate}
+			and `status` = 5
+			and (
+				`channel` = #{channel}
+				or `channel` = 1
+			)
+		order by `id` desc
+		limit 1
+	</select>
+	
+</mapper>

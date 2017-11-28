@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.write.group.ActGroupWriteDao">
+	<resultMap id="ActGroupResult" type="com.ejavashop.entity.promotion.group.ActGroup">
+			<result property="id" column="id" />
+			<result property="type" column="type" />
+			<result property="typeState" column="type_state" />
+			<result property="name" column="name" />
+			<result property="descinfo" column="descinfo" />
+			<result property="virtualSaleNum" column="virtual_sale_num" />
+			<result property="saleNum" column="sale_num" />
+			<result property="startTime" column="start_time" />
+			<result property="endTime" column="end_time" />
+			<result property="productId" column="product_id" />
+			<result property="marketPrice" column="market_price" />
+			<result property="price" column="price" />
+			<result property="purchase" column="purchase" />
+			<result property="stock" column="stock" />
+			<result property="sortNum" column="sort_num" />
+			<result property="isBest" column="is_best" />
+			<result property="activityState" column="activity_state" />
+			<result property="state" column="state" />
+			<result property="auditId" column="audit_id" />
+			<result property="auditName" column="audit_name" />
+			<result property="reason" column="reason" />
+			<result property="image" column="image" />
+			<result property="channel" column="channel" />
+			<result property="sellerId" column="seller_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+			<result property="auditOpinion" column="audit_opinion" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ActGroupResult">
+		select
+		   *
+		from `act_group`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.promotion.group.ActGroup">
+        update `act_group` 
+    	<set>
+			<if test="type != null">`type`= #{type},</if>
+			<if test="typeState != null">`type_state`= #{typeState},</if>
+			<if test="name != null">`name`= #{name},</if>
+			<if test="descinfo != null">`descinfo`= #{descinfo},</if>
+			<if test="virtualSaleNum != null">`virtual_sale_num`= #{virtualSaleNum},</if>
+			<if test="saleNum != null">`sale_num`= #{saleNum},</if>
+			<if test="startTime != null">`start_time`= #{startTime},</if>
+			<if test="endTime != null">`end_time`= #{endTime},</if>
+			<if test="productId != null">`product_id`= #{productId},</if>
+			<if test="marketPrice != null">`market_price`= #{marketPrice},</if>
+			<if test="price != null">`price`= #{price},</if>
+			<if test="purchase != null">`purchase`= #{purchase},</if>
+			<if test="stock != null">`stock`= #{stock},</if>
+			<if test="sortNum != null">`sort_num`= #{sortNum},</if>
+			<if test="isBest != null">`is_best`= #{isBest},</if>
+			<if test="activityState != null">`activity_state`= #{activityState},</if>
+			<if test="state != null">`state`= #{state},</if>
+			<if test="auditId != null">`audit_id`= #{auditId},</if>
+			<if test="auditName != null">`audit_name`= #{auditName},</if>
+			<if test="reason != null">`reason`= #{reason},</if>
+			<if test="image != null">`image`= #{image},</if>
+			<if test="channel != null">`channel`= #{channel},</if>
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="auditOpinion != null">`audit_opinion`= #{auditOpinion},</if>
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<update id="updateByTypeState" parameterType="Integer">
+        update `act_group` 
+    	set
+			`type_state`= #{typeState},
+			`update_time`= now()
+        where `type`= #{type}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.promotion.group.ActGroup" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`act_group`
+		(
+			`type`,
+			`type_state`,
+			`name`,
+			`descinfo`,
+			`virtual_sale_num`,
+			`sale_num`,
+			`start_time`,
+			`end_time`,
+			`product_id`,
+			`market_price`,
+			`price`,
+			`purchase`,
+			`stock`,
+			`sort_num`,
+			`is_best`,
+			`activity_state`,
+			`state`,
+			`audit_id`,
+			`audit_name`,
+			`reason`,
+			`image`,
+			`channel`,
+			`seller_id`,
+			`create_time`,
+			`update_time`,
+			`audit_opinion`
+		)
+		values
+		(
+			#{type},
+			#{typeState},
+			#{name},
+			#{descinfo},
+			#{virtualSaleNum},
+			#{saleNum},
+			#{startTime},
+			#{endTime},
+			#{productId},
+			#{marketPrice},
+			#{price},
+			#{purchase},
+			#{stock},
+			#{sortNum},
+			#{isBest},
+			#{activityState},
+			#{state},
+			#{auditId},
+			#{auditName},
+			#{reason},
+			#{image},
+			#{channel},
+			#{sellerId},
+			now(),
+			now(),
+			#{auditOpinion}
+		)
+	</insert>
+	
+	<update id="updateState" parameterType="java.lang.Integer">
+	 	update `act_group`
+	 		set `state`= #{state},
+	 	 	`update_time`= now()
+	 	  	where `id` = #{id}
+	</update>
+	
+	<update id="updateActivityState" parameterType="java.lang.Integer">
+	 	update `act_group`
+	 		set `activity_state`= #{activityState},
+	 	 	`update_time`= now()
+	 	  	where `id` = #{id}
+	</update>
+	
+	<update id="updateStateAndAuditOpinion" parameterType="com.ejavashop.entity.promotion.group.ActGroup">
+	 	update `act_group`
+	 		set 
+	 		`state`= #{state},
+	 		`audit_opinion`= #{auditOpinion},
+	 	 	`update_time`= now()
+	 	  	where `id` = #{id}
+	</update>
+	
+	<select id="countByType" resultType="java.lang.Integer">
+        select count(1) from `act_group` t1
+        where `type` = #{type} 
+    </select>
+	
+	<update id="updateStockAndActualSales">
+        update `act_group`
+        set `stock`= `stock` - #{saleNum},
+        	`sale_num` = `sale_num` + #{saleNum}
+        where `id` = #{id}
+	</update>
+	
+	<update id="backStockAndActualSales">
+        update `act_group`
+        set `stock`= `stock` + #{saleNum},
+        	`sale_num` = `sale_num` - #{saleNum}
+        where `id` = #{id}
+	</update>
+	
+</mapper>

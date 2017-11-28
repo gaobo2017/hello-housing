@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.settlement.SettlementReadDao">
+	<resultMap id="SettlementResult" type="com.ejavashop.entity.settlement.Settlement">
+			<result property="id" column="id" />
+			<result property="settleCycle" column="settle_cycle" />
+			<result property="sellerId" column="seller_id" />
+			<result property="sellerName" column="seller_name" />
+			<result property="moneyProduct" column="money_product" />
+			<result property="moneyLogistics" column="money_logistics" />
+			<result property="moneyOrder" column="money_order" />
+			<result property="moneyPaidBalance" column="money_paid_balance" />
+			<result property="moneyPaidReality" column="money_paid_reality" />
+			<result property="moneyCoupon" column="money_coupon" />
+			<result property="moneyActFull" column="money_act_full" />
+			<result property="moneyDiscount" column="money_discount" />
+			<result property="moneyIntegral" column="money_integral" />
+			<result property="integral" column="integral" />
+			<result property="moneyBack" column="money_back" />
+			<result property="moneyIntegralBack" column="money_integral_back" />
+			<result property="moneyOther" column="money_other" />
+			<result property="moneyOtherType" column="money_other_type" />
+			<result property="moneyOtherReason" column="money_other_reason" />
+			<result property="commision" column="commision" />
+			<result property="payable" column="payable" />
+			<result property="status" column="status" />
+			<result property="sellerDoubt" column="seller_doubt" />
+			<result property="platformExplain" column="platform_explain" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SettlementResult">
+		select
+		   *
+		from `settlement`
+		where `id` = #{id}
+	</select>
+	
+	<sql id="getCondition">
+        <where>
+            <if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''">
+                and `seller_id` = #{queryMap.q_sellerId}
+            </if>
+            <if test="queryMap.q_sellerName != null and queryMap.q_sellerName !=''">
+                and `seller_name` like CONCAT('%', #{queryMap.q_sellerName}, '%')
+            </if>
+            <if test="queryMap.q_settleCycle != null and queryMap.q_settleCycle !=''">
+                and `settle_cycle` = #{queryMap.q_settleCycle}
+            </if>
+            <if test="queryMap.q_status != null and queryMap.q_status !=''">
+                and `status` = #{queryMap.q_status}
+            </if>
+        </where>
+    </sql>
+    
+	<select id="getSettlementsCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `settlement`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getSettlements" parameterType="java.util.Map" resultMap="SettlementResult">
+		select
+		   *
+		from `settlement`
+		<include refid="getCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.write.flash.ActFlashSaleWriteDao">
+	<resultMap id="ActFlashSaleResult" type="com.ejavashop.entity.promotion.flash.ActFlashSale">
+			<result property="id" column="id" />
+			<result property="actFlashSaleName" column="act_flash_sale_name" />
+			<result property="actDate" column="act_date" />
+			<result property="pcImage" column="pc_image" />
+			<result property="mobileImage" column="mobile_image" />
+			<result property="channel" column="channel" />
+			<result property="status" column="status" />
+			<result property="auditOpinion" column="audit_opinion" />
+			<result property="auditRule" column="audit_rule" />
+			<result property="remark" column="remark" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ActFlashSaleResult">
+		select
+		   *
+		from `act_flash_sale`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.promotion.flash.ActFlashSale">
+        update `act_flash_sale` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="actFlashSaleName != null">`act_flash_sale_name`= #{actFlashSaleName},</if>
+			<if test="actDate != null">`act_date`= #{actDate},</if>
+			<if test="pcImage != null">`pc_image`= #{pcImage},</if>
+			<if test="mobileImage != null">`mobile_image`= #{mobileImage},</if>
+			<if test="channel != null">`channel`= #{channel},</if>
+			<if test="status != null">`status`= #{status},</if>
+			<if test="auditOpinion != null">`audit_opinion`= #{auditOpinion},</if>
+			<if test="auditRule != null">`audit_rule`= #{auditRule},</if>
+			<if test="remark != null">`remark`= #{remark},</if>
+			<!-- <if test="createUserId != null">`create_user_id`= #{createUserId},</if>
+			<if test="createUserName != null">`create_user_name`= #{createUserName},</if>
+			<if test="createTime != null">`create_time`= #{createTime},</if> -->
+			<if test="updateUserId != null">`update_user_id`= #{updateUserId},</if>
+			<if test="updateUserName != null">`update_user_name`= #{updateUserName},</if>
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<update id="updateStatus" parameterType="com.ejavashop.entity.promotion.flash.ActFlashSale">
+        update `act_flash_sale` 
+    	<set>
+			`status`= #{status},
+			<if test="auditOpinion != null">`audit_opinion`= #{auditOpinion},</if>
+			<if test="updateUserId != null">`update_user_id`= #{updateUserId},</if>
+			<if test="updateUserName != null">`update_user_name`= #{updateUserName},</if>
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.promotion.flash.ActFlashSale" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`act_flash_sale`
+		(
+			`act_flash_sale_name`,
+			`act_date`,
+			`pc_image`,
+			`mobile_image`,
+			`channel`,
+			`status`,
+			`audit_opinion`,
+			`audit_rule`,
+			`remark`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`,
+			`update_user_id`,
+			`update_user_name`,
+			`update_time`
+		)
+		values
+		(
+			#{actFlashSaleName},
+			#{actDate},
+			#{pcImage},
+			#{mobileImage},
+			#{channel},
+			#{status},
+			#{auditOpinion},
+			#{auditRule},
+			#{remark},
+			#{createUserId},
+			#{createUserName},
+			now(),
+			#{updateUserId},
+			#{updateUserName},
+			now()
+		)
+	</insert>
+	
+	<delete id="delete">
+        delete from `act_flash_sale` where `id` = #{id}
+	</delete>
+	
+</mapper>

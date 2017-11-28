@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <name>housing</name>
+    <url>http://maven.apache.org</url>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.housing</groupId>
+    <artifactId>housing</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <modules>
+        <module>housing-parent</module>
+        <module>housing-core</module>
+        <module>housing-service</module>
+        <module>housing-service-impl</module>
+        <module>housing-admin</module>
+  </modules>
+</project>

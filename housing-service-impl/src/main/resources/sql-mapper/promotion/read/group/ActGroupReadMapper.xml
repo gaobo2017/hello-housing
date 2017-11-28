@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.read.group.ActGroupReadDao">
+	<resultMap id="ActGroupResult" type="com.ejavashop.entity.promotion.group.ActGroup">
+			<result property="id" column="id" />
+			<result property="type" column="type" />
+			<result property="typeState" column="type_state" />
+			<result property="name" column="name" />
+			<result property="descinfo" column="descinfo" />
+			<result property="virtualSaleNum" column="virtual_sale_num" />
+			<result property="saleNum" column="sale_num" />
+			<result property="startTime" column="start_time" />
+			<result property="endTime" column="end_time" />
+			<result property="productId" column="product_id" />
+			<result property="marketPrice" column="market_price" />
+			<result property="price" column="price" />
+			<result property="purchase" column="purchase" />
+			<result property="stock" column="stock" />
+			<result property="sortNum" column="sort_num" />
+			<result property="isBest" column="is_best" />
+			<result property="activityState" column="activity_state" />
+			<result property="state" column="state" />
+			<result property="auditId" column="audit_id" />
+			<result property="auditName" column="audit_name" />
+			<result property="reason" column="reason" />
+			<result property="image" column="image" />
+			<result property="channel" column="channel" />
+			<result property="sellerId" column="seller_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+			<result property="auditOpinion" column="audit_opinion" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ActGroupResult">
+		select
+		   *
+		from `act_group`
+		where `id` = #{id}
+	</select>
+	
+	<select id="count" resultType="java.lang.Integer">
+        select count(1) from `act_group` t1
+        <include refid="whereConditions"/>
+    </select>
+
+    <select id="getActGroups" resultType="com.ejavashop.entity.promotion.group.ActGroup">
+        select * from `act_group` t1
+        <include refid="whereConditions"/>
+        order by id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_name != null and param1.q_name != ''">
+                and t1.`name` like CONCAT('%',#{param1.q_name},'%')
+            </if>
+            <if test="param1.q_type != null and param1.q_type != ''">
+                and t1.`type` = #{param1.q_type}
+            </if>
+            <if test="param1.q_activityState != null and param1.q_activityState != ''">
+                and t1.`activity_state` = #{param1.q_activityState}
+            </if>
+            <if test="param1.q_state != null and param1.q_state != ''">
+                and t1.`state` = #{param1.q_state}
+            </if>
+            <if test="param1.q_sellerId != null and param1.q_sellerId != ''">
+                and t1.`seller_id` = #{param1.q_sellerId}
+            </if>
+        </where>
+    </sql>
+    
+    <select id="countFront" resultType="java.lang.Integer">
+        select count(1) from `act_group` t1
+        where 
+        t1.`activity_state` = 2
+        and t1.`state` = 3
+        <if test="type != 0">
+             and t1.`type` = #{type}
+        </if>
+        and t1.`type_state` = 1
+        and t1.`start_time` &lt; now()
+        and t1.`end_time` &gt; now()
+        and (
+				`channel` = #{channel}
+				or `channel` = 1
+			)
+    </select>
+
+    <select id="getActGroupsFront" resultType="com.ejavashop.entity.promotion.group.ActGroup">
+        select * from `act_group` t1
+        where
+        t1.`activity_state` = 2
+        and t1.`state` = 3
+        <if test="type != 0">
+             and t1.`type` = #{type}
+        </if>
+        and t1.`type_state` = 1
+        and t1.`start_time` &lt; now()
+        and t1.`end_time` &gt; now()
+        and (
+				`channel` = #{channel}
+				or `channel` = 1
+			)
+        order by t1.`is_best` desc, t1.`sort_num` desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    
+    
+	<select id="getActGroupsByType" resultMap="ActGroupResult">
+		select
+		   *
+		from `act_group`
+		where `type` = #{type}
+		and `start_time` &lt; now()
+		and `end_time` &gt; now()
+		and `activity_state` = 2
+		and `state` = 3
+		order by `sort_num`
+		limit #{topNum}
+	</select>
+</mapper>

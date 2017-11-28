@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0">
+    <name>housing-service</name>
+    <url>http://maven.apache.org</url>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.housing</groupId>
+        <artifactId>housing-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../housing-parent/pom.xml</relativePath>
+    </parent>
+
+     <!-- <groupId>com.housing</groupId> -->
+     <artifactId>housing-service</artifactId>
+     <!-- <version>1.0-SNAPSHOT</version> -->
+    <packaging>jar</packaging>
+
+    <dependencies>
+    	<dependency>
+            <groupId>com.housing</groupId>
+            <artifactId>housing-core</artifactId>
+        </dependency>
+        
+        <!-- gson -->
+        <dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+    </dependencies>
+</project>

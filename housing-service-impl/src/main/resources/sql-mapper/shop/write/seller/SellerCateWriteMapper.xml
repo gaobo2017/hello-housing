@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.seller.SellerCateWriteDao">
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into `seller_cate`(
+            `seller_id`,
+            `pid`,
+            `name`,
+            `path`,
+            `sort`,
+            `create_id`,
+            `create_time`,
+            `status`
+        )
+        values(
+            #{sellerId},
+            #{pid},
+            #{name},
+            #{path},
+            #{sort},
+            #{createId},
+            now(),
+            #{status}
+        )
+    </insert>
+    <update id="update">
+        update `seller_cate`
+        <set>
+            <if test = "null != id and '' != id">`id`= #{id},</if>
+            <if test = "null != sellerId and '' != sellerId">`seller_id`= #{sellerId},</if>
+            <if test = "null != pid">`pid`= #{pid},</if>
+            <if test = "null != name and '' != name">`name`= #{name},</if>
+            <if test = "null != path and '' != path">`path`= #{path},</if>
+            <if test = "null != sort and '' != sort">`sort`= #{sort},</if>
+            <if test = "null != createId and '' != createId">`create_id`= #{createId},</if>
+            <if test = "null != createTime and '' != createTime">`create_time`= #{createTime},</if>
+            <if test = "null != status and '' != status">`status`= #{status},</if>
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="del">
+        delete from `seller_cate` where `id` = #{id}
+    </delete>
+
+    <select id="get" resultType="com.ejavashop.entity.seller.SellerCate">
+        select
+        <include refid="selectColumn"/>
+        from `seller_cate`
+        where `id` = #{id}
+    </select>
+    <select id="page" resultType="com.ejavashop.entity.seller.SellerCate">
+        select
+        <include refid="selectColumn"/>
+        from `seller_cate`
+        <include refid="whereConditions"/>
+        order by sort desc,id desc
+        <if test="size != null and size &gt; 0">limit {start},{size}</if>
+    </select>
+    <select id="getByPid" resultType="com.ejavashop.entity.seller.SellerCate">
+        select
+        if((select count(1) from `seller_cate` where pid = t1.`id` and `status` = 1)=0,'open','closed') state,
+        <include refid="selectColumn"/>
+        from `seller_cate` t1
+        where pid = #{pid} and `seller_id` = #{sellerId} and `status` = 1
+        order by sort desc,id desc
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from `seller_cate`
+        <include refid="whereConditions"/>
+    </select>
+    
+    <select id="countByPid" resultType="java.lang.Integer">
+        select count(1) from `seller_cate`
+        where `pid` = #{sellerCateId} and `status` = 1
+    </select>
+
+    <sql id="selectColumn">
+        `id`,
+        `seller_id`,
+        `pid`,
+        `name`,
+        `path`,
+        `sort`,
+        `create_id`,
+        `create_time`,
+        `status`
+    </sql>
+    <sql id="whereConditions">
+        <where>
+            <if test="id != null and '' != id">
+                and `id`= #{id}
+            </if>
+            <if test="sellerId != null and '' != sellerId">
+                and `seller_id`= #{sellerId}
+            </if>
+            <if test="pid != null and '' != pid">
+                and `pid`= #{pid}
+            </if>
+            <if test="name != null and '' != name">
+                and `name`= #{name}
+            </if>
+            <if test="path != null and '' != path">
+                and `path`= #{path}
+            </if>
+            <if test="sort != null and '' != sort">
+                and `sort`= #{sort}
+            </if>
+            <if test="createId != null and '' != createId">
+                and `create_id`= #{createId}
+            </if>
+            <if test="createTime != null and '' != createTime">
+                and `create_time`= #{createTime}
+            </if>
+            <if test="state != null and '' != state">
+                and `state`= #{state}
+            </if>
+        </where>
+    </sql>
+</mapper>

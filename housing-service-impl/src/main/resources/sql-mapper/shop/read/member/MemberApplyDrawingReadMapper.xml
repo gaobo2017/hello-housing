@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.member.MemberApplyDrawingReadDao">
+	<resultMap id="MemberApplyDrawingResult" type="com.ejavashop.entity.member.MemberApplyDrawing">
+			<result property="id" column="id" />
+			<result property="memberId" column="member_id" />
+			<result property="memberName" column="member_name" />
+			<result property="code" column="code" />
+			<result property="money" column="money" />
+			<result property="createTime" column="create_time" />
+			<result property="auditingTime" column="auditing_time" />
+			<result property="handleTime" column="handle_time" />
+			<result property="bank" column="bank" />
+			<result property="bankCode" column="bank_code" />
+			<result property="state" column="state" />
+			<result property="failReason" column="fail_reason" />
+			<result property="optId" column="opt_id" />
+			<result property="optName" column="opt_name" />
+	</resultMap>
+	<sql id="getCondition">
+         <!-- 查询条件 -->
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="id != null and id !=''"  > and `id`= #{id}</if>
+			<if test="memberId != null and memberId !=''"  > and `member_id`= #{memberId}</if>
+			<if test="memberName != null and memberName !=''"  > and `member_name`= #{memberName}</if>
+			<if test="code != null and code !=''"  > and `code`= #{code}</if>
+			<if test="money != null and money !=''"  > and `money`= #{money}</if>
+			<if test="createTime != null and createTime !=''"  > and `create_time`= #{createTime}</if>
+			<if test="auditingTime != null and auditingTime !=''"  > and `auditing_time`= #{auditingTime}</if>
+			<if test="handleTime != null and handleTime !=''"  > and `handle_time`= #{handleTime}</if>
+			<if test="bank != null and bank !=''"  > and `bank`= #{bank}</if>
+			<if test="bankCode != null and bankCode !=''"  > and `bank_code`= #{bankCode}</if>
+			<if test="state != null and state !=''"  > and `state`= #{state}</if>
+			<if test="failReason != null and failReason !=''"  > and `fail_reason`= #{failReason}</if>
+			<if test="optId != null and optId !=''"  > and `opt_id`= #{optId}</if>
+			<if test="optName != null and optName !=''"  > and `opt_name`= #{optName}</if>
+		</trim>
+    </sql>
+    
+	<select id="get" parameterType="Integer" resultMap="MemberApplyDrawingResult">
+		select
+		   *
+		from `member_apply_drawing`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getMemberApplyDrawingsCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `member_apply_drawing`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getMemberApplyDrawings" parameterType="java.util.Map" resultMap="MemberApplyDrawingResult">
+		select
+		   *
+		from `member_apply_drawing`
+		<include refid="getCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+</mapper>

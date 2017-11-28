@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.write.flash.LogActFlashSaleWriteDao">
+	<!-- <resultMap id="LogActFlashSaleResult" type="com.ejavashop.entity.promotion.flash.LogActFlashSale">
+			<result property="id" column="id" />
+			<result property="optType" column="opt_type" />
+			<result property="optUserId" column="opt_user_id" />
+			<result property="optUserName" column="opt_user_name" />
+			<result property="optTime" column="opt_time" />
+			<result property="actFlashSaleId" column="act_flash_sale_id" />
+			<result property="actFlashSaleName" column="act_flash_sale_name" />
+			<result property="actDate" column="act_date" />
+			<result property="channel" column="channel" />
+			<result property="status" column="status" />
+			<result property="auditOpinion" column="audit_opinion" />
+			<result property="auditRule" column="audit_rule" />
+			<result property="remark" column="remark" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="LogActFlashSaleResult">
+		select
+		   *
+		from `log_act_flash_sale`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.promotion.flash.LogActFlashSale">
+        update `log_act_flash_sale` 
+    	<set>
+			<if test="id != null">`id`= #{id},</if>
+			<if test="optType != null">`opt_type`= #{optType},</if>
+			<if test="optUserId != null">`opt_user_id`= #{optUserId},</if>
+			<if test="optUserName != null">`opt_user_name`= #{optUserName},</if>
+			<if test="optTime != null">`opt_time`= #{optTime},</if>
+			<if test="actFlashSaleId != null">`act_flash_sale_id`= #{actFlashSaleId},</if>
+			<if test="actFlashSaleName != null">`act_flash_sale_name`= #{actFlashSaleName},</if>
+			<if test="actDate != null">`act_date`= #{actDate},</if>
+			<if test="channel != null">`channel`= #{channel},</if>
+			<if test="status != null">`status`= #{status},</if>
+			<if test="auditOpinion != null">`audit_opinion`= #{auditOpinion},</if>
+			<if test="auditRule != null">`audit_rule`= #{auditRule},</if>
+			<if test="remark != null">`remark`= #{remark},</if>
+			<if test="createUserId != null">`create_user_id`= #{createUserId},</if>
+			<if test="createUserName != null">`create_user_name`= #{createUserName},</if>
+			<if test="createTime != null">`create_time`= #{createTime},</if>
+			<if test="updateUserId != null">`update_user_id`= #{updateUserId},</if>
+			<if test="updateUserName != null">`update_user_name`= #{updateUserName},</if>
+			<if test="updateTime != null">`update_time`= #{updateTime}</if>
+	    </set>
+        where `id` = #{id}
+	</update> -->
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.promotion.flash.LogActFlashSale" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`log_act_flash_sale`
+		(
+			`opt_type`,
+			`opt_user_id`,
+			`opt_user_name`,
+			`opt_time`,
+			`act_flash_sale_id`,
+			`act_flash_sale_name`,
+			`act_date`,
+			`pc_image`,
+			`mobile_image`,
+			`channel`,
+			`status`,
+			`audit_opinion`,
+			`audit_rule`,
+			`remark`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`,
+			`update_user_id`,
+			`update_user_name`,
+			`update_time`
+		) select 
+			#{optType},
+			#{optUserId},
+			#{optUserName},
+			now(),
+			`id`,
+			`act_flash_sale_name`,
+			`act_date`,
+			`pc_image`,
+			`mobile_image`,
+			`channel`,
+			`status`,
+			`audit_opinion`,
+			`audit_rule`,
+			`remark`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`,
+			`update_user_id`,
+			`update_user_name`,
+			`update_time`
+		from `act_flash_sale` act_flash_sale where act_flash_sale.`id` = #{actFlashSaleId}
+	</insert>
+	
+	<!-- <delete id="delete">
+        delete from `log_act_flash_sale` where `id` = #{id}
+	</delete> -->
+	
+</mapper>

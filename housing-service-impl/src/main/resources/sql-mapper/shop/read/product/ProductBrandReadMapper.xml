@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.product.ProductBrandReadDao">
+	<resultMap id="ProductBrandResult" type="com.ejavashop.entity.product.ProductBrand">
+			<result property="id" column="id" />
+			<result property="name" column="name" />
+			<result property="nameFirst" column="name_first" />
+			<result property="image" column="image" />
+			<result property="lookMethod" column="look_method" />
+			<result property="top" column="top" />
+			<result property="sort" column="sort" />
+			<result property="createId" column="create_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateId" column="update_id" />
+			<result property="updateTime" column="update_time" />
+			<result property="state" column="state" />
+	</resultMap>
+	<select id="getById" parameterType="Integer" resultMap="ProductBrandResult">
+		select
+		   *
+		from `product_brand`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getByIds" parameterType="String" resultMap="ProductBrandResult">
+		select
+		   *
+		from `product_brand`
+		where `id` in (${ids})
+	</select>
+</mapper>

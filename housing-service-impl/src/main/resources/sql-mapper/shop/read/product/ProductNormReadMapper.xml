@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.product.ProductNormReadDao">
+
+    <select id="countNorm" resultType="java.lang.Integer">
+        select count(1) from product_norm t
+        <include refid="pageNormWhere"/>
+    </select>
+    
+    <select id="getNormByPage" resultType="com.ejavashop.entity.product.ProductNorm">
+        select * from product_norm t
+        <include refid="pageNormWhere"/>
+        order by sort desc,id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    
+    <select id="getNormById" resultType="com.ejavashop.entity.product.ProductNorm">
+        select * from product_norm t
+        where t.id = #{id}
+    </select>
+    
+    <select id="getNormByIds" resultType="com.ejavashop.entity.product.ProductNorm">
+        select * from product_norm t
+        where t.id in(${ids})
+    </select>
+    
+    <sql id="pageNormWhere">
+        <where>
+            state != 0
+            <if test="param1.q_name != null and param1.q_name != ''">
+                and t.name like CONCAT('%',#{param1.q_name},'%')
+            </if>
+            <if test="param1.q_type != null and param1.q_type != ''">
+                and t.type = #{param1.q_type}
+            </if>
+            <if test="param1.q_state != null and param1.q_state != ''">
+                and t.state = #{param1.q_state}
+            </if>
+        </where>
+    </sql>
+
+  
+    <select id="getNormAttrById" resultType="com.ejavashop.entity.product.ProductNormAttr">
+        select * from product_norm_attr where id = #{id}
+    </select>
+    <select id="getAttrByNormId" resultType="com.ejavashop.entity.product.ProductNormAttr">
+        select * from product_norm_attr where product_norm_id = #{id}
+    </select>
+    <select id="getAttrByNormIds" resultType="com.ejavashop.entity.product.ProductNormAttr">
+        select * from product_norm_attr where product_norm_id in (#{ids})
+    </select>
+    <select id="countNormAttr" resultType="java.lang.Integer">
+        select count(1) from product_norm_attr t, product_norm t1
+        <include refid="pageNormAttrWhere"/>
+    </select>
+    <select id="getNormAttrByPage" resultType="com.ejavashop.entity.product.ProductNormAttr">
+        select t.*, t1.name productNormName from product_norm_attr t, product_norm t1
+        <include refid="pageNormAttrWhere"/>
+        order by sort desc,id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    <sql id="pageNormAttrWhere">
+        <where>
+            t.product_norm_id = t1.id
+            <if test="param1.q_name != null and param1.q_name != ''">
+                and t.name like CONCAT('%',#{param1.q_name},'%')
+            </if>
+            <if test="param1.q_productNormId != null and param1.q_productNormId != ''">
+                and t.productNormId like CONCAT('%',#{param1.q_productNormId},'%')
+            </if>
+        </where>
+    </sql>
+
+ 
+    
+    <select id="getNormAttrOptById" resultType="com.ejavashop.entity.product.ProductNormAttrOpt">
+        select * from product_norm_attr_opt where id = #{id}
+    </select>
+    
+    <select id="countNormAttrOpt" resultType="java.lang.Integer">
+        select count(1) from product_norm_attr_opt t
+        <include refid="pageNormAttrOptWhere"/>
+    </select>
+  
+    <select id="getNormAttrOptByPage" resultType="com.ejavashop.entity.product.ProductNormAttrOpt">
+        select * from product_norm_attr_opt t
+        <include refid="pageNormAttrOptWhere"/>
+        order by id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+   
+    <sql id="pageNormAttrOptWhere">
+        <where>
+            <if test="param1.q_productNormId != null and param1.q_productNormId != ''">
+                and t.product_norm_id = #{param1.q_productNormId}
+            </if>
+            <if test="param1.q_productId != null and param1.q_productId != ''">
+                and t.product_id = #{param1.q_productId}
+            </if>
+            <if test="param1.q_sellerId != null and param1.q_sellerId != ''">
+                and t.seller_id = #{param1.q_sellerId}
+            </if>
+            <if test="param1.q_typeAttr != null and param1.q_typeAttr != ''">
+                and t.type_attr = #{param1.q_typeAttr}
+            </if>
+            <if test="param1.attrId != null and param1.attrId != ''">
+                and t.attr_id = #{param1.attrId}
+            </if>
+            <if test="param1.q_type != null and param1.q_type != ''">
+                and t.type = #{param1.q_type}
+            </if>
+            <if test="param1.q_name != null and param1.q_name != ''">
+                and t.name like CONCAT('%',#{param1.q_name},'%')
+            </if>
+        </where>
+    </sql>
+</mapper>

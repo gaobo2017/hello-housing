@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.cart.CartReadDao">
+	<resultMap id="CartResult" type="com.ejavashop.entity.cart.Cart">
+			<result property="id" column="id" />
+			<result property="createTime" column="create_time" />
+			<result property="memberId" column="member_id" />
+			<result property="count" column="count" />
+			<result property="specId" column="spec_id" />
+			<result property="specInfo" column="spec_info" />
+			<result property="productId" column="product_id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="productGoodsId" column="product_goods_id" />
+			<result property="checked" column="checked" />
+	</resultMap>
+
+	<!-- 移到write库 <select id="getByMemberId" parameterType="Integer" resultMap="CartResult">
+		select
+		   *
+		from `cart`
+		where `member_id` = #{memberId}
+	</select> -->
+
+
+	   
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="q_id != null and q_id !=''"  > and `id`= #{q_id}</if>
+			<if test="q_createTime != null and q_createTime !=''"  > and `create_time`= #{q_createTime}</if>
+			<if test="q_memberId != null and q_memberId !=''"  > and `member_id`= #{q_memberId}</if>
+			<if test="q_count != null and q_count !=''"  > and `count`= #{q_count}</if>
+			<if test="q_specId != null and q_specId !=''"  > and `spec_id`= #{q_specId}</if>
+			<if test="q_specInfo != null and q_specInfo !=''"  > and `spec_info`= #{q_specInfo}</if>
+			<if test="q_productId != null and q_productId !=''"  > and `product_id`= #{q_productId}</if>
+			<if test="q_sellerId != null and q_sellerId !=''"  > and `seller_id`= #{q_sellerId}</if>
+			<if test="q_productGoodsId != null and q_productGoodsId !=''"  > and `product_goods_id`= #{q_productGoodsId}</if>
+		</trim>
+	</sql>
+	
+	
+	<select id="get" parameterType="Integer" resultMap="CartResult">
+		select
+		   *
+		from `cart`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getCartNumberByMId" parameterType="Integer" resultType="Integer">
+		select
+		   sum(count)
+		from `cart`
+		where `member_id` = #{memberId}
+	</select>
+	
+	
+	
+	<!-- 商城购物车 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from cart
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询商城购物车列表 -->
+	<select id="queryList" resultMap="CartResult"  parameterType="map">
+		select 
+		  * 
+		from cart 
+		<include refid="Where_Clause"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

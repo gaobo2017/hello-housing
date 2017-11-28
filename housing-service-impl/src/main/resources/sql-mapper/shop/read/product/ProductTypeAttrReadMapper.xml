@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.product.ProductTypeAttrReadDao">
+
+    <select id="get" resultType="com.ejavashop.entity.product.ProductTypeAttr">
+        select
+        <include refid="selectColumn"/>
+        from `product_type_attr`
+        where `id` = #{id}
+    </select>
+    <select id="getByTypeIdAndQuery" resultType="com.ejavashop.entity.product.ProductTypeAttr">
+        select
+        <include refid="selectColumn"/>
+        from `product_type_attr`
+        where `product_type_id` = #{id} and `type` = 1
+        order by `sort` desc
+    </select>
+
+    <sql id="selectColumn">
+        `id`,
+        `name`,
+        `value`,
+        `product_type_id`,
+        `type`,
+        `create_id`,
+        `create_time`,
+        `sort`
+    </sql>
+    
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.member.MemberRuleWriteDao">
+	<resultMap id="MemberRuleResult" type="com.ejavashop.entity.member.MemberRule">
+			<result property="id" column="id" />
+			<result property="register" column="register" />
+			<result property="login" column="login" />
+			<result property="orderEvaluate" column="order_evaluate" />
+			<result property="orderBuy" column="order_buy" />
+			<result property="orderMax" column="order_max" />
+			<result property="state" column="state" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="MemberRuleResult">
+		select
+		   *
+		from `member_rule`
+		where `id` = #{id}
+		<if test="state != null">
+			and `state`= #{state}
+		</if>
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.member.MemberRule">
+        update `member_rule` 
+    	<set>
+			<if test="register != null">`register`= #{register},</if>
+			<if test="login != null">`login`= #{login},</if>
+			<if test="orderEvaluate != null">`order_evaluate`= #{orderEvaluate},</if>
+			<if test="orderBuy != null">`order_buy`= #{orderBuy},</if>
+			<if test="orderMax != null">`order_max`= #{orderMax},</if>
+			<if test="state != null">`state`= #{state}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="save" parameterType="com.ejavashop.entity.member.MemberRule" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`member_rule`
+		(
+			`register`,
+			`login`,
+			`order_evaluate`,
+			`order_buy`,
+			`order_max`,
+			`state`
+		)
+		values
+		(
+			#{register},
+			#{login},
+			#{orderEvaluate},
+			#{orderBuy},
+			#{orderMax},
+			#{state}
+		)
+	</insert>
+</mapper>

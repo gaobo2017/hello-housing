@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.member.MemberProductBackReadDao">
+	<resultMap id="MemberProductBackResult" type="com.ejavashop.entity.member.MemberProductBack">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="orderId" column="order_id" />
+			<result property="orderProductId" column="order_product_id" />
+			<result property="productId" column="product_id" />
+			<result property="memberId" column="member_id" />
+			<result property="memberName" column="member_name" />
+			<result property="provinceId" column="province_id" />
+			<result property="cityId" column="city_id" />
+			<result property="areaId" column="area_id" />
+			<result property="addressAll" column="address_all" />
+			<result property="addressInfo" column="address_info" />
+			<result property="phone" column="phone" />
+			<result property="returnName" column="return_name" />
+			<result property="zipCode" column="zip_code" />
+			<result property="question" column="question" />
+			<result property="image" column="image" />
+			<result property="stateReturn" column="state_return" />
+			<result property="stateMoney" column="state_money" />
+			<result property="backMoney" column="back_money" />
+			<result property="backIntegral" column="back_integral" />
+			<result property="backIntegralMoney" column="back_integral_money" />
+			<result property="backCouponUserId" column="back_coupon_user_id" />
+			<result property="backMoneyTime" column="back_money_time" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+			<result property="optId" column="opt_id" />
+			<result property="remark" column="remark" />
+	</resultMap>
+	
+	<select id="getSettleBacksCount" resultType="Integer">
+		select
+		   count(1)
+		from `member_product_back`
+		where `seller_id` = #{sellerId}
+		and `state_money` > 1
+		and `back_money_time` &gt;= #{startTime}
+		and `back_money_time` &lt;= #{endTime}
+	</select>
+	
+	<select id="getSettleBacks" resultMap="MemberProductBackResult">
+		select
+		   *
+		from `member_product_back`
+		where `seller_id` = #{sellerId}
+		and `state_money` > 1
+		and `back_money_time` &gt;= #{startTime}
+		and `back_money_time` &lt;= #{endTime}
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="id != null and id !=''"  > and `id`= #{id}</if>
+			<if test="sellerId != null and sellerId !=''"  > and `seller_id`= #{sellerId}</if>
+			<if test="orderId != null and orderId !=''"  > and `order_id`= #{orderId}</if>
+			<if test="orderProductId != null and orderProductId !=''"  > and `order_product_id`= #{orderProductId}</if>
+			<if test="productId != null and productId !=''"  > and `product_id`= #{productId}</if>
+			<if test="memberId != null and memberId !=''"  > and `member_id`= #{memberId}</if>
+			<if test="memberName != null and memberName !=''"  > and `member_name`= #{memberName}</if>
+			<if test="provinceId != null and provinceId !=''"  > and `province_id`= #{provinceId}</if>
+			<if test="cityId != null and cityId !=''"  > and `city_id`= #{cityId}</if>
+			<if test="areaId != null and areaId !=''"  > and `area_id`= #{areaId}</if>
+			<if test="addressAll != null and addressAll !=''"  > and `address_all`= #{addressAll}</if>
+			<if test="addressInfo != null and addressInfo !=''"  > and `address_info`= #{addressInfo}</if>
+			<if test="phone != null and phone !=''"  > and `phone`= #{phone}</if>
+			<if test="returnName != null and returnName !=''"  > and `return_name`= #{returnName}</if>
+			<if test="zipCode != null and zipCode !=''"  > and `zip_code`= #{zipCode}</if>
+			<if test="question != null and question !=''"  > and `question`= #{question}</if>
+			<if test="image != null and image !=''"  > and `image`= #{image}</if>
+			<if test="stateReturn != null and stateReturn !=''"  > and `state_return`= #{stateReturn}</if>
+			<if test="stateMoney != null and stateMoney !=''"  > and `state_money`= #{stateMoney}</if>
+			<if test="createTime != null and createTime !=''"  > and `create_time`= #{createTime}</if>
+			<if test="updateTime != null and updateTime !=''"  > and `update_time`= #{updateTime}</if>
+			<if test="optId != null and optId !=''"  > and `opt_id`= #{optId}</if>
+			<if test="remark != null and remark !=''"  > and `remark`= #{remark}</if>
+		</trim>
+	</sql>
+	
+	
+	<select id="get" parameterType="Integer" resultMap="MemberProductBackResult">
+		select
+		   *
+		from `member_product_back`
+		where `id` = #{id}
+	</select>
+	
+	
+	<!-- 用户退货 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from member_product_back
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询用户退货列表 -->
+	<select id="queryList" resultMap="MemberProductBackResult"  parameterType="map">
+		select 
+		  * 
+		from member_product_back 
+		<include refid="Where_Clause"/>
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

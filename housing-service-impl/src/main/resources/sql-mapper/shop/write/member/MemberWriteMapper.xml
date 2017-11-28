@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.member.MemberWriteDao">
+	<resultMap id="MemberResult" type="com.ejavashop.entity.member.Member">
+			<result property="id" column="id" />
+			<result property="name" column="name" />
+			<result property="password" column="password" />
+			<result property="grade" column="grade" />
+			<result property="gradeValue" column="grade_value" />
+			<result property="integral" column="integral" />
+			<result property="registerTime" column="register_time" />
+			<result property="lastLoginTime" column="last_login_time" />
+			<result property="lastLoginIp" column="last_login_ip" />
+			<result property="loginNumber" column="login_number" />
+			<result property="lastAddressId" column="last_address_id" />
+			<result property="lastPaymentCode" column="last_payment_code" />
+			<result property="gender" column="gender" />
+			<result property="birthday" column="birthday" />
+			<result property="email" column="email" />
+			<result property="qq" column="qq" />
+			<result property="mobile" column="mobile" />
+			<result property="phone" column="phone" />
+			<result property="pwdErrCount" column="pwd_err_count" />
+			<result property="source" column="source" />
+			<result property="balance" column="balance" />
+			<result property="balancePwd" column="balance_pwd" />
+			<result property="isEmailVerify" column="is_email_verify" />
+			<result property="isSmsVerify" column="is_sms_verify" />
+			<result property="smsVerifyCode" column="sms_verify_code" />
+			<result property="emailVerifyCode" column="email_verify_code" />
+			<result property="canReceiveSms" column="can_receive_sms" />
+			<result property="canReceiveEmail" column="can_receive_email" />
+			<result property="status" column="status" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<sql id="getCondition">
+        <where>
+            <if test="queryMap.q_name != null and queryMap.q_name !=''">
+                and name like CONCAT('%', #{queryMap.q_name}, '%')
+            </if>
+            <if test="queryMap.q_grade != null and queryMap.q_grade !=''">
+                and grade = #{queryMap.q_grade}
+            </if>
+            <if test="queryMap.q_email != null and queryMap.q_email !=''">
+                and email like CONCAT('%', #{queryMap.q_email}, '%')
+            </if>
+            <if test="queryMap.q_mobile != null and queryMap.q_mobile !=''">
+                and mobile = #{queryMap.q_mobile}
+            </if>
+            <if test="queryMap.q_source != null and queryMap.q_source !=''">
+                and source = #{queryMap.q_source}
+            </if>
+            <if test="queryMap.q_status != null and queryMap.q_status !=''">
+                and status = #{queryMap.q_status}
+            </if>
+            <if test="queryMap.q_isEmailVerify != null and queryMap.q_isEmailVerify !=''">
+                and is_email_verify = #{queryMap.q_isEmailVerify}
+            </if>
+            <if test="queryMap.q_isSmsVerify != null and queryMap.q_isSmsVerify !=''">
+                and is_sms_verify = #{queryMap.q_isSmsVerify}
+            </if>
+        </where>
+    </sql>
+    
+	<select id="get" parameterType="Integer" resultMap="MemberResult">
+		select
+		   *
+		from `member`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getMembersCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `member`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getMembers" parameterType="java.util.Map" resultMap="MemberResult">
+		select
+		   *
+		from `member`
+		<include refid="getCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.member.Member">
+        update `member` 
+    	<set>
+			<if test="name != null">`name`= #{name},</if>
+			<if test="password != null">`password`= #{password},</if>
+			<if test="grade != null">`grade`= #{grade},</if>
+			<if test="gradeValue != null">`grade_value`= #{gradeValue},</if>
+			<if test="integral != null">`integral`= #{integral},</if>
+			<!-- <if test="registerTime != null">`register_time`= #{registerTime},</if> -->
+			<if test="lastLoginTime != null">`last_login_time`= #{lastLoginTime},</if>
+			<if test="lastLoginIp != null">`last_login_ip`= #{lastLoginIp},</if>
+			<if test="loginNumber != null">`login_number`= #{loginNumber},</if>
+			<if test="lastAddressId != null">`last_address_id`= #{lastAddressId},</if>
+			<if test="lastPaymentCode != null">`last_payment_code`= #{lastPaymentCode},</if>
+			<if test="gender != null">`gender`= #{gender},</if>
+			<if test="birthday != null">`birthday`= #{birthday},</if>
+			<if test="email != null">`email`= #{email},</if>
+			<if test="qq != null">`qq`= #{qq},</if>
+			<if test="mobile != null">`mobile`= #{mobile},</if>
+			<if test="phone != null">`phone`= #{phone},</if>
+			<if test="pwdErrCount != null">`pwd_err_count`= #{pwdErrCount},</if>
+			<if test="source != null">`source`= #{source},</if>
+			<if test="balance != null">`balance`= #{balance},</if>
+			<if test="balancePwd != null">`balance_pwd`= #{balancePwd},</if>
+			<if test="isEmailVerify != null">`is_email_verify`= #{isEmailVerify},</if>
+			<if test="isSmsVerify != null">`is_sms_verify`= #{isSmsVerify},</if>
+			<if test="smsVerifyCode != null">`sms_verify_code`= #{smsVerifyCode},</if>
+			<if test="emailVerifyCode != null">`email_verify_code`= #{emailVerifyCode},</if>
+			<if test="canReceiveSms != null">`can_receive_sms`= #{canReceiveSms},</if>
+			<if test="canReceiveEmail != null">`can_receive_email`= #{canReceiveEmail},</if>
+			<if test="status != null">`status`= #{status},</if>
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+
+	<update id="updateGrade">
+        update `member` 
+        set `grade`= #{grade},
+        	`grade_value`= `grade_value` + #{gradeValue},
+        	`update_time`= now()
+        where `id` = #{id}
+	</update>
+
+	<update id="updateIntegral">
+        update `member` 
+        set `integral`= `integral` + #{integral},
+        	`update_time`= now()
+        where `id` = #{id}
+	</update>
+
+	<update id="updateBalance">
+        update `member` 
+        set `balance`= `balance` + #{balance},
+        	`update_time`= now()
+        where `id` = #{id}
+	</update>
+	
+	<update id="updateValue">
+        update `member` 
+        set `grade`= #{grade},
+        	`grade_value`= `grade_value` + #{gradeValue},
+			`integral`= `integral` + #{integral},
+        	`update_time`= now()
+        where `id` = #{id}
+	</update>
+	
+	<insert id="save" parameterType="com.ejavashop.entity.member.Member" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `member`
+		(
+			`name`,
+			`password`,
+			`grade`,
+			`grade_value`,
+			`integral`,
+			`register_time`,
+			`last_login_time`,
+			`last_login_ip`,
+			`login_number`,
+			`last_address_id`,
+			`last_payment_code`,
+			`gender`,
+			`birthday`,
+			`email`,
+			`qq`,
+			`mobile`,
+			`phone`,
+			`pwd_err_count`,
+			`source`,
+			`balance`,
+			`balance_pwd`,
+			`is_email_verify`,
+			`is_sms_verify`,
+			`sms_verify_code`,
+			`email_verify_code`,
+			`can_receive_sms`,
+			`can_receive_email`,
+			`status`,
+			`update_time`
+		)
+		values
+		(
+			#{name},
+			#{password},
+			#{grade},
+			#{gradeValue},
+			#{integral},
+			now(),
+			now(),
+			#{lastLoginIp},
+			#{loginNumber},
+			#{lastAddressId},
+			#{lastPaymentCode},
+			#{gender},
+			#{birthday},
+			#{email},
+			#{qq},
+			#{mobile},
+			#{phone},
+			#{pwdErrCount},
+			#{source},
+			#{balance},
+			#{balancePwd},
+			#{isEmailVerify},
+			#{isSmsVerify},
+			#{smsVerifyCode},
+			#{emailVerifyCode},
+			#{canReceiveSms},
+			#{canReceiveEmail},
+			#{status},
+			now()
+		)
+	</insert>
+
+	<select id="getByNameAndPwd" parameterType="String" resultMap="MemberResult">
+		select
+		   *
+		from `member`
+		where `name` = #{name}
+		and `password` = #{password}
+	</select>
+	
+	<select id="getByName" parameterType="String" resultMap="MemberResult">
+		select
+		   *
+		from `member`
+		where `name` = #{name}
+	</select>
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.member.MemberGradeIntegralLogsWriteDao">
+	<resultMap id="MemberGradeIntegralLogsResult" type="com.ejavashop.entity.member.MemberGradeIntegralLogs">
+			<result property="id" column="id" />
+			<result property="memberId" column="member_id" />
+			<result property="memberName" column="member_name" />
+			<result property="value" column="value" />
+			<result property="createTime" column="create_time" />
+			<result property="optType" column="opt_type" />
+			<result property="optDes" column="opt_des" />
+			<result property="type" column="type" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="MemberGradeIntegralLogsResult">
+		select
+		   *
+		from `member_grade_integral_logs`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.member.MemberGradeIntegralLogs">
+        update `member_grade_integral_logs` 
+    	<set>
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="memberName != null">`member_name`= #{memberName},</if>
+			<if test="value != null">`value`= #{value},</if>
+			<if test="optType != null">`opt_type`= #{optType},</if>
+			<if test="optDes != null">`opt_des`= #{optDes},</if>
+			<if test="type != null">`type`= #{type}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="save" parameterType="com.ejavashop.entity.member.MemberGradeIntegralLogs" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`member_grade_integral_logs`
+		(
+			`member_id`,
+			`member_name`,
+			`value`,
+			`create_time`,
+			`opt_type`,
+			`opt_des`,
+			`type`
+		)
+		values
+		(
+			#{memberId},
+			#{memberName},
+			#{value},
+			now(),
+			#{optType},
+			#{optDes},
+			#{type}
+		)
+	</insert>
+	
+	<select id="getMemberGradeIntegralLogsCount" resultType="Integer">
+		select
+		   count(*)
+		from `member_grade_integral_logs`
+		where `member_id` = #{memberId}
+		and `type` = #{type}
+	</select>
+
+	<select id="getMemberGradeIntegralLogs" resultMap="MemberGradeIntegralLogsResult">
+		select
+		   *
+		from `member_grade_integral_logs`
+		where `member_id` = #{memberId}
+		and `type` = #{type}
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

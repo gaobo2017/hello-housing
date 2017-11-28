@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.product.ProductPictureWriteDao">
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into `product_picture`(
+            `product_id`,
+            `image_path`,
+            `sort`,
+            `create_id`,
+            `create_time`,
+            `seller_id`,
+            `state`,
+            `product_lead`
+        )
+        values(
+            #{productId},
+            #{imagePath},
+            #{sort},
+            #{createId},
+            now(),
+            #{sellerId},
+            #{state},
+            #{productLead}
+        )
+    </insert>
+    <update id="update">
+        update `product_picture`
+        <set>
+            <if test = "null != id and '' != id">`id`= #{id},</if>
+            <if test = "null != productId and '' != productId">`product_id`= #{productId},</if>
+            <if test = "null != imagePath and '' != imagePath">`image_path`= #{imagePath},</if>
+            <if test = "null != sort and '' != sort">`sort`= #{sort},</if>
+            <if test = "null != createId and '' != createId">`create_id`= #{createId},</if>
+            <if test = "null != createTime and '' != createTime">`create_time`= #{createTime},</if>
+            <if test = "null != sellerId and '' != sellerId">`seller_id`= #{sellerId},</if>
+            <if test = "null != state and '' != state">`state`= #{state},</if>
+            <if test = "null != productLead and '' != productLead">`product_lead`= #{productLead},</if>
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="del">
+        delete from `product_picture` where `id` = #{id}
+    </delete>
+
+    <select id="get" resultType="com.ejavashop.entity.product.ProductPicture">
+        select
+        <include refid="selectColumn"/>
+        from `product_picture`
+        where `id` = #{id}
+    </select>
+    <select id="page" resultType="com.ejavashop.entity.product.ProductPicture">
+        select
+        <include refid="selectColumn"/>
+        from `product_picture`
+        <include refid="whereConditions"/>
+        order by sort desc,id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+
+    <select id="getByProductId" resultType="com.ejavashop.entity.product.ProductPicture">
+        select
+        <include refid="selectColumn"/>
+        from `product_picture`
+        where `product_id` = #{productId}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from `product_picture`
+        <include refid="whereConditions"/>
+    </select>
+
+    <sql id="selectColumn">
+        `id`,
+        `product_id`,
+        `image_path`,
+        `sort`,
+        `create_id`,
+        `create_time`,
+        `seller_id`,
+        `state`,
+        `product_lead`
+    </sql>
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_id != null and '' != param1.q_id">
+                and `id`= #{param1.q_id}
+            </if>
+            <if test="param1.q_productId != null and '' != param1.q_productId">
+                and `product_id`= #{param1.q_productId}
+            </if>
+            <if test="param1.q_imagePath != null and '' != param1.q_imagePath">
+                and `image_path`= #{param1.q_imagePath}
+            </if>
+            <if test="param1.q_sort != null and '' != param1.q_sort">
+                and `sort`= #{param1.q_sort}
+            </if>
+            <if test="param1.q_createId != null and '' != param1.q_createId">
+                and `create_id`= #{param1.q_createId}
+            </if>
+            <if test="param1.q_createTime != null and '' != param1.q_createTime">
+                and `create_time`= #{param1.q_createTime}
+            </if>
+            <if test="param1.q_sellerId != null and '' != param1.q_sellerId">
+                and `seller_id`= #{param1.q_sellerId}
+            </if>
+            <if test="param1.q_state != null and '' != param1.q_state">
+                and `state`= #{param1.q_state}
+            </if>
+            <if test="param1.q_productLead != null and '' != param1.q_productLead">
+                and `product_lead`= #{param1.q_productLead}
+            </if>
+        </where>
+    </sql>
+
+    <select id="getproductLead" parameterType="Integer" resultType="com.ejavashop.entity.product.ProductPicture">
+        select
+        *
+        from `product_picture`
+        where `product_id` = #{productId}
+        order by product_lead asc
+        limit 1
+    </select>
+    
+    
+    <delete id="delByProductId">
+        delete from `product_picture` where `product_id` = #{productId}
+	</delete>
+	
+	<select id="list" resultType="com.ejavashop.entity.product.ProductPicture">
+		select * from `product_picture` t1
+		order by id
+	</select>
+    
+    <!-- <select id="getCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from `product_picture` t1
+		<include refid="whereConditionsSeller" />
+	</select>
+	
+	
+	
+	
+	<select id="page" resultType="com.ejavashop.entity.product.ProductPicture">
+		select * from `product_picture` t1
+		<include refid="whereConditionsSeller" />
+		order by id
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	
+	
+	查询条件
+	<sql id="whereConditionsSeller">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="id != null and id !=''"  > and `id`= #{id}</if>
+			<if test="productId != null and productId !=''"  > and `product_id`= #{productId}</if>
+			<if test="imagePath != null and imagePath !=''"  > and `image_path`= #{imagePath}</if>
+			<if test="sort != null and sort !=''"  > and `sort`= #{sort}</if>
+			<if test="createId != null and createId !=''"  > and `create_id`= #{createId}</if>
+			<if test="createTime != null and createTime !=''"  > and `create_time`= #{createTime}</if>
+			<if test="sellerId != null and sellerId !=''"  > and `seller_id`= #{sellerId}</if>
+			<if test="state != null and state !=''"  > and `state`= #{state}</if>
+			<if test="productLead != null and productLead !=''"  > and `product_lead`= #{productLead}</if>
+		</trim>
+	</sql> -->
+	
+	
+</mapper>

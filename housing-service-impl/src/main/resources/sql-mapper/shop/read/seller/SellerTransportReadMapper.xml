@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.seller.SellerTransportReadDao">
+	<resultMap id="SellerTransportResult" type="com.ejavashop.entity.seller.SellerTransport">
+			<result property="id" column="id" />
+			<result property="transName" column="trans_name" />
+			<result property="transEmsInfo" column="trans_ems_info" />
+			<result property="transExpress" column="trans_express" />
+			<result property="transExpressInfo" column="trans_express_info" />
+			<result property="transMail" column="trans_mail" />
+			<result property="transMailInfo" column="trans_mail_info" />
+			<result property="createtime" column="createtime" />
+			<result property="sellerId" column="seller_id" />
+			<result property="transType" column="trans_type" />
+			<result property="state" column="state" />
+			<result property="transTime" column="trans_time" />
+			<result property="transEms" column="trans_ems" />
+	</resultMap>
+
+	<select id="getInUseBySellerId" parameterType="Integer" resultMap="SellerTransportResult">
+		select
+		   *
+		from `seller_transport`
+		where `seller_id` = #{sellerId}
+		and `state` = 1
+		limit 1
+	</select>
+
+
+	<select id="get" parameterType="Integer" resultMap="SellerTransportResult">
+		select
+		   *
+		from `seller_transport`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from `seller_transport` t1
+		<include refid="whereConditions" />
+	</select>
+	
+	
+	<select id="page" resultType="com.ejavashop.entity.seller.SellerTransport">
+		select * from `seller_transport` t1
+		<include refid="whereConditions" />
+		order by id
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="list" resultType="com.ejavashop.entity.seller.SellerTransport">
+		select * from `seller_transport` t1
+		order by id
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="id != null and id !=''"  > and `id`= #{id}</if>
+			<if test="transName != null and transName !=''"  > and `trans_name`= #{transName}</if>
+			<if test="transEmsInfo != null and transEmsInfo !=''"  > and `trans_ems_info`= #{transEmsInfo}</if>
+			<if test="transExpress != null and transExpress !=''"  > and `trans_express`= #{transExpress}</if>
+			<if test="transExpressInfo != null and transExpressInfo !=''"  > and `trans_express_info`= #{transExpressInfo}</if>
+			<if test="transMail != null and transMail !=''"  > and `trans_mail`= #{transMail}</if>
+			<if test="transMailInfo != null and transMailInfo !=''"  > and `trans_mail_info`= #{transMailInfo}</if>
+			<if test="createtime != null and createtime !=''"  > and `createtime`= #{createtime}</if>
+			<if test="sellerId != null and sellerId !=''"  > and `seller_id`= #{sellerId}</if>
+			<if test="transType != null and transType !=''"  > and `trans_type`= #{transType}</if>
+			<if test="state != null and state !=''"  > and `state`= #{state}</if>
+			<if test="transTime != null and transTime !=''"  > and `trans_time`= #{transTime}</if>
+			<if test="transEms != null and transEms !=''"  > and `trans_ems`= #{transEms}</if>
+		</trim>
+	</sql>
+	
+	
+</mapper>

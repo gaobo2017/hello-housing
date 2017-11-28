@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.seller.SellerResourcesRolesReadDao">
+	<resultMap id="SellerResourcesRolesResult" type="com.ejavashop.entity.seller.SellerResourcesRoles">
+			<result property="id" column="id" />
+			<result property="resourcesId" column="resources_id" />
+			<result property="sellerRolesId" column="seller_roles_id" />
+			<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SellerResourcesRolesResult">
+		select
+		   *
+		from `seller_resources_roles`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from `seller_resources_roles`
+        <include refid="whereConditions"/>
+    </select>
+
+    <select id="page" resultType="com.ejavashop.entity.seller.SellerResourcesRoles">
+        select * from `seller_resources_roles`
+        <include refid="whereConditions"/>
+        order by id
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    
+    <!-- 查询条件 -->
+    <sql id="whereConditions">
+        where 1=1
+        <trim suffixOverrides=",">
+            <if test="id != null and id !=''">and `id`= #{id}</if>
+            <if test="resourcesId != null and resourcesId !=''">and `resources_id`= #{resourcesId}</if>
+            <if test="rolesId != null and rolesId !=''">and `seller_roles_id`= #{rolesId}</if>
+            <if test="createTime != null and createTime !=''">and `create_time`= #{createTime}</if>
+        </trim>
+    </sql>
+
+    <select id="getResourceByRoleId" resultType="com.ejavashop.entity.system.SystemResources">
+        select * from `system_resources` t1
+        where t1.id in(select t2.resources_id from `seller_resources_roles` t2 where t2.seller_roles_id = #{roleId})
+        and t1.scope=#{scope}
+        order by id
+    </select>
+
+    <select id="getResourceByPid" resultType="com.ejavashop.entity.system.SystemResources">
+        select * from `system_resources` t1
+        where
+        t1.pid = #{pid}
+        and t1.id in(select t2.resources_id from `seller_resources_roles` t2 where t2.seller_roles_id = #{roleId})
+        and t1.scope=#{scope}
+        order by id
+    </select>
+
+    <select id="list" resultType="com.ejavashop.entity.seller.SellerResourcesRoles">
+        select * from `seller_resources_roles` t1
+        order by id
+    </select>
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shopm.read.pcseller.PcSellerRecommendReadDao">
+	<resultMap id="PcSellerRecommendResult" type="com.ejavashop.entity.shopm.pcseller.PcSellerRecommend">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="title" column="title" />
+			<result property="orderNo" column="order_no" />
+			<result property="status" column="status" />
+			<result property="remark" column="remark" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="PcSellerRecommendResult">
+		select
+		   *
+		from `pc_seller_recommend`
+		where `id` = #{id}
+	</select>
+	
+	<sql id="getCondition">
+        <where>
+            <if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''">
+                and `seller_id` = #{queryMap.q_sellerId}
+            </if>
+            <if test="queryMap.q_title != null and queryMap.q_title !=''">
+                and `title` like CONCAT('%', #{queryMap.q_title}, '%')
+            </if>
+            <if test="queryMap.q_status != null and queryMap.q_status !=''">
+                and `status` = #{queryMap.q_status}
+            </if>
+        </where>
+    </sql>
+    
+	<select id="getPcSellerRecommendsCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `pc_seller_recommend`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getPcSellerRecommends" parameterType="java.util.Map" resultMap="PcSellerRecommendResult">
+		select
+		   *
+		from `pc_seller_recommend`
+		<include refid="getCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="getPcSellerRecommendsForView" resultMap="PcSellerRecommendResult">
+		select
+		   *
+		from `pc_seller_recommend`
+		where `seller_id` = #{sellerId}
+		<if test="isPreview != null and isPreview == 0">
+			and `status` = 1
+		</if>
+		<if test="isPreview != null and isPreview == 1">
+			and `status` &lt; 3
+		</if>
+		order by `order_no`
+	</select>
+</mapper>

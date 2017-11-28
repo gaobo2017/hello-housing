@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.order.OrdersReadDao">
+	<resultMap id="OrdersResult" type="com.ejavashop.entity.order.Orders">
+			<result property="id" column="id" />
+			<result property="orderSn" column="order_sn" />
+			<result property="relationOrderSn" column="relation_order_sn" />
+			<result property="orderType" column="order_type" />
+			<result property="sellerId" column="seller_id" />
+			<result property="memberId" column="member_id" />
+			<result property="memberName" column="member_name" />
+			<result property="orderState" column="order_state" />
+			<result property="payTime" column="pay_time" />
+			<result property="paymentStatus" column="payment_status" />
+			<result property="invoiceStatus" column="invoice_status" />
+			<result property="invoiceTitle" column="invoice_title" />
+			<result property="invoiceType" column="invoice_type" />
+			<result property="moneyProduct" column="money_product" />
+			<result property="moneyLogistics" column="money_logistics" />
+			<result property="moneyOrder" column="money_order" />
+			<result property="moneyPaidBalance" column="money_paid_balance" />
+			<result property="moneyPaidReality" column="money_paid_reality" />
+			<result property="moneyCoupon" column="money_coupon" />
+			<result property="moneyActFull" column="money_act_full" />
+			<result property="moneyDiscount" column="money_discount" />
+			<result property="moneyBack" column="money_back" />
+			<result property="moneyIntegral" column="money_integral" />
+			<result property="integral" column="integral" />
+			<result property="couponUserId" column="coupon_user_id" />
+			<result property="actFullId" column="act_full_id" />
+			<result property="ip" column="ip" />
+			<result property="paymentName" column="payment_name" />
+			<result property="paymentCode" column="payment_code" />
+			<result property="name" column="name" />
+			<result property="provinceId" column="province_id" />
+			<result property="cityId" column="city_id" />
+			<result property="areaId" column="area_id" />
+			<result property="addressAll" column="address_all" />
+			<result property="addressInfo" column="address_info" />
+			<result property="mobile" column="mobile" />
+			<result property="email" column="email" />
+			<result property="zipCode" column="zip_code" />
+			<result property="remark" column="remark" />
+			<result property="deliverTime" column="deliver_time" />
+			<result property="finishTime" column="finish_time" />
+			<result property="tradeSn" column="trade_sn" />
+			<result property="source" column="source" />
+			<result property="logisticsId" column="logistics_id" />
+			<result property="logisticsName" column="logistics_name" />
+			<result property="logisticsNumber" column="logistics_number" />
+			<result property="isCodconfim" column="is_codconfim" />
+			<result property="codconfirmId" column="codconfirm_id" />
+			<result property="codconfirmName" column="codconfirm_name" />
+			<result property="codconfirmTime" column="codconfirm_time" />
+			<result property="codconfirmRemark" column="codconfirm_remark" />
+			<result property="codconfirmState" column="codconfirm_state" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="getOrderNumByMIdAndState" resultType="java.lang.Integer">
+		select
+		   count(1)
+		from `orders`
+		where `member_id` = #{memberId}
+		and `order_state` = #{orderState}
+	</select>
+	
+	<select id="get" parameterType="Integer" resultMap="OrdersResult">
+		select
+		   *
+		from `orders`
+		where `id` = #{id}
+	</select>
+
+	<select id="getSettleOrders" resultMap="OrdersResult">
+		select
+		   *
+		from `orders`
+		where `seller_id` = #{sellerId}
+		and `order_state` = 5
+		and `finish_time` &gt;= #{startTime}
+		and `finish_time` &lt;= #{endTime}
+	</select>
+	
+	<select id="getOrderDayDto" resultType="com.ejavashop.dto.OrderDayDto">
+        select 
+        	left(create_time,10) as orderDay,
+        	sum(money_product) as moneyProduct,
+        	sum(money_logistics) as moneyLogistics,
+	    	sum(money_order) as moneyOrder,
+        	sum(money_paid_balance) as moneyPaidBalance,
+        	sum(money_paid_reality) as moneyPaidReality,
+        	sum(money_back) as moneyBack,
+	    	count(1) as count
+    	from orders
+		where
+			`order_state` != 6
+			<if test="queryMap.q_startTime != null and queryMap.q_startTime !=''"  >
+				and `create_time` &gt;= #{queryMap.q_startTime}
+			</if>
+			<if test="queryMap.q_endTime != null and queryMap.q_endTime !=''"  >
+				and `create_time` &lt;= #{queryMap.q_endTime}
+			</if>
+			<if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''"  >
+				and `seller_id`= #{queryMap.q_sellerId}
+			</if>
+		group by orderDay
+    	order by orderDay desc
+    </select>
+	
+	<select id="getUnfinishedOrders" resultMap="OrdersResult">
+		select
+		   *
+		from `orders`
+		where `order_state` = 4
+		and `deliver_time` &lt;= #{deliverTime}
+	</select>
+	
+	<select id="getUnPaiedOrders" resultMap="OrdersResult">
+		select
+		   *
+		from `orders`
+		where `order_state` = 1
+		and `payment_status` = 0
+		and `create_time` &lt;= #{cancelTime}
+	</select>
+	
+	<select id="getSumMoneyOrderBySellerId" resultType="com.ejavashop.dto.OrderDayDto">
+        select 
+	    	sum(money_order) as moneyOrder,
+        	sum(money_back) as moneyBack,
+	    	count(1) as count
+    	from orders
+		where `order_state` = 5
+			and `seller_id`= #{sellerId}
+    </select>
+    
+    <select id="getCountBySellerId" parameterType="Integer" resultType="Integer">
+		select count(1)
+		from `orders`
+		where `seller_id` = #{sellerId}
+	</select>
+	
+	
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+		<if test="id != null and id != ''" >
+			    and id =  #{id}
+			</if>
+		<if test="orderSn != null and orderSn != ''" >
+			    and order_sn =  #{orderSn}
+			</if>
+		<if test="relationOrderSn != null and relationOrderSn != ''" >
+			    and relation_order_sn =  #{relationOrderSn}
+			</if>
+		<if test="orderType != null and orderType != ''" >
+			    and order_type =  #{orderType}
+			</if>
+		<if test="sellerId != null and sellerId != ''" >
+			    and seller_id =  #{sellerId}
+			</if>
+		<if test="memberId != null and memberId != ''" >
+			    and member_id =  #{memberId}
+			</if>
+		<if test="memberName != null and memberName != ''" >
+			    and member_name =  #{memberName}
+			</if>
+		<if test="orderState != null and orderState != ''" >
+			    and order_state =  #{orderState}
+			</if>
+		<if test="payTime != null and payTime != ''" >
+			    and pay_time =  #{payTime}
+			</if>
+		<if test="paymentStatus != null and paymentStatus != ''" >
+			    and payment_status =  #{paymentStatus}
+			</if>
+		<if test="invoiceStatus != null and invoiceStatus != ''" >
+			    and invoice_status =  #{invoiceStatus}
+			</if>
+		<if test="invoiceTitle != null and invoiceTitle != ''" >
+			    and invoice_title =  #{invoiceTitle}
+			</if>
+		<if test="invioceState != null and invioceState != ''" >
+			    and invioce_state =  #{invioceState}
+			</if>
+		<if test="invoiceType != null and invoiceType != ''" >
+			    and invoice_type =  #{invoiceType}
+			</if>
+		<if test="lowerId != null and lowerId != ''" >
+			    and lower_id =  #{lowerId}
+			</if>
+		<if test="giftcardId != null and giftcardId != ''" >
+			    and giftcard_id =  #{giftcardId}
+			</if>
+		<if test="couponcodeId != null and couponcodeId != ''" >
+			    and couponcode_id =  #{couponcodeId}
+			</if>
+		<if test="ip != null and ip != ''" >
+			    and ip =  #{ip}
+			</if>
+		<if test="paymentName != null and paymentName != ''" >
+			    and payment_name =  #{paymentName}
+			</if>
+		<if test="paymentCode != null and paymentCode != ''" >
+			    and payment_code =  #{paymentCode}
+			</if>
+		<if test="name != null and name != ''" >
+			    and name =  #{name}
+			</if>
+		<if test="provinceId != null and provinceId != ''" >
+			    and province_id =  #{provinceId}
+			</if>
+		<if test="cityId != null and cityId != ''" >
+			    and city_id =  #{cityId}
+			</if>
+		<if test="areaId != null and areaId != ''" >
+			    and area_id =  #{areaId}
+			</if>
+		<if test="mobile != null and mobile != ''" >
+			    and mobile =  #{mobile}
+			</if>
+		<if test="email != null and email != ''" >
+			    and email =  #{email}
+			</if>
+		<if test="zipCode != null and zipCode != ''" >
+			    and zip_code =  #{zipCode}
+			</if>
+		<if test="deliverTime != null and deliverTime != ''" >
+			    and deliver_time =  #{deliverTime}
+			</if>
+		<if test="finishTime != null and finishTime != ''" >
+			    and finish_time =  #{finishTime}
+			</if>
+		<if test="tradeSn != null and tradeSn != ''" >
+			    and trade_sn =  #{tradeSn}
+			</if>
+		<if test="source != null and source != ''" >
+			    and source =  #{source}
+			</if>
+		<if test="logisticsId != null and logisticsId != ''" >
+			    and logistics_id =  #{logisticsId}
+			</if>
+		<if test="logisticsName != null and logisticsName != ''" >
+			    and logistics_name =  #{logisticsName}
+			</if>
+		<if test="logisticsNumber != null and logisticsNumber != ''" >
+			    and logistics_number =  #{logisticsNumber}
+			</if>
+		<if test="isGiftCardOrder != null and isGiftCardOrder != ''" >
+			    and is_gift_card_order =  #{isGiftCardOrder}
+			</if>
+		<if test="isCodconfim != null and isCodconfim != ''" >
+			    and is_codconfim =  #{isCodconfim}
+			</if>
+		<if test="codconfirmId != null and codconfirmId != ''" >
+			    and codconfirm_id =  #{codconfirmId}
+			</if>
+		<if test="codconfirmTime != null and codconfirmTime != ''" >
+			    and codconfirm_time =  #{codconfirmTime}
+			</if>
+		<if test="codconfirmState != null and codconfirmState != ''" >
+			    and codconfirm_state =  #{codconfirmState}
+			</if>
+		<if test="createTime != null and createTime != ''" >
+			    and create_time =  #{createTime}
+			</if>
+		</trim>
+	</sql>
+	
+	<!-- 订单 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from orders 
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询订单列表 -->
+	<select id="queryList" resultMap="OrdersResult"  parameterType="map">
+		select 
+			* 
+		from orders 
+		<include refid="Where_Clause"/>
+		order by create_time desc
+		
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

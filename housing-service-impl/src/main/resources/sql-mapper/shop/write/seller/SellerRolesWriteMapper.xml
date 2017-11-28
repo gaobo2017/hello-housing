@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.seller.SellerRolesWriteDao">
+	<resultMap id="SellerRolesResult" type="com.ejavashop.entity.seller.SellerRoles">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="rolesName" column="roles_name" />
+			<result property="roleCode" column="role_code" />
+			<result property="content" column="content" />
+			<result property="userId" column="user_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+			<result property="status" column="status" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SellerRolesResult">
+		select
+		   *
+		from `seller_roles`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.seller.SellerRoles">
+        update `seller_roles` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="rolesName != null">`roles_name`= #{rolesName},</if>
+			<if test="roleCode != null">`role_code`= #{roleCode},</if>
+			<if test="content != null">`content`= #{content},</if>
+			<if test="userId != null">`user_id`= #{userId},</if>
+			<!-- <if test="createTime != null">`create_time`= #{createTime},</if> -->
+			<!-- <if test="updateTime != null">`update_time`= #{updateTime},</if> -->
+			`update_time`= now(),
+			<if test="status != null">`status`= #{status}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.seller.SellerRoles" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `seller_roles`
+		(
+			`seller_id`,
+			`roles_name`,
+			`role_code`,
+			`content`,
+			`user_id`,
+			`create_time`,
+			`update_time`,
+			`status`
+		)
+		values
+		(
+			#{sellerId},
+			#{rolesName},
+			#{roleCode},
+			#{content},
+			#{userId},
+			now(),
+			now(),
+			#{status}
+		)
+	</insert>
+	
+	<delete id="delete">
+        delete from `seller_roles` where `id` = #{id}
+	</delete>
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.product.ProductAttrWriteDao">
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into `product_attr`(
+            `product_id`,
+            `product_type_attr_id`,
+            `name`,
+            `value`,
+            `state`
+        )
+        values(
+            #{productId},
+            #{productTypeAttrId},
+            #{name},
+            #{value},
+            #{state}
+        )
+    </insert>
+    <update id="update">
+        update `product_attr`
+        <set>
+            <if test = "null != id and '' != id">`id`= #{id},</if>
+            <if test = "null != productId and '' != productId">`product_id`= #{productId},</if>
+            <if test = "null != productTypeAttrId and '' != productTypeAttrId">`product_type_attr_id`= #{productTypeAttrId},</if>
+            <if test = "null != name and '' != name">`name`= #{name},</if>
+            <if test = "null != value and '' != value">`value`= #{value},</if>
+            <if test = "null != state and '' != state">`state`= #{state},</if>
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="del">
+        delete from `product_attr` where `id` = #{id}
+    </delete>
+
+    <select id="get" resultType="com.ejavashop.entity.product.ProductAttr">
+        select
+        <include refid="selectColumn"/>
+        from `product_attr`
+        where `id` = #{id}
+    </select>
+    <select id="getByProductId" resultType="com.ejavashop.entity.product.ProductAttr">
+        select
+        <include refid="selectColumn"/>
+        from `product_attr`
+        where `product_id` = #{productId}
+    </select>
+    <select id="page" resultType="com.ejavashop.entity.product.ProductAttr">
+        select
+        <include refid="selectColumn"/>
+        from `product_attr`
+        <include refid="whereConditions"/>
+        order by id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from `product_attr`
+        <include refid="whereConditions"/>
+    </select>
+
+    <sql id="selectColumn">
+        `id`,
+        `product_id`,
+        `product_type_attr_id`,
+        `name`,
+        `value`,
+        `state`
+    </sql>
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_id != null and '' != param1.q_id">
+                and `id`= #{param1.q_id}
+            </if>
+            <if test="param1.q_productId != null and '' != param1.q_productId">
+                and `product_id`= #{param1.q_productId}
+            </if>
+            <if test="param1.q_productTypeAttrId != null and '' != param1.q_productTypeAttrId">
+                and `product_type_attr_id`= #{param1.q_productTypeAttrId}
+            </if>
+            <if test="param1.q_name != null and '' != param1.q_name">
+                and `name`= #{param1.q_name}
+            </if>
+            <if test="param1.q_value != null and '' != param1.q_value">
+                and `value`= #{param1.q_value}
+            </if>
+            <if test="param1.q_state != null and '' != param1.q_state">
+                and `state`= #{param1.q_state}
+            </if>
+        </where>
+    </sql>
+    
+    <!-- seller start -->
+    <delete id="delByProductId">
+        delete from `product_attr` where `product_id` = #{productId}
+    </delete>
+    <!-- seller end -->
+</mapper>

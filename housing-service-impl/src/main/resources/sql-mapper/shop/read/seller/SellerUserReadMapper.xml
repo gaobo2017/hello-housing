@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.seller.SellerUserReadDao">
+	<resultMap id="SellerUserResult" type="com.ejavashop.entity.seller.SellerUser">
+			<result property="id" column="id" />
+			<result property="name" column="name" />
+			<result property="password" column="password" />
+			<result property="code" column="code" />
+			<result property="realName" column="real_name" />
+			<result property="phone" column="phone" />
+			<result property="job" column="job" />
+			<result property="sellerId" column="seller_id" />
+			<result property="roleId" column="role_id" />
+			<result property="state" column="state" />
+			<result property="createId" column="create_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateId" column="update_id" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SellerUserResult">
+		select
+		   *
+		from `seller_user`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getByName" parameterType="java.lang.String" resultMap="SellerUserResult">
+		select * 
+		from `seller_user`
+		where `name` = #{name}
+	</select>
+	
+	<select id="getByNamePwd" parameterType="java.lang.String" resultMap="SellerUserResult">
+		select * 
+		from `seller_user`
+		where `name` = #{name} and password = #{password}
+		and `state`=1
+		limit 1
+	</select>
+	
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from `seller_user` t1
+		<include refid="whereConditions" />
+	</select>
+	
+	<select id="page"  parameterType="java.util.Map" resultType="com.ejavashop.entity.seller.SellerUser">
+		select * from `seller_user` t1
+		<include refid="whereConditions" />
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="list" resultType="com.ejavashop.entity.seller.SellerUser">
+		select * from `seller_user` t1
+		order by id
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		<where>
+			<if test="queryMap.q_id != null and queryMap.q_id !=''"  > and `id`= #{queryMap.q_id}</if>
+			<if test="queryMap.q_name != null and queryMap.q_name !=''"  > and `name` like CONCAT('%',#{queryMap.q_name},'%')</if>
+			<if test="queryMap.q_password != null and queryMap.q_password !=''"  > and `password`= #{queryMap.q_password}</if>
+			<if test="queryMap.q_code != null and queryMap.q_code !=''"  > and `code`= #{queryMap.q_code}</if>
+			<if test="queryMap.q_realName != null and queryMap.q_realName !=''"  > and `real_name` like CONCAT('%',#{queryMap.q_realName},'%')</if>
+			<if test="queryMap.q_phone != null and queryMap.q_phone !=''"  > and `phone`= #{queryMap.q_phone}</if>
+			<if test="queryMap.q_job != null and queryMap.q_job !=''"  > and `job`= #{queryMap.q_job}</if>
+			<if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''"  > and `seller_id`= #{queryMap.q_sellerId}</if>
+			<if test="queryMap.q_roleId != null and queryMap.q_roleId !=''"  > and `role_id`= #{queryMap.q_roleId}</if>
+			<if test="queryMap.q_createTime != null and queryMap.q_createTime !=''"  > and `create_time`= #{queryMap.q_createTime}</if>
+			<if test="queryMap.q_createUser != null and queryMap.q_createUser !=''"  > and `create_user`= #{queryMap.q_createUser}</if>
+			<if test="queryMap.q_tel != null and queryMap.q_tel !=''"  > and `tel`= #{queryMap.q_tel}</if>
+			<if test="queryMap.q_state != null and queryMap.q_state !=''"  > and `state`= #{queryMap.q_state}</if>
+		</where>
+	</sql>
+</mapper>

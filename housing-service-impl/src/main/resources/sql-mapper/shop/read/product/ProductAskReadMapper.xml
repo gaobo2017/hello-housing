@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.product.ProductAskReadDao">
+	<resultMap id="ProductAskResult" type="com.ejavashop.entity.product.ProductAsk">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="productId" column="product_id" />
+			<result property="userId" column="user_id" />
+			<result property="userName" column="user_name" />
+			<result property="askContent" column="ask_content" />
+			<result property="replyId" column="reply_id" />
+			<result property="replyName" column="reply_name" />
+			<result property="replyContent" column="reply_content" />
+			<result property="createTime" column="create_time" />
+			<result property="replyTime" column="reply_time" />
+			<result property="state" column="state" />
+	</resultMap>
+	
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+		<if test="id != null and id != ''" >
+			    and id =  #{id}
+			</if>
+		<if test="sellerId != null and sellerId != ''" >
+			    and seller_id =  #{sellerId}
+			</if>
+		<if test="productId != null and productId != ''" >
+			    and product_id =  #{productId}
+			</if>
+		<if test="userId != null and userId != ''" >
+			    and user_id =  #{userId}
+			</if>
+		<if test="replyId != null and replyId != ''" >
+			    and reply_id =  #{replyId}
+			</if>
+		<if test="state != null and state != ''" >
+			    and state =  #{state}
+			</if>
+		</trim>
+	</sql>
+	<select id="get" parameterType="Integer" resultMap="ProductAskResult">
+		select
+		   *
+		from `product_ask`
+		where `id` = #{id}
+	</select>
+	
+	<!-- 商品资讯管理 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from product_ask 
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询商品资讯管理列表 -->
+	<select id="queryList" resultMap="ProductAskResult"  parameterType="map">
+		select 
+			* 
+		from product_ask 
+		<include refid="Where_Clause"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

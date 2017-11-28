@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.member.MemberGradeConfigWriteDao">
+	<resultMap id="MemberGradeConfigResult" type="com.ejavashop.entity.member.MemberGradeConfig">
+			<result property="id" column="id" />
+			<result property="grade1" column="grade1" />
+			<result property="grade2" column="grade2" />
+			<result property="grade3" column="grade3" />
+			<result property="grade4" column="grade4" />
+			<result property="grade5" column="grade5" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="MemberGradeConfigResult">
+		select
+		   *
+		from `member_grade_config`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.member.MemberGradeConfig">
+        update `member_grade_config` 
+    	<set>
+			<if test="grade1 != null">`grade1`= #{grade1},</if>
+			<if test="grade2 != null">`grade2`= #{grade2},</if>
+			<if test="grade3 != null">`grade3`= #{grade3},</if>
+			<if test="grade4 != null">`grade4`= #{grade4},</if>
+			<if test="grade5 != null">`grade5`= #{grade5}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="save" parameterType="com.ejavashop.entity.member.MemberGradeConfig" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`member_grade_config`
+		(
+			`grade1`,
+			`grade2`,
+			`grade3`,
+			`grade4`,
+			`grade5`
+		)
+		values
+		(
+			#{grade1},
+			#{grade2},
+			#{grade3},
+			#{grade4},
+			#{grade5}
+		)
+	</insert>
+</mapper>

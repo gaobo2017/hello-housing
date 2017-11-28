@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shopm.write.pcindex.PcRecommendWriteDao">
+	<resultMap id="PcRecommendResult" type="com.ejavashop.entity.shopm.pcindex.PcRecommend">
+			<result property="id" column="id" />
+			<result property="recommendType" column="recommend_type" />
+			<result property="productId" column="product_id" />
+			<result property="orderNo" column="order_no" />
+			<result property="startTime" column="start_time" />
+			<result property="endTime" column="end_time" />
+			<result property="status" column="status" />
+			<result property="remark" column="remark" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="PcRecommendResult">
+		select
+		   *
+		from `pc_recommend`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.shopm.pcindex.PcRecommend">
+        update `pc_recommend` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="recommendType != null">`recommend_type`= #{recommendType},</if>
+			<if test="productId != null">`product_id`= #{productId},</if>
+			<if test="orderNo != null">`order_no`= #{orderNo},</if>
+			<if test="startTime != null">`start_time`= #{startTime},</if>
+			<if test="endTime != null">`end_time`= #{endTime},</if>
+			<if test="status != null">`status`= #{status},</if>
+			<if test="remark != null">`remark`= #{remark},</if>
+			<!-- <if test="createUserId != null">`create_user_id`= #{createUserId},</if>
+			<if test="createUserName != null">`create_user_name`= #{createUserName},</if>
+			<if test="createTime != null">`create_time`= #{createTime},</if> -->
+			<if test="updateUserId != null">`update_user_id`= #{updateUserId},</if>
+			<if test="updateUserName != null">`update_user_name`= #{updateUserName},</if>
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.shopm.pcindex.PcRecommend" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`pc_recommend`
+		(
+			`recommend_type`,
+			`product_id`,
+			`order_no`,
+			`start_time`,
+			`end_time`,
+			`status`,
+			`remark`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`,
+			`update_user_id`,
+			`update_user_name`,
+			`update_time`
+		)
+		values
+		(
+			#{recommendType},
+			#{productId},
+			#{orderNo},
+			#{startTime},
+			#{endTime},
+			#{status},
+			#{remark},
+			#{createUserId},
+			#{createUserName},
+			now(),
+			#{updateUserId},
+			#{updateUserName},
+			now()
+		)
+	</insert>
+	
+	<delete id="delete">
+        delete from `pc_recommend` where `id` = #{id}
+	</delete>
+	
+</mapper>

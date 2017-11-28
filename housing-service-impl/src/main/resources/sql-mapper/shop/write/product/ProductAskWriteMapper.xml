@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.product.ProductAskWriteDao">
+	<resultMap id="ProductAskResult" type="com.ejavashop.entity.product.ProductAsk">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="productId" column="product_id" />
+			<result property="userId" column="user_id" />
+			<result property="userName" column="user_name" />
+			<result property="askContent" column="ask_content" />
+			<result property="replyId" column="reply_id" />
+			<result property="replyName" column="reply_name" />
+			<result property="replyContent" column="reply_content" />
+			<result property="createTime" column="create_time" />
+			<result property="replyTime" column="reply_time" />
+			<result property="state" column="state" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ProductAskResult">
+		select
+		   *
+		from `product_ask`
+		where `id` = #{id}
+	</select>
+
+	<insert id="insert" parameterType="com.ejavashop.entity.product.ProductAsk" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `product_ask`
+		(
+			`seller_id`,
+			`product_id`,
+			`user_id`,
+			`user_name`,
+			`ask_content`,
+			`reply_id`,
+			`reply_name`,
+			`reply_content`,
+			`create_time`,
+			`reply_time`,
+			`state`
+		)
+		values
+		(
+			#{sellerId},
+			#{productId},
+			#{userId},
+			#{userName},
+			#{askContent},
+			#{replyId},
+			#{replyName},
+			#{replyContent},
+			now(),
+			#{replyTime},
+			#{state}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.ejavashop.entity.product.ProductAsk">
+        update `product_ask` 
+    	<set>
+			<!-- <if test="id != null">
+				`id`= #{id},
+			</if> -->
+			<if test="sellerId != null">
+				`seller_id`= #{sellerId},
+			</if>
+			<if test="productId != null">
+				`product_id`= #{productId},
+			</if>
+			<if test="userId != null">
+				`user_id`= #{userId},
+			</if>
+			<if test="userName != null">
+				`user_name`= #{userName},
+			</if>
+			<if test="askContent != null">
+				`ask_content`= #{askContent},
+			</if>
+			<if test="replyId != null">
+				`reply_id`= #{replyId},
+			</if>
+			<if test="replyName != null">
+				`reply_name`= #{replyName},
+			</if>
+			<if test="replyContent != null">
+				`reply_content`= #{replyContent},
+			</if>
+			<if test="replyTime != null">
+				`reply_time`= #{replyTime},
+			</if>
+			<if test="state != null">
+				`state`= #{state}
+			</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+
+	<!-- 商品资讯管理 列表总数-->
+	<select id="getProductAsksCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from product_ask 
+		<include refid="getProductAsksCondition"/>
+	</select>
+	  	
+	<!-- 查询商品资讯管理列表 -->
+	<select id="getProductAsks" parameterType="java.util.Map" resultMap="ProductAskResult">
+		select 
+			* 
+		from product_ask 
+		<include refid="getProductAsksCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="getProductAsksCondition">
+        <where>
+        	<if test="queryMap.q_id != null and queryMap.q_id !=''" >
+        		and `id`= #{queryMap.q_id}
+        	</if>
+			<if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''" >
+				and `seller_id`= #{queryMap.q_sellerId}
+			</if>
+			<if test="queryMap.q_productId != null and queryMap.q_productId !=''" >
+				and `product_id`= #{queryMap.q_productId}
+			</if>
+			<if test="queryMap.q_userId != null and queryMap.q_userId !=''" >
+				and `user_id`= #{queryMap.q_userId}
+			</if>
+			<if test="queryMap.q_userName != null and queryMap.q_userName !=''" >
+				and `user_name` like CONCAT('%', #{queryMap.q_userName}, '%')
+			</if>
+			<if test="queryMap.q_askContent != null and queryMap.q_askContent !=''" >
+				and `ask_content`= #{queryMap.q_askContent}
+			</if>
+			<if test="queryMap.q_replyId != null and queryMap.q_replyId !=''" >
+				and `reply_id`= #{queryMap.q_replyId}
+			</if>
+			<if test="queryMap.q_replyName != null and queryMap.q_replyName !=''" >
+				and `reply_name`= #{queryMap.q_replyName}
+			</if>
+			<if test="queryMap.q_replyContent != null and queryMap.q_replyContent !=''" >
+				and `reply_content`= #{queryMap.q_replyContent}
+			</if>
+			<if test="queryMap.q_createTime != null and queryMap.q_createTime !=''" >
+				and `create_time`= #{queryMap.q_createTime}
+			</if>
+			<if test="queryMap.q_replyTime != null and queryMap.q_replyTime !=''" >
+				and `reply_time`= #{queryMap.q_replyTime}
+			</if>
+			<if test="queryMap.q_state != null and queryMap.q_state !=''" >
+				and `state`= #{queryMap.q_state}
+			</if>
+        </where>
+    </sql>
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.order.OrderPayLogReadDao">
+	<resultMap id="OrderPayLogResult" type="com.ejavashop.entity.order.OrderPayLog">
+			<result property="id" column="id" />
+			<result property="ordersId" column="orders_id" />
+			<result property="ordersSn" column="orders_sn" />
+			<result property="payStatus" column="pay_status" />
+			<result property="payContent" column="pay_content" />
+			<result property="payMoney" column="pay_money" />
+			<result property="memberId" column="member_id" />
+			<result property="memberName" column="member_name" />
+			<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	
+	   
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="q_id != null and q_id !=''"  > and `id`= #{q_id}</if>
+			<if test="q_ordersId != null and q_ordersId !=''"  > and `orders_id`= #{q_ordersId}</if>
+			<if test="q_ordersSn != null and q_ordersSn !=''"  > and `orders_sn`= #{q_ordersSn}</if>
+			<if test="q_payStatus != null and q_payStatus !=''"  > and `pay_status`= #{q_payStatus}</if>
+			<if test="q_payContent != null and q_payContent !=''"  > and `pay_content`= #{q_payContent}</if>
+			<if test="q_payMoney != null and q_payMoney !=''"  > and `pay_money`= #{q_payMoney}</if>
+			<if test="q_memberId != null and q_memberId !=''"  > and `member_id`= #{q_memberId}</if>
+			<if test="q_memberName != null and q_memberName !=''"  > and `member_name`= #{q_memberName}</if>
+			<if test="q_createTime != null and q_createTime !=''"  > and `create_time`= #{q_createTime}</if>
+		</trim>
+	</sql>
+	
+	
+	<select id="get" parameterType="Integer" resultMap="OrderPayLogResult">
+		select
+		   *
+		from `order_pay_log`
+		where `id` = #{id}
+	</select>
+	
+	
+	<!-- 订单支付记录表 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from order_pay_log
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询订单支付记录表列表 -->
+	<select id="queryList" resultMap="OrderPayLogResult"  parameterType="map">
+		select 
+		  * 
+		from order_pay_log 
+		<include refid="Where_Clause"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.seller.SellerTypeLogsWriteDao">
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into `seller_type_logs`(
+            `create_id`,
+            `create_name`,
+            `content`,
+            `create_time`,
+            `product_cate_id`
+        )
+        values(
+            #{createId},
+            #{createName},
+            #{content},
+            now(),
+            #{productCateId}
+        )
+    </insert>
+    <update id="update">
+        update `seller_type_logs`
+        <set>
+            <if test = "null != id and '' != id">`id`= #{id},</if>
+            <if test = "null != createId and '' != createId">`create_id`= #{createId},</if>
+            <if test = "null != createName and '' != createName">`create_name`= #{createName},</if>
+            <if test = "null != content and '' != content">`content`= #{content},</if>
+            <if test = "null != createTime and '' != createTime">`create_time`= #{createTime},</if>
+            <if test = "null != #{productCateId} and '' != #{productCateId}">`product_cate_id`= #{#{productCateId}},</if>
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="del">
+        delete from `seller_type_logs` where `id` = #{id}
+    </delete>
+
+    <select id="get" resultType="com.ejavashop.entity.seller.SellerTypeLogs">
+        select
+        <include refid="selectColumn"/>
+        from `seller_type_logs`
+        where `id` = #{id}
+    </select>
+    <select id="getByCateId" resultType="com.ejavashop.entity.seller.SellerTypeLogs">
+        select
+        <include refid="selectColumn"/>
+        from `seller_type_logs`
+        where `product_cate_id` = #{id}
+    </select>
+    <select id="page" resultType="com.ejavashop.entity.seller.SellerTypeLogs">
+        select
+        <include refid="selectColumn"/>
+        from `seller_type_logs`
+        <include refid="whereConditions"/>
+        order by sort desc,id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from `seller_type_logs`
+        <include refid="whereConditions"/>
+    </select>
+
+    <sql id="selectColumn">
+        `id`,
+        `create_id`,
+        `create_name`,
+        `content`,
+        `create_time`,
+        `product_cate_id`
+    </sql>
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_id != null and '' != param1.q_id">
+                and `id`= param1.q_#{id}
+            </if>
+            <if test="param1.q_createId != null and '' != param1.q_createId">
+                and `create_id`= param1.q_#{createId}
+            </if>
+            <if test="param1.q_createName != null and '' != param1.q_createName">
+                and `create_name`= param1.q_#{createName}
+            </if>
+            <if test="param1.q_content != null and '' != param1.q_content">
+                and `content`= param1.q_#{content}
+            </if>
+            <if test="param1.q_createTime != null and '' != param1.q_createTime">
+                and `create_time`= param1.q_#{createTime}
+            </if>
+        </where>
+    </sql>
+</mapper>

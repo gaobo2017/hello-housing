@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.seller.SellerRolesReadDao">
+	<resultMap id="SellerRolesResult" type="com.ejavashop.entity.seller.SellerRoles">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="rolesName" column="roles_name" />
+			<result property="roleCode" column="role_code" />
+			<result property="content" column="content" />
+			<result property="userId" column="user_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+			<result property="status" column="status" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SellerRolesResult">
+		select
+		   *
+		from `seller_roles`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getSellerRolesCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from `seller_roles`
+		<include refid="whereConditions" />
+	</select>
+	
+	<select id="getSellerRoles" parameterType="java.util.Map" resultMap="SellerRolesResult">
+		select * from `seller_roles`
+		<include refid="whereConditions" />
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		<where>
+			<if test="queryMap.q_id != null and queryMap.q_id !=''"  > and `id`= #{queryMap.q_id}</if>
+			<if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''"  > and `seller_id`= #{queryMap.q_sellerId}</if>
+			<if test="queryMap.q_rolesName != null and queryMap.q_rolesName !=''"  > and `roles_name`like CONCAT('%',#{queryMap.q_rolesName},'%')</if>
+			<if test="queryMap.q_content != null and queryMap.q_content !=''"  > and `content`= #{queryMap.q_content}</if>
+			<if test="queryMap.q_userId != null and queryMap.q_userId !=''"  > and `user_id`= #{queryMap.q_userId}</if>
+			<if test="queryMap.q_createTime != null and queryMap.q_createTime !=''"  > and `create_time`= #{queryMap.q_createTime}</if>
+			<if test="queryMap.q_updateTime != null and queryMap.q_updateTime !=''"  > and `update_time`= #{queryMap.q_updateTime}</if>
+			<if test="queryMap.q_status != null and queryMap.q_status !=''"  > and `status`= #{queryMap.q_status}</if>
+			<if test="queryMap.q_roleCode != null and queryMap.q_roleCode !=''"  > and `role_code`= #{queryMap.q_roleCode}</if>
+		</where>
+	</sql>
+</mapper>

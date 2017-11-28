@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.product.ProductTypeWriteDao">
+    <insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into `product_type`(
+            `name`,
+            `sort`,
+            `product_norm_ids`,
+            `product_brand_ids`,
+            `create_id`,
+            `create_time`
+        )
+        values(
+            #{name},
+            #{sort},
+            #{productNormIds},
+            #{productBrandIds},
+            #{createId},
+            now()
+        )
+    </insert>
+    <update id="update">
+        update `product_type`
+        <set>
+            <if test = "null != id and '' != id">`id`= #{id},</if>
+            <if test = "null != name and '' != name">`name`= #{name},</if>
+            <if test = "null != sort and '' != sort">`sort`= #{sort},</if>
+            <if test = "null != productNormIds and '' != productNormIds">`product_norm_ids`= #{productNormIds},</if>
+            <if test = "null != productBrandIds and '' != productBrandIds">`product_brand_ids`= #{productBrandIds},</if>
+            <if test = "null != createId and '' != createId">`create_id`= #{createId},</if>
+            <if test = "null != createTime and '' != createTime">`create_time`= #{createTime},</if>
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="del">
+        delete from `product_type` where `id` = #{id}
+    </delete>
+
+    <select id="get" resultType="com.ejavashop.entity.product.ProductType">
+        select
+        <include refid="selectColumn"/>
+        from `product_type`
+        where `id` = #{id}
+    </select>
+    <select id="page" resultType="com.ejavashop.entity.product.ProductType">
+        select
+        <include refid="selectColumn"/>
+        from `product_type`
+        <include refid="whereConditions"/>
+        order by sort desc,id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    <select id="getByNormId" resultType="com.ejavashop.entity.product.ProductType">
+        select
+        <include refid="selectColumn"/>
+        from `product_type`
+        where `product_norm_ids` like CONCAT('%', #{normId}, '%')
+        order by sort desc,id desc
+    </select>
+    <select id="getByBrandId" resultType="com.ejavashop.entity.product.ProductType">
+        select
+        <include refid="selectColumn"/>
+        from `product_type`
+        where `product_brand_ids` like CONCAT('%', #{brandId}, '%')
+        order by sort desc,id desc
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from `product_type`
+        <include refid="whereConditions"/>
+    </select>
+
+    <sql id="selectColumn">
+        `id`,
+        `name`,
+        `sort`,
+        `product_norm_ids`,
+        `product_brand_ids`,
+        `create_id`,
+        `create_time`
+    </sql>
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_id != null and '' != param1.q_id">
+                and `id`= #{param1.q_id}
+            </if>
+            <if test="param1.q_name != null and '' != param1.q_name">
+                and `name` like CONCAT('%',#{param1.q_name},'%')
+            </if>
+            <if test="param1.q_sort != null and '' != param1.q_sort">
+                and `sort`= #{param1.q_sort}
+            </if>
+            <if test="param1.q_productNormIds != null and '' != param1.q_productNormIds">
+                and `product_norm_ids`= #{param1.q_productNormIds}
+            </if>
+            <if test="param1.q_productBrandIds != null and '' != param1.q_productBrandIds">
+                and `product_brand_ids`= #{param1.q_productBrandIds}
+            </if>
+            <if test="param1.q_createId != null and '' != param1.q_createId">
+                and `create_id`= #{param1.q_createId}
+            </if>
+            <if test="param1.q_createTime != null and '' != param1.q_createTime">
+                and `create_time`= #{param1.q_createTime}
+            </if>
+        </where>
+    </sql>
+</mapper>

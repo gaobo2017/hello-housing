@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.operate.ConfigReadDao">
+	<resultMap id="ConfigResult" type="com.ejavashop.entity.operate.Config">
+			<result property="id" column="id" />
+			<result property="integralScale" column="integral_scale" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ConfigResult">
+		select
+		   *
+		from `config`
+		where `id` = #{id}
+	</select>
+	
+</mapper>

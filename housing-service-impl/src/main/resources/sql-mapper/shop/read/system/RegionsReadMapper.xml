@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.system.RegionsReadDao">
+	<resultMap id="RegionsResult" type="com.ejavashop.entity.system.Regions">
+			<result property="id" column="id" />
+			<result property="parentId" column="parentId" />
+			<result property="regionName" column="regionName" />
+			<result property="parentPath" column="parentPath" />
+			<result property="firstLetter" column="firstLetter" />
+			<result property="regionType" column="regionType" />
+			<result property="agencyId" column="agencyId" />
+			<result property="shippingId" column="shippingId" />
+			<result property="visible" column="visible" />
+			<result property="rowId" column="rowId" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="RegionsResult">
+		select
+		   *
+		from `regions`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getChildrenArea" parameterType="java.util.Map" resultMap="RegionsResult">
+		select
+		   *
+		from `regions`
+		where `parentId` = #{parentid} and `regionType` = #{type}
+	</select>
+	
+	<select id="getProvince" resultMap="RegionsResult">
+		select
+		   *
+		from `regions`
+		where `parentId` = 0 and `regionType` = 1
+	</select>
+	
+	<select id="getByParentId" parameterType="java.util.Map" resultMap="RegionsResult">
+		select
+		   *
+		from `regions`
+		where `parentId` = #{parentId}
+	</select>
+</mapper>

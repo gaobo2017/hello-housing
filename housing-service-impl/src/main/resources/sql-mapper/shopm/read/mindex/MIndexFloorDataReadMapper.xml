@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shopm.read.mindex.MIndexFloorDataReadDao">
+	<resultMap id="MIndexFloorDataResult" type="com.ejavashop.entity.shopm.MIndexFloorData">
+			<result property="id" column="id" />
+			<result property="indexFloorId" column="index_floor_id" />
+			<result property="dataType" column="data_type" />
+			<result property="refId" column="ref_id" />
+			<result property="title" column="title" />
+			<result property="image" column="image" />
+			<result property="linkUrl" column="link_url" />
+			<result property="orderNo" column="order_no" />
+			<result property="remark" column="remark" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="MIndexFloorDataResult">
+		select
+		   *
+		from `m_index_floor_data`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getMIndexFloorDatasByFloorId" parameterType="Integer" resultMap="MIndexFloorDataResult">
+		select
+		   *
+		from `m_index_floor_data`
+		where `index_floor_id` = #{mIndexFloorId}
+		order by `order_no`
+	</select>
+	
+	<sql id="getCondition">
+        <where>
+            <if test="queryMap.q_indexFloorId != null and queryMap.q_indexFloorId !=''">
+                and `index_floor_id` = #{queryMap.q_indexFloorId}
+            </if>
+            <if test="queryMap.q_dataType != null and queryMap.q_dataType !=''">
+                and `data_type` = #{queryMap.q_dataType}
+            </if>
+        </where>
+    </sql>
+    
+	<select id="getMIndexFloorDatasCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `m_index_floor_data`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getMIndexFloorDatas" parameterType="java.util.Map" resultMap="MIndexFloorDataResult">
+		select
+		   *
+		from `m_index_floor_data`
+		<include refid="getCondition"/>
+		order by `index_floor_id` desc, `order_no` asc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

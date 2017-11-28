@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.member.MemberAddressWriteDao">
+	<resultMap id="MemberAddressResult" type="com.ejavashop.entity.member.MemberAddress">
+			<result property="id" column="id" />
+			<result property="memberId" column="member_id" />
+			<result property="memberName" column="member_name" />
+			<result property="provinceId" column="province_id" />
+			<result property="cityId" column="city_id" />
+			<result property="areaId" column="area_id" />
+			<result property="addAll" column="add_all" />
+			<result property="addressInfo" column="address_info" />
+			<result property="mobile" column="mobile" />
+			<result property="phone" column="phone" />
+			<result property="email" column="email" />
+			<result property="zipCode" column="zip_code" />
+			<result property="state" column="state" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="MemberAddressResult">
+		select
+		   *
+		from `member_address`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.member.MemberAddress">
+        update `member_address` 
+    	<set>
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="memberName != null">`member_name`= #{memberName},</if>
+			<if test="provinceId != null">`province_id`= #{provinceId},</if>
+			<if test="cityId != null">`city_id`= #{cityId},</if>
+			<if test="areaId != null">`area_id`= #{areaId},</if>
+			<if test="addAll != null">`add_all`= #{addAll},</if>
+			<if test="addressInfo != null">`address_info`= #{addressInfo},</if>
+			<if test="mobile != null">`mobile`= #{mobile},</if>
+			<if test="phone != null">`phone`= #{phone},</if>
+			<if test="email != null">`email`= #{email},</if>
+			<if test="zipCode != null">`zip_code`= #{zipCode},</if>
+			<if test="state != null">`state`= #{state},</if>
+			<!-- <if test="createTime != null">`create_time`= #{createTime},</if> -->
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="save" parameterType="com.ejavashop.entity.member.MemberAddress" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `member_address`
+		(
+			`member_id`,
+			`member_name`,
+			`province_id`,
+			`city_id`,
+			`area_id`,
+			`add_all`,
+			`address_info`,
+			`mobile`,
+			`phone`,
+			`email`,
+			`zip_code`,
+			`state`,
+			`create_time`
+		)
+		values
+		(
+			#{memberId},
+			#{memberName},
+			#{provinceId},
+			#{cityId},
+			#{areaId},
+			#{addAll},
+			#{addressInfo},
+			#{mobile},
+			#{phone},
+			#{email},
+			#{zipCode},
+			#{state},
+			now()
+		)
+	</insert>
+
+	<select id="getMemberAddressesCount" resultType="Integer">
+		select
+		   count(*)
+		from `member_address`
+		where `member_id` = #{memberId}
+	</select>
+
+	<select id="getMemberAddresses" resultMap="MemberAddressResult">
+		select
+		   *
+		from `member_address`
+		where `member_id` = #{memberId}
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<update id="updateNotDefByMId">
+        update `member_address`
+        set `state` = 2,
+        	`update_time` = now()
+        where `member_id` = #{memberId}
+        	and `id` != #{id}
+	</update>
+	
+	<!-- 删除记录 -->
+	<delete id="delete">
+		delete from `member_address`  where `id` = #{id}
+	</delete>
+	
+	<delete id="deleteByIdAndMId">
+		delete from `member_address`  where `id` = #{id} and `member_id` = #{memberId}
+	</delete>
+</mapper>

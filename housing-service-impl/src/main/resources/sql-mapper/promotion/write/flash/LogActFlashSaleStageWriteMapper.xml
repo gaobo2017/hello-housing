@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.write.flash.LogActFlashSaleStageWriteDao">
+	<!-- <resultMap id="LogActFlashSaleStageResult" type="com.ejavashop.entity.promotion.flash.LogActFlashSaleStage">
+			<result property="id" column="id" />
+			<result property="actFlashSaleStageId" column="act_flash_sale_stage_id" />
+			<result property="actFlashSaleId" column="act_flash_sale_id" />
+			<result property="startTime" column="start_time" />
+			<result property="endTime" column="end_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="LogActFlashSaleStageResult">
+		select
+		   *
+		from `log_act_flash_sale_stage`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.promotion.flash.LogActFlashSaleStage">
+        update `log_act_flash_sale_stage` 
+    	<set>
+			<if test="id != null">`id`= #{id},</if>
+			<if test="actFlashSaleStageId != null">`act_flash_sale_stage_id`= #{actFlashSaleStageId},</if>
+			<if test="actFlashSaleId != null">`act_flash_sale_id`= #{actFlashSaleId},</if>
+			<if test="startTime != null">`start_time`= #{startTime},</if>
+			<if test="endTime != null">`end_time`= #{endTime}</if>
+	    </set>
+        where `id` = #{id}
+	</update> -->
+	
+	<!-- <insert id="insert" parameterType="com.ejavashop.entity.promotion.flash.LogActFlashSaleStage" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`log_act_flash_sale_stage`
+		(
+			`act_flash_sale_stage_id`,
+			`act_flash_sale_id`,
+			`start_time`,
+			`end_time`
+		)
+		values
+		(
+			#{actFlashSaleStageId},
+			#{actFlashSaleId},
+			#{startTime},
+			#{endTime}
+		)
+	</insert> -->
+	<insert id="insert">
+		insert into 
+		`log_act_flash_sale_stage`
+		(
+			`act_flash_sale_stage_id`,
+			`act_flash_sale_id`,
+			`start_time`,
+			`end_time`,
+			`remark`
+		) select 
+			`id`,
+			`act_flash_sale_id`,
+			`start_time`,
+			`end_time`,
+			`remark`
+		from `act_flash_sale_stage` act_flash_sale_stage where act_flash_sale_stage.`act_flash_sale_id` = #{actFlashSaleId}
+	</insert>
+	
+	<!-- <delete id="delete">
+        delete from `log_act_flash_sale_stage` where `id` = #{id}
+	</delete> -->
+	
+</mapper>

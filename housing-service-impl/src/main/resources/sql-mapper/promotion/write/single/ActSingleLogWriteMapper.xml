@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.write.single.ActSingleLogWriteDao">
+	<resultMap id="ActSingleLogResult" type="com.ejavashop.entity.promotion.single.ActSingleLog">
+			<result property="id" column="id" />
+			<result property="actSingleId" column="act_single_id" />
+			<result property="memberId" column="member_id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="orderId" column="order_id" />
+			<result property="orderProductId" column="order_product_id" />
+			<result property="productId" column="product_id" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ActSingleLogResult">
+		select
+		   *
+		from `act_single_log`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.promotion.single.ActSingleLog">
+        update `act_single_log` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="actSingleId != null">`act_single_id`= #{actSingleId},</if>
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="orderId != null">`order_id`= #{orderId},</if>
+			<if test="orderProductId != null">`order_product_id`= #{orderProductId},</if>
+			<if test="productId != null">`product_id`= #{productId},</if>
+			<!-- <if test="createUserId != null">`create_user_id`= #{createUserId},</if>
+			<if test="createUserName != null">`create_user_name`= #{createUserName},</if>
+			<if test="createTime != null">`create_time`= #{createTime}</if> -->
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.promotion.single.ActSingleLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`act_single_log`
+		(
+			`act_single_id`,
+			`member_id`,
+			`seller_id`,
+			`order_id`,
+			`order_product_id`,
+			`product_id`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`
+		)
+		values
+		(
+			#{actSingleId},
+			#{memberId},
+			#{sellerId},
+			#{orderId},
+			#{orderProductId},
+			#{productId},
+			#{createUserId},
+			#{createUserName},
+			now()
+		)
+	</insert>
+
+	<insert id="batchInsertActSingleLog" parameterType="java.util.List">
+        insert into 
+		`act_single_log`
+		(
+			`act_single_id`,
+			`member_id`,
+			`seller_id`,
+			`order_id`,
+			`order_product_id`,
+			`product_id`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`
+		)
+		values
+	   <foreach collection="list" item="item" index="index" separator=","> 
+	    (
+	    	#{item.actSingleId},
+			#{item.memberId},
+			#{item.sellerId},
+			#{item.orderId},
+			#{item.orderProductId},
+			#{item.productId},
+			#{item.createUserId},
+			#{item.createUserName},
+			now()
+	    )
+	   </foreach>
+	</insert>
+	
+</mapper>

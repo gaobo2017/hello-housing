@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shopm.write.mseller.MSellerIndexFloorDataWriteDao">
+	<resultMap id="MSellerIndexFloorDataResult" type="com.ejavashop.entity.shopm.MSellerIndexFloorData">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="indexFloorId" column="index_floor_id" />
+			<result property="dataType" column="data_type" />
+			<result property="refId" column="ref_id" />
+			<result property="title" column="title" />
+			<result property="image" column="image" />
+			<result property="linkUrl" column="link_url" />
+			<result property="orderNo" column="order_no" />
+			<result property="remark" column="remark" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="MSellerIndexFloorDataResult">
+		select
+		   *
+		from `m_seller_index_floor_data`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.shopm.MSellerIndexFloorData">
+        update `m_seller_index_floor_data` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="indexFloorId != null">`index_floor_id`= #{indexFloorId},</if>
+			<if test="dataType != null">`data_type`= #{dataType},</if>
+			<if test="refId != null">`ref_id`= #{refId},</if>
+			<if test="title != null">`title`= #{title},</if>
+			<if test="image != null">`image`= #{image},</if>
+			<if test="linkUrl != null">`link_url`= #{linkUrl},</if>
+			<if test="orderNo != null">`order_no`= #{orderNo},</if>
+			<if test="remark != null">`remark`= #{remark},</if>
+			<!-- <if test="createUserId != null">`create_user_id`= #{createUserId},</if>
+			<if test="createTime != null">`create_time`= #{createTime},</if> -->
+			<if test="updateUserId != null">`update_user_id`= #{updateUserId},</if>
+			<if test="updateUserName != null">`update_user_name`= #{updateUserName},</if>
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.shopm.MSellerIndexFloorData" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `m_seller_index_floor_data`
+		(
+			`seller_id`,
+			`index_floor_id`,
+			`data_type`,
+			`ref_id`,
+			`title`,
+			`image`,
+			`link_url`,
+			`order_no`,
+			`remark`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`,
+			`update_user_id`,
+			`update_user_name`,
+			`update_time`
+		)
+		values
+		(
+			#{sellerId},
+			#{indexFloorId},
+			#{dataType},
+			#{refId},
+			#{title},
+			#{image},
+			#{linkUrl},
+			#{orderNo},
+			#{remark},
+			#{createUserId},
+			#{createUserName},
+			now(),
+			#{updateUserId},
+			#{updateUserName},
+			now()
+		)
+	</insert>
+	
+	<delete id="delete">
+        delete from `m_seller_index_floor_data` where `id` = #{id}
+	</delete>
+	
+	<delete id="deleteByFloorId">
+        delete from `m_seller_index_floor_data` where `index_floor_id` = #{mIndexFloorId}
+	</delete>
+</mapper>

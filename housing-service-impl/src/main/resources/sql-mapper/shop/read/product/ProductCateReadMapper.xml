@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.product.ProductCateReadDao">
+	<resultMap id="ProductCateResult" type="com.ejavashop.entity.product.ProductCate">
+			<result property="id" column="id" />
+			<result property="productTypeId" column="product_type_id" />
+			<result property="pid" column="pid" />
+			<result property="name" column="name" />
+			<result property="path" column="path" />
+			<result property="scaling" column="scaling" />
+			<result property="createId" column="create_id" />
+			<result property="updateId" column="update_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+			<result property="sort" column="sort" />
+			<result property="status" column="status" />
+	</resultMap>
+	
+	
+	   
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="id != null and id !=''"  > and `id`= #{id}</if>
+			<if test="productTypeId != null and productTypeId !=''"  > and `product_type_id`= #{productTypeId}</if>
+			<if test="pid != null and pid !=''"  > and `pid`= #{pid}</if>
+			<if test="name != null and name !=''"  > and `name`= #{name}</if>
+			<if test="path != null and path !=''"  > and `path`= #{path}</if>
+			<if test="scaling != null and scaling !=''"  > and `scaling`= #{scaling}</if>
+			<if test="createId != null and createId !=''"  > and `create_id`= #{createId}</if>
+			<if test="updateId != null and updateId !=''"  > and `update_id`= #{updateId}</if>
+			<if test="createTime != null and createTime !=''"  > and `create_time`= #{createTime}</if>
+			<if test="updateTime != null and updateTime !=''"  > and `update_time`= #{updateTime}</if>
+			<if test="sort != null and sort !=''"  > and `sort`= #{sort}</if>
+			<if test="status != null and status !=''"  > and `status`= #{status}</if>
+		</trim>
+	</sql>
+	
+	
+	<select id="get" parameterType="Integer" resultMap="ProductCateResult">
+		select
+		   *
+		from `product_cate`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getByPid" parameterType="Integer" resultMap="ProductCateResult">
+		select
+		   *
+		from `product_cate`
+		where `pid` = #{pid}
+	</select>
+	
+	<!-- 商品分类 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from product_cate
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询商品分类列表 -->
+	<select id="queryList" resultMap="ProductCateResult"  parameterType="map">
+		select 
+		  * 
+		from product_cate 
+		<include refid="Where_Clause"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

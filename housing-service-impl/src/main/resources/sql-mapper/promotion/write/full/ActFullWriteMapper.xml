@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.write.full.ActFullWriteDao">
+	<resultMap id="ActFullResult" type="com.ejavashop.entity.promotion.full.ActFull">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="actFullName" column="act_full_name" />
+			<result property="firstFull" column="first_full" />
+			<result property="firstDiscount" column="first_discount" />
+			<result property="secondFull" column="second_full" />
+			<result property="secondDiscount" column="second_discount" />
+			<result property="thirdFull" column="third_full" />
+			<result property="thirdDiscount" column="third_discount" />
+			<result property="startTime" column="start_time" />
+			<result property="endTime" column="end_time" />
+			<result property="channel" column="channel" />
+			<result property="status" column="status" />
+			<result property="auditOpinion" column="audit_opinion" />
+			<result property="remark" column="remark" />
+			<result property="auditUserId" column="audit_user_id" />
+			<result property="auditUserName" column="audit_user_name" />
+			<result property="auditTime" column="audit_time" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ActFullResult">
+		select
+		   *
+		from `act_full`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.promotion.full.ActFull">
+        update `act_full` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="actFullName != null">`act_full_name`= #{actFullName},</if>
+			<if test="firstFull != null">`first_full`= #{firstFull},</if>
+			<if test="firstDiscount != null">`first_discount`= #{firstDiscount},</if>
+			<if test="secondFull != null">`second_full`= #{secondFull},</if>
+			<if test="secondDiscount != null">`second_discount`= #{secondDiscount},</if>
+			<if test="thirdFull != null">`third_full`= #{thirdFull},</if>
+			<if test="thirdDiscount != null">`third_discount`= #{thirdDiscount},</if>
+			<if test="startTime != null">`start_time`= #{startTime},</if>
+			<if test="endTime != null">`end_time`= #{endTime},</if>
+			<if test="channel != null">`channel`= #{channel},</if>
+			<!-- <if test="status != null">`status`= #{status},</if> -->
+			<if test="auditOpinion != null">`audit_opinion`= #{auditOpinion},</if>
+			<if test="remark != null">`remark`= #{remark},</if>
+			<if test="auditUserId != null">`audit_user_id`= #{auditUserId},</if>
+			<if test="auditUserName != null">`audit_user_name`= #{auditUserName},</if>
+			<if test="auditTime != null">`audit_time`= #{auditTime},</if>
+			<!-- <if test="createUserId != null">`create_user_id`= #{createUserId},</if>
+			<if test="createUserName != null">`create_user_name`= #{createUserName},</if>
+			<if test="createTime != null">`create_time`= #{createTime},</if> -->
+			<if test="updateUserId != null">`update_user_id`= #{updateUserId},</if>
+			<if test="updateUserName != null">`update_user_name`= #{updateUserName},</if>
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<update id="updateStatus" parameterType="com.ejavashop.entity.promotion.full.ActFull">
+        update `act_full` 
+    	<set>
+			`status`= #{status},
+			<if test="auditOpinion != null">`audit_opinion`= #{auditOpinion},</if>
+			<if test="updateUserId != null">`update_user_id`= #{updateUserId},</if>
+			<if test="updateUserName != null">`update_user_name`= #{updateUserName},</if>
+			<if test="updateTime != null">`update_time`= #{updateTime},</if>
+			<if test="auditUserId != null">`audit_user_id`= #{auditUserId},</if>
+			<if test="auditUserName != null">`audit_user_name`= #{auditUserName},</if>
+			<if test="auditTime != null">`audit_time`= #{auditTime},</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.promotion.full.ActFull" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`act_full`
+		(
+			`seller_id`,
+			`act_full_name`,
+			`first_full`,
+			`first_discount`,
+			`second_full`,
+			`second_discount`,
+			`third_full`,
+			`third_discount`,
+			`start_time`,
+			`end_time`,
+			`channel`,
+			`status`,
+			`audit_opinion`,
+			`remark`,
+			`audit_user_id`,
+			`audit_user_name`,
+			`audit_time`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`,
+			`update_user_id`,
+			`update_user_name`,
+			`update_time`
+		)
+		values
+		(
+			#{sellerId},
+			#{actFullName},
+			#{firstFull},
+			#{firstDiscount},
+			#{secondFull},
+			#{secondDiscount},
+			#{thirdFull},
+			#{thirdDiscount},
+			#{startTime},
+			#{endTime},
+			#{channel},
+			#{status},
+			#{auditOpinion},
+			#{remark},
+			#{auditUserId},
+			#{auditUserName},
+			#{auditTime},
+			#{createUserId},
+			#{createUserName},
+			now(),
+			#{updateUserId},
+			#{updateUserName},
+			now()
+		)
+	</insert>
+	
+	<delete id="delete">
+        delete from `act_full` where `id` = #{id}
+	</delete>
+</mapper>

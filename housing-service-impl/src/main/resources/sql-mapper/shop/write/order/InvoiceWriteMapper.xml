@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.member.InvoiceWriteDao">
+	<resultMap id="InvoiceResult" type="com.ejavashop.entity.order.Invoice">
+			<result property="id" column="id" />
+			<result property="content" column="content" />
+			<result property="state" column="state" />
+			<result property="createId" column="create_id" />
+			<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="InvoiceResult">
+		select
+		   *
+		from `invoice`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getByMId" parameterType="Integer" resultMap="InvoiceResult">
+		select
+		   *
+		from `invoice`
+		where `create_id` = #{memberId}
+		and `state` = 1
+	</select>
+	
+	<delete id="delete" parameterType="Integer" >
+		delete from `invoice` where `id` = #{id}
+	</delete>
+	
+	<update id="update" parameterType="com.ejavashop.entity.order.Invoice">
+        update `invoice` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="content != null">`content`= #{content},</if>
+			<if test="state != null">`state`= #{state},</if>
+			<!-- <if test="createId != null">`create_id`= #{createId},</if> -->
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="save" parameterType="com.ejavashop.entity.order.Invoice" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `invoice`
+		(
+			`content`,
+			`state`,
+			`create_id`,
+			`create_time`
+		)
+		values
+		(
+			#{content},
+			#{state},
+			#{createId},
+			now()
+		)
+	</insert>
+	
+	
+	   
+	<!--  查询条件 
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="q_id != null and q_id !=''"  > and `id`= #{q_id}</if>
+			<if test="q_content != null and q_content !=''"  > and `content`= #{q_content}</if>
+			<if test="q_state != null and q_state !=''"  > and `state`= #{q_state}</if>
+			<if test="q_createId != null and q_createId !=''"  > and `create_id`= #{q_createId}</if>
+			<if test="q_createTime != null and q_createTime !=''"  > and `create_time`= #{q_createTime}</if>
+		</trim>
+	</sql>
+
+	发票信息表 列表总数
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from invoice
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	查询发票信息表列表
+	<select id="queryList" resultMap="InvoiceResult"  parameterType="map">
+		select 
+		  * 
+		from invoice 
+		<include refid="Where_Clause"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select> -->
+</mapper>

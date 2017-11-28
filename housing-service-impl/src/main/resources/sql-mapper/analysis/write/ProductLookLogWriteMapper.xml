@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.analysis.write.ProductLookLogWriteDao">
+	<resultMap id="ProductLookLogResult" type="com.ejavashop.entity.analysis.ProductLookLog">
+			<result property="id" column="id" />
+			<result property="siteCookie" column="site_cookie" />
+			<result property="memberId" column="member_id" />
+			<result property="productId" column="product_id" />
+			<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ProductLookLogResult">
+		select
+		   *
+		from `product_look_log`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.analysis.ProductLookLog">
+        update `product_look_log` 
+    	<set>
+			<if test="id != null">`id`= #{id},</if>
+			<if test="siteCookie != null">`site_cookie`= #{siteCookie},</if>
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="productId != null">`product_id`= #{productId},</if>
+			<if test="createTime != null">`create_time`= #{createTime}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.analysis.ProductLookLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`product_look_log`
+		(
+			`site_cookie`,
+			`member_id`,
+			`product_id`,
+			`create_time`
+		)
+		values
+		(
+			#{siteCookie},
+			#{memberId},
+			#{productId},
+			date_format(now(),'%Y-%c-%d')
+		)
+	</insert>
+	
+	<select id="countBySiteCookieAndProductId" resultType="java.lang.Integer">
+		select
+		   count(1)
+		from `product_look_log`
+		where `site_cookie` = #{siteCookie}
+		and product_id = #{productId}
+		and create_time = date_format(now(),'%Y-%c-%d')
+	</select>
+	
+	<select id="countBySiteCookie" resultType="java.lang.Integer">
+		select
+		   count(1)
+		from `product_look_log`
+		where `site_cookie` = #{siteCookie}
+		and member_id = 0
+	</select>
+	
+	<update id="updateByMemberId">
+        update `product_look_log` 
+        set `member_id`= #{memberId}
+        where `site_cookie`= #{siteCookie}
+	</update>
+	
+</mapper>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.member.MemberGradeUpLogsWriteDao">
+	<resultMap id="MemberGradeUpLogsResult" type="com.ejavashop.entity.member.MemberGradeUpLogs">
+			<result property="id" column="id" />
+			<result property="memberId" column="member_id" />
+			<result property="memberName" column="member_name" />
+			<result property="beforeExper" column="before_exper" />
+			<result property="afterExper" column="after_exper" />
+			<result property="beforeGrade" column="before_grade" />
+			<result property="afterGrade" column="after_grade" />
+			<result property="createTime" column="create_time" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="MemberGradeUpLogsResult">
+		select
+		   *
+		from `member_grade_up_logs`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.member.MemberGradeUpLogs">
+        update `member_grade_up_logs` 
+    	<set>
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="memberName != null">`member_name`= #{memberName},</if>
+			<if test="beforeExper != null">`before_exper`= #{beforeExper},</if>
+			<if test="afterExper != null">`after_exper`= #{afterExper},</if>
+			<if test="beforeGrade != null">`before_grade`= #{beforeGrade},</if>
+			<if test="afterGrade != null">`after_grade`= #{afterGrade},</if>
+			<if test="createTime != null">`create_time`= #{createTime}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="save" parameterType="com.ejavashop.entity.member.MemberGradeUpLogs" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`member_grade_up_logs`
+		(
+			`member_id`,
+			`member_name`,
+			`before_exper`,
+			`after_exper`,
+			`before_grade`,
+			`after_grade`,
+			`create_time`
+		)
+		values
+		(
+			#{memberId},
+			#{memberName},
+			#{beforeExper},
+			#{afterExper},
+			#{beforeGrade},
+			#{afterGrade},
+			#{createTime}
+		)
+	</insert>
+
+	<select id="getMemberGradeUpLogsCount" resultType="Integer">
+		select
+		   count(*)
+		from `member_grade_up_logs`
+		where `member_id` = #{memberId}
+	</select>
+
+	<select id="getMemberGradeUpLogs" resultMap="MemberGradeUpLogsResult">
+		select
+		   *
+		from `member_grade_up_logs`
+		where `member_id` = #{memberId}
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

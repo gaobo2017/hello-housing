@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.read.group.ActGroupBannerReadDao">
+	<resultMap id="ActGroupBannerResult" type="com.ejavashop.entity.promotion.group.ActGroupBanner">
+			<result property="id" column="id" />
+			<result property="title" column="title" />
+			<result property="linkUrl" column="link_url" />
+			<result property="image" column="image" />
+			<result property="orderNo" column="order_no" />
+			<result property="startTime" column="start_time" />
+			<result property="endTime" column="end_time" />
+			<result property="state" column="state" />
+			<result property="pcMobile" column="pc_mobile" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ActGroupBannerResult">
+		select
+		   *
+		from `act_group_banner`
+		where `id` = #{id}
+	</select>
+	
+	<sql id="getCondition">
+        <where>
+            <if test="queryMap.q_state != null and queryMap.q_state !=''">
+                and `state` = #{queryMap.q_state}
+            </if>
+            <if test="queryMap.q_pcMobile != null and queryMap.q_pcMobile !=''">
+                and `pc_mobile` = #{queryMap.q_pcMobile}
+            </if>
+        </where>
+    </sql>
+    
+	<select id="getActGroupBannersCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `act_group_banner`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getActGroupBanners" parameterType="java.util.Map" resultMap="ActGroupBannerResult">
+		select
+		   *
+		from `act_group_banner`
+		<include refid="getCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="getActGroupBannersPcMobile" parameterType="Integer" resultMap="ActGroupBannerResult">
+		select
+		   *
+		from `act_group_banner`
+		where 
+		`pc_mobile` = ${pcMobile}
+		and `state` = 1
+		and `start_time` &lt; now()
+        and `end_time` &gt; now()
+		order by `order_no` desc
+	</select>
+	
+</mapper>

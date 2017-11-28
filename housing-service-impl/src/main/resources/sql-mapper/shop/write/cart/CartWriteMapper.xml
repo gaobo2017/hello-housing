@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.cart.CartWriteDao">
+	<resultMap id="CartResult" type="com.ejavashop.entity.cart.Cart">
+			<result property="id" column="id" />
+			<result property="createTime" column="create_time" />
+			<result property="memberId" column="member_id" />
+			<result property="count" column="count" />
+			<result property="specId" column="spec_id" />
+			<result property="specInfo" column="spec_info" />
+			<result property="productId" column="product_id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="productGoodsId" column="product_goods_id" />
+			<result property="checked" column="checked" />
+	</resultMap>
+
+	<update id="update" parameterType="com.ejavashop.entity.cart.Cart">
+        update `cart` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="count != null">`count`= #{count},</if>
+			<if test="specId != null">`spec_id`= #{specId},</if>
+			<if test="specInfo != null">`spec_info`= #{specInfo},</if>
+			<if test="productId != null">`product_id`= #{productId},</if>
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="productGoodsId != null">`product_goods_id`= #{productGoodsId},</if>
+			<if test="checked != null">`checked`= #{checked},</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+
+	<update id="addCount">
+        update `cart` 
+    	set `count` = `count` + #{count},
+    		`checked`= 1
+        where `id` = #{id}
+	</update>
+
+	<delete id="delete"  parameterType="java.lang.Integer">
+		delete from `cart` where `id` = #{id}
+	</delete>
+
+	<delete id="deleteByIds">
+		delete from `cart`
+		where `id` in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            ${item}
+       	</foreach>
+    </delete>
+
+	<select id="getByMemberId" parameterType="Integer" resultMap="CartResult">
+		select
+		   *
+		from `cart`
+		where `member_id` = #{memberId}
+		<if test="useType == 2">
+			and `checked`= 1
+		</if>
+	</select>
+
+	<!-- 根据会员ID 删除购物车内信息 -->
+    <delete id="deleteByMemberId"  parameterType="java.lang.Integer">
+		delete from `cart` where `member_id` = #{memberId} and `checked` = 1
+	</delete>
+
+	<delete id="jobClearCart"  parameterType="java.lang.String">
+		delete from `cart` where `create_time` &lt;= #{clearTime}
+	</delete>
+
+	<update id="updateChecked">
+        update `cart` 
+    	set `checked` = #{checked}
+        where `id` = #{cartId}
+        and `member_id` = #{memberId}
+	</update>
+
+	<update id="updateCheckedAll">
+        update `cart` 
+    	set `checked` = #{checked}
+        where `member_id` = #{memberId}
+	</update>
+
+
+
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="q_id != null and q_id !=''"  > and `id`= #{q_id}</if>
+			<if test="q_createTime != null and q_createTime !=''"  > and `create_time`= #{q_createTime}</if>
+			<if test="q_memberId != null and q_memberId !=''"  > and `member_id`= #{q_memberId}</if>
+			<if test="q_count != null and q_count !=''"  > and `count`= #{q_count}</if>
+			<if test="q_specId != null and q_specId !=''"  > and `spec_id`= #{q_specId}</if>
+			<if test="q_specInfo != null and q_specInfo !=''"  > and `spec_info`= #{q_specInfo}</if>
+			<if test="q_productId != null and q_productId !=''"  > and `product_id`= #{q_productId}</if>
+			<if test="q_sellerId != null and q_sellerId !=''"  > and `seller_id`= #{q_sellerId}</if>
+			<if test="q_productGoodsId != null and q_productGoodsId !=''"  > and `product_goods_id`= #{q_productGoodsId}</if>
+		</trim>
+	</sql>
+	
+	
+	<select id="get" parameterType="Integer" resultMap="CartResult">
+		select
+		   *
+		from `cart`
+		where `id` = #{id}
+	</select>
+	
+	<!-- 取购物车中商户 -->
+	<select id="getSellersOfCart" parameterType="Integer" resultMap="CartResult">
+		select
+		   *
+		from `cart`
+		where `member_id` = #{memberId}
+		group by seller_id 
+	</select>
+	
+	
+	
+	
+	
+	
+	<insert id="save" parameterType="com.ejavashop.entity.cart.Cart" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`cart`
+		(
+			
+			`create_time`,
+			`member_id`,
+			`count`,
+			`spec_id`,
+			`spec_info`,
+			`product_id`,
+			`seller_id`,
+			`product_goods_id`
+		)
+		values
+		(
+			
+			now(),
+			#{memberId},
+			#{count},
+			#{specId},
+			#{specInfo},
+			#{productId},
+			#{sellerId},
+			#{productGoodsId}
+		)
+	</insert>
+	
+	<!-- 商城购物车 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from cart
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询商城购物车列表 -->
+	<select id="queryList" resultMap="CartResult"  parameterType="map">
+		select 
+		  * 
+		from cart 
+		<include refid="Where_Clause"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

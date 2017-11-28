@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shopm.read.pcseller.PcSellerIndexReadDao">
+	<resultMap id="PcSellerIndexResult" type="com.ejavashop.entity.shopm.pcseller.PcSellerIndex">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="logo" column="logo" />
+			<result property="notice" column="notice" />
+			<result property="detail" column="detail" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="PcSellerIndexResult">
+		select
+		   *
+		from `pc_seller_index`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getBySellerId" parameterType="Integer" resultMap="PcSellerIndexResult">
+		select
+		   *
+		from `pc_seller_index`
+		where `seller_id` = #{sellerId}
+	</select>
+	
+	<sql id="getCondition">
+        <where>
+            <if test="queryMap.q_sellerId != null and queryMap.q_sellerId !=''">
+                and `seller_id` = #{queryMap.q_sellerId}
+            </if>
+        </where>
+    </sql>
+    
+	<select id="getPcSellerIndexsCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `pc_seller_index`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getPcSellerIndexs" parameterType="java.util.Map" resultMap="PcSellerIndexResult">
+		select
+		   *
+		from `pc_seller_index`
+		<include refid="getCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+</mapper>

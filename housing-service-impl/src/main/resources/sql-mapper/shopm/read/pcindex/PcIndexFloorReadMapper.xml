@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shopm.read.pcindex.PcIndexFloorReadDao">
+	<resultMap id="PcIndexFloorResult" type="com.ejavashop.entity.shopm.pcindex.PcIndexFloor">
+			<result property="id" column="id" />
+			<result property="name" column="name" />
+			<result property="orderNo" column="order_no" />
+			<result property="masterImage" column="master_image" />
+			<result property="masterLinkUrl" column="master_link_url" />
+			<result property="advImage" column="adv_image" />
+			<result property="advLinkUrl" column="adv_link_url" />
+			<result property="status" column="status" />
+			<result property="remark" column="remark" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="PcIndexFloorResult">
+		select
+		   *
+		from `pc_index_floor`
+		where `id` = #{id}
+	</select>
+	
+	<sql id="getCondition">
+        <where>
+            <if test="queryMap.q_name != null and queryMap.q_name !=''">
+                and `name` like CONCAT('%', #{queryMap.q_name}, '%')
+            </if>
+            <if test="queryMap.q_status != null and queryMap.q_status !=''">
+                and `status` = #{queryMap.q_status}
+            </if>
+        </where>
+    </sql>
+    
+	<select id="getPcIndexFloorsCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `pc_index_floor`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getPcIndexFloors" parameterType="java.util.Map" resultMap="PcIndexFloorResult">
+		select
+		   *
+		from `pc_index_floor`
+		<include refid="getCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="getPcIndexFloorsForView" resultMap="PcIndexFloorResult">
+		select
+		   *
+		from `pc_index_floor`
+		<if test="isPreview != null and isPreview == 0">
+			where `status` = 1
+		</if>
+		<if test="isPreview != null and isPreview == 1">
+			where `status` &lt; 3
+		</if>
+		order by `order_no`
+	</select>
+</mapper>

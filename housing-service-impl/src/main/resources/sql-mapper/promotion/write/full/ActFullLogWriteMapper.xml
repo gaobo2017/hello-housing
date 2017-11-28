@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.write.full.ActFullLogWriteDao">
+	<resultMap id="ActFullLogResult" type="com.ejavashop.entity.promotion.full.ActFullLog">
+			<result property="id" column="id" />
+			<result property="actFullId" column="act_full_id" />
+			<result property="memberId" column="member_id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="orderId" column="order_id" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ActFullLogResult">
+		select
+		   *
+		from `act_full_log`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.promotion.full.ActFullLog">
+        update `act_full_log` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="actFullId != null">`act_full_id`= #{actFullId},</if>
+			<if test="memberId != null">`member_id`= #{memberId},</if>
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="orderId != null">`order_id`= #{orderId},</if>
+			<!-- <if test="createUserId != null">`create_user_id`= #{createUserId},</if>
+			<if test="createUserName != null">`create_user_name`= #{createUserName},</if>
+			<if test="createTime != null">`create_time`= #{createTime}</if> -->
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.promotion.full.ActFullLog" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`act_full_log`
+		(
+			`act_full_id`,
+			`member_id`,
+			`seller_id`,
+			`order_id`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`
+		)
+		values
+		(
+			#{actFullId},
+			#{memberId},
+			#{sellerId},
+			#{orderId},
+			#{createUserId},
+			#{createUserName},
+			now()
+		)
+	</insert>
+
+	<insert id="batchInsertActFullLog" parameterType="java.util.List">
+        insert into 
+		`act_full_log`
+		(
+			`act_full_id`,
+			`member_id`,
+			`seller_id`,
+			`order_id`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`
+		)
+		values
+	   <foreach collection="list" item="item" index="index" separator=","> 
+	    (
+	    	#{item.actFullId},
+			#{item.memberId},
+			#{item.sellerId},
+			#{item.orderId},
+			#{item.createUserId},
+			#{item.createUserName},
+			now()
+	    )
+	   </foreach>
+	</insert>
+
+</mapper>

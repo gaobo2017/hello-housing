@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shopm.read.mindex.MIndexFloorReadDao">
+	<resultMap id="MIndexFloorResult" type="com.ejavashop.entity.shopm.MIndexFloor">
+			<result property="id" column="id" />
+			<result property="name" column="name" />
+			<result property="orderNo" column="order_no" />
+			<result property="status" column="status" />
+			<result property="remark" column="remark" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="MIndexFloorResult">
+		select
+		   *
+		from `m_index_floor`
+		where `id` = #{id}
+	</select>
+	
+	<sql id="getCondition">
+        <where>
+            <if test="queryMap.q_name != null and queryMap.q_name !=''">
+                and `name` like CONCAT('%', #{queryMap.q_name}, '%')
+            </if>
+            <if test="queryMap.q_status != null and queryMap.q_status !=''">
+                and `status` = #{queryMap.q_status}
+            </if>
+        </where>
+    </sql>
+    
+	<select id="getMIndexFloorsCount" parameterType="java.util.Map" resultType="Integer">
+		select
+		   count(*)
+		from `m_index_floor`
+		<include refid="getCondition"/>
+	</select>
+	
+	<select id="getMIndexFloors" parameterType="java.util.Map" resultMap="MIndexFloorResult">
+		select
+		   *
+		from `m_index_floor`
+		<include refid="getCondition"/>
+		order by `id` desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="getMIndexFloorsForView" parameterType="String" resultMap="MIndexFloorResult">
+		select
+		   *
+		from `m_index_floor`
+		<if test="status != null and status !=''">
+            where `status` = #{status}
+        </if>
+		order by `order_no`
+	</select>
+</mapper>

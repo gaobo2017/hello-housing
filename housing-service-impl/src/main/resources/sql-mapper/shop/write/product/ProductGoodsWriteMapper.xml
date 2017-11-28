@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.product.ProductGoodsWriteDao">
+   <resultMap id="ProductGoodsResult" type="com.ejavashop.entity.product.ProductGoods">
+			<result property="id" column="id" />
+			<result property="productId" column="product_id" />
+			<result property="normAttrId" column="norm_attr_id" />
+			<result property="normName" column="norm_name" />
+			<result property="mallPcPrice" column="mall_pc_price" />
+			<result property="mallMobilePrice" column="mall_mobile_price" />
+			<result property="productStock" column="product_stock" />
+			<result property="productStockWarning" column="product_stock_warning" />
+			<result property="actualSales" column="actual_sales" />
+			<result property="sku" column="sku" />
+			<result property="images" column="images" />
+	</resultMap>
+   
+	<update id="updateStock">
+		update `product_goods`
+        set `product_stock`= `product_stock` - #{number}
+        where `id` = #{id}
+	</update>
+   
+	<update id="batchUpdate" parameterType="java.util.List">
+		  <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+                update product_goods 
+                <set>
+                  `product_stock` = #{item.productStock},
+                  `mall_pc_price` = #{item.mallPcPrice},
+                  `mall_mobile_price` = #{item.mallMobilePrice}
+                </set>
+                where id = ${item.id}
+         </foreach>
+	</update>
+	
+	<update id="updateActualSales">
+		update `product_goods`
+        set `actual_sales`= `actual_sales` + #{number}
+        where `id` = #{id}
+	</update>
+   
+   <insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into `product_goods`(
+            `product_id`,
+            `norm_attr_id`,
+            `norm_name`,
+            `mall_pc_price`,
+            `mall_mobile_price`,
+            `product_stock`,
+            `product_stock_warning`,
+            `actual_sales`,
+            `sku`,
+            `images`
+        )
+        values(
+            #{productId},
+            #{normAttrId},
+            #{normName},
+            #{mallPcPrice},
+            #{mallMobilePrice},
+            #{productStock},
+            #{productStockWarning},
+            #{actualSales},
+            #{sku},
+            #{images}
+        )
+    </insert>
+   
+   	<update id="update">
+		update `product_goods`
+		<set>
+		    <!-- <if test = "null != id and '' != id">`id`= #{id},</if> -->
+		    <if test = "null != productId">`product_id`= #{productId},</if>
+		    <if test = "null != normName">`norm_name`= #{normName},</if>
+		    <if test = "null != mallPcPrice">`mall_pc_price`= #{mallPcPrice},</if>
+		    <if test = "null != mallMobilePrice">`mall_mobile_price`= #{mallMobilePrice},</if>
+		    <if test = "null != productStock">`product_stock`= #{productStock},</if>
+		    <if test = "null != productStockWarning">`product_stock_warning`= #{productStockWarning},</if>
+		    <if test = "null != actualSales">`actual_sales`= #{actualSales},</if>
+		    <if test = "null != sku">`sku`= #{sku},</if>
+		    <if test = "null != images">`images`= #{images},</if>
+		</set>
+		where `id` = #{id}
+	</update>
+   
+   
+
+
+    
+    <!-- <update id="update">
+        update `product_goods`
+        <set>
+            <if test = "null != id and '' != id">`id`= #{id},</if>
+            <if test = "null != productId and '' != productId">`product_id`= #{productId},</if>
+            <if test = "null != normName and '' != normName">`norm_name`= #{normName},</if>
+            <if test = "null != mallPcPrice and '' != mallPcPrice">`mall_pc_price`= #{mallPcPrice},</if>
+            <if test = "null != mallMobilePrice and '' != mallMobilePrice">`mall_mobile_price`= #{mallMobilePrice},</if>
+            <if test = "null != productStock">`product_stock`= #{productStock},</if>
+            <if test = "null != productStockWarning and '' != productStockWarning">`product_stock_warning`= #{productStockWarning},</if>
+            <if test = "null != actualSales and '' != actualSales">`actual_sales`= #{actualSales},</if>
+            <if test = "null != sku and '' != sku">`sku`= #{sku},</if>
+            <if test = "null != images and '' != images">`images`= #{images},</if>
+        </set>
+        where `id` = #{id}
+    </update> -->
+    
+    <select id="getByCondition" parameterType="Integer" resultMap="ProductGoodsResult">
+		select
+		   *
+		from `product_goods`
+		<include refid="whereConditions"/>
+		limit 1
+	</select>
+    
+    <delete id="del">
+        delete from `product_goods` where `id` = #{id}
+    </delete>
+
+    <select id="get" resultType="com.ejavashop.entity.product.ProductGoods">
+        select
+        <include refid="selectColumn"/>
+        from `product_goods`
+        where `id` = #{id}
+    </select>
+
+    <select id="getByProductId" resultType="com.ejavashop.entity.product.ProductGoods">
+        select
+        <include refid="selectColumn"/>
+        from `product_goods`
+        where `product_id` = #{productId} order by id desc limit 1
+    </select>
+
+    <select id="getByProductIdAndAttrId" resultType="com.ejavashop.entity.product.ProductGoods">
+        select
+        <include refid="selectColumn"/>
+        from `product_goods`
+        where `product_id` = #{productId} and `norm_attr_id` = #{attrId}
+    </select>
+    
+    <select id="page" resultType="com.ejavashop.entity.product.ProductGoods">
+        select
+        <include refid="selectColumn"/>
+        from `product_goods`
+        <include refid="whereConditions"/>
+        order by id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from `product_goods`
+        <include refid="whereConditions"/>
+    </select>
+
+    <sql id="selectColumn">
+        `id`,
+        `product_id`,
+        `norm_attr_id`,
+        `norm_name`,
+        `mall_pc_price`,
+        `mall_mobile_price`,
+        `product_stock`,
+        `product_stock_warning`,
+        `actual_sales`,
+        `sku`,
+        `images`
+    </sql>
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_id != null and '' != param1.q_id">
+                and `id`= #{param1.q_id}
+            </if>
+            <if test="param1.q_productId != null and '' != param1.q_productId">
+                and `product_id`= #{param1.q_productId}
+            </if>
+            <if test="param1.q_normAttrId != null and param1.q_normAttrId !=''">
+            	and `norm_attr_id`= #{param1.q_normAttrId}
+            </if>
+            <if test="param1.q_normName != null and '' != param1.q_normName">
+                and `norm_name`= #{param1.q_normName}
+            </if>
+            <if test="param1.q_mallPcPrice != null and '' != param1.q_mallPcPrice">
+                and `mall_pc_price`= #{param1.q_mallPcPrice}
+            </if>
+            <if test="param1.q_mallMobilePrice != null and '' != param1.q_mallMobilePrice">
+                and `mall_mobile_price`= #{param1.q_mallMobilePrice}
+            </if>
+            <if test="param1.q_productStock != null and '' != param1.q_productStock">
+                and `product_stock`= #{param1.q_productStock}
+            </if>
+            <if test="param1.q_productStockWarning != null and '' != param1.q_productStockWarning">
+                and `product_stock_warning`= #{param1.q_productStockWarning}
+            </if>
+            <if test="param1.q_actualSales != null and '' != param1.q_actualSales">
+                and `actual_sales`= #{param1.q_actualSales}
+            </if>
+            <if test="param1.q_sku != null and '' != param1.q_sku">
+                and `sku`= #{param1.q_sku}
+            </if>
+            <if test="param1.q_images != null and '' != param1.q_images">
+                and `images`= #{param1.q_images}
+            </if>
+        </where>
+    </sql>
+    
+    <delete id="deleteByProductId">
+        delete from `product_goods` where `product_id` = #{proid}
+    </delete>
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.read.flash.ActFlashSaleProductReadDao">
+	<resultMap id="ActFlashSaleProductResult" type="com.ejavashop.entity.promotion.flash.ActFlashSaleProduct">
+			<result property="id" column="id" />
+			<result property="actFlashSaleId" column="act_flash_sale_id" />
+			<result property="actFlashSaleStageId" column="act_flash_sale_stage_id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="productId" column="product_id" />
+			<result property="price" column="price" />
+			<result property="stock" column="stock" />
+			<result property="actualSales" column="actual_sales" />
+			<result property="status" column="status" />
+			<result property="auditOpinion" column="audit_opinion" />
+			<result property="auditUserId" column="audit_user_id" />
+			<result property="auditUserName" column="audit_user_name" />
+			<result property="auditTime" column="audit_time" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ActFlashSaleProductResult">
+		select
+		   *
+		from `act_flash_sale_product`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getActFlashSaleProduct" parameterType="Integer" resultMap="ActFlashSaleProductResult">
+		select
+		   *
+		from `act_flash_sale_product`
+		where 1=1
+		 <if test="productId != null">
+			and `product_id` = #{productId}
+		</if>
+		<if test="sellerId != null">
+			and `seller_id` = #{sellerId}
+		</if>
+		<if test="actFlashSaleId != null">
+			and `act_flash_sale_id` = #{actFlashSaleId}
+		</if>
+		<if test="actFlashSaleStageId != null">
+			and `act_flash_sale_stage_id` = #{actFlashSaleStageId}
+		</if>
+		order by sort
+	</select>
+	
+	<select id="getByStageId" parameterType="Integer" resultMap="ActFlashSaleProductResult">
+		select
+		   *
+		from `act_flash_sale_product`
+		where `act_flash_sale_stage_id` = #{actFlashSaleStageId}
+		order by sort desc
+	</select>
+	
+	<select id="getEffectiveByStageId" parameterType="Integer" resultMap="ActFlashSaleProductResult">
+		select
+		   *
+		from `act_flash_sale_product`
+		where `act_flash_sale_stage_id` = #{actFlashSaleStageId}
+		and `status` = 2
+		order by sort desc
+	</select>
+	
+	<select id="getByStageIdAndSellerId" resultMap="ActFlashSaleProductResult">
+		select
+		   *
+		from `act_flash_sale_product`
+		where `act_flash_sale_stage_id` = #{actFlashSaleStageId}
+			and `seller_id` = #{sellerId}
+	</select>
+	
+	<select id="getByStageIdAndProductId" resultMap="ActFlashSaleProductResult">
+		select
+		   *
+		from `act_flash_sale_product`
+		where `act_flash_sale_stage_id` = #{actFlashSaleStageId}
+		and `product_id` = #{productId}
+		and `status` = 2
+	</select>
+	
+	<select id="getByActFlashSaleIdAndProductId" resultMap="ActFlashSaleProductResult">
+		select
+		   *
+		from `act_flash_sale_product`
+		where `act_flash_sale_id` = #{actFlashSaleId}
+		and `product_id` = #{productId}
+		and `status` = 2
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.settlement.SettlementOpWriteDao">
+	<resultMap id="SettlementOpResult" type="com.ejavashop.entity.settlement.SettlementOp">
+			<result property="id" column="id" />
+			<result property="ordersId" column="orders_id" />
+			<result property="ordersSn" column="orders_sn" />
+			<result property="sellerId" column="seller_id" />
+			<result property="productId" column="product_id" />
+			<result property="productGoodsId" column="product_goods_id" />
+			<result property="specInfo" column="spec_info" />
+			<result property="productName" column="product_name" />
+			<result property="productSku" column="product_sku" />
+			<result property="packageGroupsId" column="package_groups_id" />
+			<result property="mallGroupsId" column="mall_groups_id" />
+			<result property="giftId" column="gift_id" />
+			<result property="isGift" column="is_gift" />
+			<result property="moneyPrice" column="money_price" />
+			<result property="number" column="number" />
+			<result property="moneyAmount" column="money_amount" />
+			<result property="moneyActSingle" column="money_act_single" />
+			<result property="actSingleId" column="act_single_id" />
+			<result property="activityId" column="activity_id" />
+			<result property="actFlashSaleId" column="act_flash_sale_id" />
+			<result property="actFlashSaleProductId" column="act_flash_sale_product_id" />
+			<result property="logisticsId" column="logistics_id" />
+			<result property="logisticsName" column="logistics_name" />
+			<result property="logisticsNumber" column="logistics_number" />
+			<result property="shippingTime" column="shipping_time" />
+			<result property="closeTime" column="close_time" />
+			<result property="systemRemark" column="system_remark" />
+			<result property="memberProductBackId" column="member_product_back_id" />
+			<result property="memberProductExchangeId" column="member_product_exchange_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+			<result property="settlementId" column="settlement_id" />
+			<result property="settleCycle" column="settle_cycle" />
+			<result property="productCateId" column="product_cate_id" />
+			<result property="productCateName" column="product_cate_name" />
+			<result property="scaling" column="scaling" />
+			<result property="commision" column="commision" />
+			<result property="settleTime" column="settle_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SettlementOpResult">
+		select
+		   *
+		from `settlement_op`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.settlement.SettlementOp">
+        update `settlement_op` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="ordersId != null">`orders_id`= #{ordersId},</if>
+			<if test="ordersSn != null">`orders_sn`= #{ordersSn},</if>
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="productId != null">`product_id`= #{productId},</if>
+			<if test="productGoodsId != null">`product_goods_id`= #{productGoodsId},</if>
+			<if test="specInfo != null">`spec_info`= #{specInfo},</if>
+			<if test="productName != null">`product_name`= #{productName},</if>
+			<if test="productSku != null">`product_sku`= #{productSku},</if>
+			<if test="packageGroupsId != null">`package_groups_id`= #{packageGroupsId},</if>
+			<if test="mallGroupsId != null">`mall_groups_id`= #{mallGroupsId},</if>
+			<if test="giftId != null">`gift_id`= #{giftId},</if>
+			<if test="isGift != null">`is_gift`= #{isGift},</if>
+			<if test="moneyPrice != null">`money_price`= #{moneyPrice},</if>
+			<if test="number != null">`number`= #{number},</if>
+			<if test="moneyAmount != null">`money_amount`= #{moneyAmount},</if>
+			<if test="moneyActSingle != null">`money_act_single`= #{moneyActSingle},</if>
+			<if test="actSingleId != null">`act_single_id`= #{actSingleId},</if>
+			<if test="activityId != null">`activity_id`= #{activityId},</if>
+			<if test="actFlashSaleId != null">`act_flash_sale_id`= #{actFlashSaleId},</if>
+			<if test="actFlashSaleProductId != null">`act_flash_sale_product_id`= #{actFlashSaleProductId},</if>
+			<if test="logisticsId != null">`logistics_id`= #{logisticsId},</if>
+			<if test="logisticsName != null">`logistics_name`= #{logisticsName},</if>
+			<if test="logisticsNumber != null">`logistics_number`= #{logisticsNumber},</if>
+			<if test="shippingTime != null">`shipping_time`= #{shippingTime},</if>
+			<if test="closeTime != null">`close_time`= #{closeTime},</if>
+			<if test="systemRemark != null">`system_remark`= #{systemRemark},</if>
+			<if test="memberProductBackId != null">`member_product_back_id`= #{memberProductBackId},</if>
+			<if test="memberProductExchangeId != null">`member_product_exchange_id`= #{memberProductExchangeId},</if>
+			<!-- <if test="createTime != null">`create_time`= #{createTime},</if> -->
+			<!-- <if test="updateTime != null">`update_time`= #{updateTime},</if> -->
+			`update_time`= now(),
+			<if test="settlementId != null">`settlement_id`= #{settlementId},</if>
+			<if test="settleCycle != null">`settle_cycle`= #{settleCycle},</if>
+			<if test="productCateId != null">`product_cate_id`= #{productCateId},</if>
+			<if test="productCateName != null">`product_cate_name`= #{productCateName},</if>
+			<if test="scaling != null">`scaling`= #{scaling},</if>
+			<if test="commision != null">`commision`= #{commision},</if>
+			<if test="settleTime != null">`settle_time`= #{settleTime}</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.settlement.SettlementOp" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into `settlement_op`
+		(
+			`orders_id`,
+			`orders_sn`,
+			`seller_id`,
+			`product_id`,
+			`product_goods_id`,
+			`spec_info`,
+			`product_name`,
+			`product_sku`,
+			`package_groups_id`,
+			`mall_groups_id`,
+			`gift_id`,
+			`is_gift`,
+			`money_price`,
+			`number`,
+			`money_amount`,
+			`money_act_single`,
+			`act_single_id`,
+			`activity_id`,
+			`act_flash_sale_id`,
+			`act_flash_sale_product_id`,
+			`logistics_id`,
+			`logistics_name`,
+			`logistics_number`,
+			`shipping_time`,
+			`close_time`,
+			`system_remark`,
+			`member_product_back_id`,
+			`member_product_exchange_id`,
+			`create_time`,
+			`update_time`,
+			`settlement_id`,
+			`settle_cycle`,
+			`product_cate_id`,
+			`product_cate_name`,
+			`scaling`,
+			`commision`,
+			`settle_time`
+		)
+		values
+		(
+			#{ordersId},
+			#{ordersSn},
+			#{sellerId},
+			#{productId},
+			#{productGoodsId},
+			#{specInfo},
+			#{productName},
+			#{productSku},
+			#{packageGroupsId},
+			#{mallGroupsId},
+			#{giftId},
+			#{isGift},
+			#{moneyPrice},
+			#{number},
+			#{moneyAmount},
+			#{moneyActSingle},
+			#{actSingleId},
+			#{activityId},
+			#{actFlashSaleId},
+			#{actFlashSaleProductId},
+			#{logisticsId},
+			#{logisticsName},
+			#{logisticsNumber},
+			#{shippingTime},
+			#{closeTime},
+			#{systemRemark},
+			#{memberProductBackId},
+			#{memberProductExchangeId},
+			now(),
+			now(),
+			#{settlementId},
+			#{settleCycle},
+			#{productCateId},
+			#{productCateName},
+			#{scaling},
+			#{commision},
+			#{settleTime}
+		)
+	</insert>
+	
+	<delete id="deleteByCysleAndSellerId">
+        delete from `settlement_op` where `settle_cycle` = #{settleCycle} and `seller_id` = #{sellerId}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.promotion.write.single.ActSingleWriteDao">
+	<resultMap id="ActSingleResult" type="com.ejavashop.entity.promotion.single.ActSingle">
+			<result property="id" column="id" />
+			<result property="sellerId" column="seller_id" />
+			<result property="actSingleName" column="act_single_name" />
+			<result property="type" column="type" />
+			<result property="discount" column="discount" />
+			<result property="productIds" column="product_ids" />
+			<result property="startTime" column="start_time" />
+			<result property="endTime" column="end_time" />
+			<result property="channel" column="channel" />
+			<result property="status" column="status" />
+			<result property="auditOpinion" column="audit_opinion" />
+			<result property="remark" column="remark" />
+			<result property="auditUserId" column="audit_user_id" />
+			<result property="auditUserName" column="audit_user_name" />
+			<result property="auditTime" column="audit_time" />
+			<result property="createUserId" column="create_user_id" />
+			<result property="createUserName" column="create_user_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateUserId" column="update_user_id" />
+			<result property="updateUserName" column="update_user_name" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="ActSingleResult">
+		select
+		   *
+		from `act_single`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.promotion.single.ActSingle">
+        update `act_single` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+			<if test="actSingleName != null">`act_single_name`= #{actSingleName},</if>
+			<if test="type != null">`type`= #{type},</if>
+			<if test="discount != null">`discount`= #{discount},</if>
+			<if test="productIds != null">`product_ids`= #{productIds},</if>
+			<if test="startTime != null">`start_time`= #{startTime},</if>
+			<if test="endTime != null">`end_time`= #{endTime},</if>
+			<if test="channel != null">`channel`= #{channel},</if>
+			<!-- <if test="status != null">`status`= #{status},</if> -->
+			<if test="auditOpinion != null">`audit_opinion`= #{auditOpinion},</if>
+			<if test="remark != null">`remark`= #{remark},</if>
+			<if test="auditUserId != null">`audit_user_id`= #{auditUserId},</if>
+			<if test="auditUserName != null">`audit_user_name`= #{auditUserName},</if>
+			<if test="auditTime != null">`audit_time`= #{auditTime},</if>
+			<!-- <if test="createUserId != null">`create_user_id`= #{createUserId},</if>
+			<if test="createUserName != null">`create_user_name`= #{createUserName},</if>
+			<if test="createTime != null">`create_time`= #{createTime},</if> -->
+			<if test="updateUserId != null">`update_user_id`= #{updateUserId},</if>
+			<if test="updateUserName != null">`update_user_name`= #{updateUserName},</if>
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<update id="updateStatus" parameterType="com.ejavashop.entity.promotion.single.ActSingle">
+        update `act_single` 
+    	<set>
+			`status`= #{status},
+			<if test="auditOpinion != null">`audit_opinion`= #{auditOpinion},</if>
+			<if test="updateUserId != null">`update_user_id`= #{updateUserId},</if>
+			<if test="updateUserName != null">`update_user_name`= #{updateUserName},</if>
+			<if test="updateTime != null">`update_time`= #{updateTime},</if>
+			<if test="auditUserId != null">`audit_user_id`= #{auditUserId},</if>
+			<if test="auditUserName != null">`audit_user_name`= #{auditUserName},</if>
+			<if test="auditTime != null">`audit_time`= #{auditTime},</if>
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="com.ejavashop.entity.promotion.single.ActSingle" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`act_single`
+		(
+			`seller_id`,
+			`act_single_name`,
+			`type`,
+			`discount`,
+			`product_ids`,
+			`start_time`,
+			`end_time`,
+			`channel`,
+			`status`,
+			`audit_opinion`,
+			`remark`,
+			`audit_user_id`,
+			`audit_user_name`,
+			`audit_time`,
+			`create_user_id`,
+			`create_user_name`,
+			`create_time`,
+			`update_user_id`,
+			`update_user_name`,
+			`update_time`
+		)
+		values
+		(
+			#{sellerId},
+			#{actSingleName},
+			#{type},
+			#{discount},
+			#{productIds},
+			#{startTime},
+			#{endTime},
+			#{channel},
+			#{status},
+			#{auditOpinion},
+			#{remark},
+			#{auditUserId},
+			#{auditUserName},
+			#{auditTime},
+			#{createUserId},
+			#{createUserName},
+			now(),
+			#{updateUserId},
+			#{updateUserName},
+			now()
+		)
+	</insert>
+	
+	<delete id="delete">
+        delete from `act_single` where `id` = #{id}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.system.CodeWriteDao">
+
+  	<select id="getCodes" parameterType="java.util.Map" resultType="com.ejavashop.entity.system.Code">
+		select 	t1.`code_div`, t1.`code_cd`, t1.`code_text`, 
+				t1.`sort_order`, t1.`use_yn`, 
+				t1.`create_user_id`, t1.`create_user`, t1.`create_time`,
+				t1.`update_user_id`, t1.`update_user`, t1.`update_time`
+		from 	`code_master` t1
+		<where>
+			<if test="param1.q_codeDiv != null and param1.q_codeDiv != ''">
+				t1.`code_div` like CONCAT('%',UPPER(#{param1.q_codeDiv}),'%')
+			</if>
+			<if test="param1.q_codeCd != null and param1.q_codeCd != ''">
+				and (
+						t1.`code_cd` like CONCAT('%',UPPER(#{param1.q_codeCd}),'%')
+					or
+						t1.`code_text` like CONCAT('%',#{param1.q_codeCd},'%')
+					)
+			</if>
+			<if test="param1.q_useYn != null and param1.q_useYn != ''">
+				and t1.`use_yn` = #{param1.q_useYn}
+			</if>
+		</where>	
+		order by t1.`code_div`, t1.`sort_order`, t1.`code_cd`
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="getCodesCount" parameterType="java.util.Map" resultType="Integer">
+		select 	count(1)
+		from 	`code_master` t1
+		<where>
+			<if test="q_codeDiv != null and q_codeDiv != ''">
+				t1.`code_div` like CONCAT('%',UPPER(#{q_codeDiv}),'%')
+			</if>
+			<if test="q_codeCd != null and q_codeCd != ''">
+				and (
+						t1.`code_cd` like CONCAT('%',UPPER(#{q_codeCd}),'%')
+					or
+						t1.`code_text` like CONCAT('%',#{q_codeCd},'%')
+					)
+			</if>
+			<if test="q_useYn != null and q_useYn != ''">
+				and t1.`use_yn` = #{param1.q_useYn}
+			</if>
+		</where>	
+	</select>
+	
+	<select id="getCode" resultType="com.ejavashop.entity.system.Code">
+		select 	t1.`code_div`, t1.`code_cd`, t1.`code_text`, 
+				t1.`sort_order`, t1.`use_yn`, 
+				t1.`create_user_id`, t1.`create_user`, t1.`create_time`,
+				t1.`update_user_id`, t1.`update_user`, t1.`update_time`
+		from 	`code_master` t1
+		where	t1.`code_div` = #{codeDiv}
+		and		t1.`code_cd` = #{codeCd}
+	</select>
+	
+	<insert id="createCode"  parameterType="com.ejavashop.entity.system.Code">
+		insert into `code_master`
+			(`code_div`, `code_cd`, `code_text`, 
+			`sort_order`, `use_yn`, 
+			`create_user_id`, `create_user`, `create_time`)
+		values 
+	        (UPPER(#{codeDiv}),UPPER(#{codeCd}),#{codeText},
+	        #{sortOrder},#{useYn},
+	        #{createUserId},#{createUser},now())
+	</insert>
+	
+	<update id="updateCode" parameterType="com.ejavashop.entity.system.Code">
+		update 	`code_master` t
+		set		t.`use_yn`=#{useYn}
+				,t.`sort_order`=#{sortOrder}
+				,t.`update_user_id` = #{updateUserId}
+				,t.`update_user` = #{updateUser}
+				,t.`update_time` = now()
+				<if test="codeText != null"> ,t.`code_text`=#{codeText}</if>
+		where	t.`code_div` = #{codeDiv}
+		and		t.`code_cd` = #{codeCd};
+	</update>
+	
+</mapper>

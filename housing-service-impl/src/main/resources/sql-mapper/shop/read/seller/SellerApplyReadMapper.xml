@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.seller.SellerApplyReadDao">
+	<resultMap id="SellerApplyResult" type="com.ejavashop.entity.seller.SellerApply">
+		<result property="id" column="id" />
+		<result property="userId" column="user_id" />
+		<result property="name" column="name" />
+		<result property="password" column="password" />
+		<result property="company" column="company" />
+		<result property="bussinessLicense" column="bussiness_license" />
+		<result property="taxLicense" column="tax_license" />
+		<result property="companyProvince" column="company_province" />
+		<result property="companyCity" column="company_city" />
+		<result property="companyStartTime" column="company_start_time" />
+		<result property="companyEndTime" column="company_end_time" />
+		<result property="companyAdd" column="company_add" />
+		<result property="telephone" column="telephone" />
+		<result property="fax" column="fax" />
+		<result property="bussinessLicenseImage" column="bussiness_license_image" />
+		<result property="organization" column="organization" />
+		<result property="bankUser" column="bank_user" />
+		<result property="bankName" column="bank_name" />
+		<result property="bankNameBranch" column="bank_name_branch" />
+		<result property="brandNameCode" column="brand_name_code" />
+		<result property="bankCode" column="bank_code" />
+		<result property="bankProvince" column="bank_province" />
+		<result property="bankCity" column="bank_city" />
+		<result property="legalPerson" column="legal_person" />
+		<result property="legalPersonCard" column="legal_person_card" />
+		<result property="personCardUp" column="person_card_up" />
+		<result property="personCardDown" column="person_card_down" />
+		<result property="personPhone" column="person_phone" />
+		<result property="email" column="email" />
+		<result property="state" column="state" />
+		<result property="type" column="type" />
+		<result property="optId" column="opt_id" />
+		<result property="bond" column="bond" />
+		<result property="createTime" column="create_time" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	<select id="get" parameterType="Integer" resultMap="SellerApplyResult">
+		select
+		   *
+		from `seller_apply`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getSellerApplyByCondition" resultType="com.ejavashop.entity.seller.SellerApply"  parameterType="map">
+		select 
+			* 
+		from `seller_apply`
+		<include refid="whereConditions"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+
+	<select id="getSellerApplyByUser" parameterType="Integer" resultMap="SellerApplyResult">
+		select
+		   *
+		from `seller_apply`
+		where `user_id` = #{userid}
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="id != null and id !=''"  > and `id`= #{id}</if>
+			<if test="userId != null and userId !=''"  > and `user_id`= #{userId}</if>
+			<if test="name != null and name !=''"  > and `name`= #{name}</if>
+			<if test="password != null and password !=''"  > and `password`= #{password}</if>
+			<if test="company != null and company !=''"  > and `company`= #{company}</if>
+			<if test="bussinessLicense != null and bussinessLicense !=''"  > and `bussiness_license`= #{bussinessLicense}</if>
+			<if test="taxLicense != null and taxLicense !=''"  > and `tax_license`= #{taxLicense}</if>
+			<if test="companyProvince != null and companyProvince !=''"  > and `company_province`= #{companyProvince}</if>
+			<if test="companyCity != null and companyCity !=''"  > and `company_city`= #{companyCity}</if>
+			<if test="companyStartTime != null and companyStartTime !=''"  > and `company_start_time`= #{companyStartTime}</if>
+			<if test="companyEndTime != null and companyEndTime !=''"  > and `company_end_time`= #{companyEndTime}</if>
+			<if test="companyAdd != null and companyAdd !=''"  > and `company_add`= #{companyAdd}</if>
+			<if test="telephone != null and telephone !=''"  > and `telephone`= #{telephone}</if>
+			<if test="fax != null and fax !=''"  > and `fax`= #{fax}</if>
+			<if test="bussinessLicenseImage != null and bussinessLicenseImage !=''"  > and `bussiness_license_image`= #{bussinessLicenseImage}</if>
+			<if test="organization != null and organization !=''"  > and `organization`= #{organization}</if>
+			<if test="bankUser != null and bankUser !=''"  > and `bank_user`= #{bankUser}</if>
+			<if test="bankName != null and bankName !=''"  > and `bank_name`= #{bankName}</if>
+			<if test="bankNameBranch != null and bankNameBranch !=''"  > and `bank_name_branch`= #{bankNameBranch}</if>
+			<if test="brandNameCode != null and brandNameCode !=''"  > and `brand_name_code`= #{brandNameCode}</if>
+			<if test="bankCode != null and bankCode !=''"  > and `bank_code`= #{bankCode}</if>
+			<if test="bankProvince != null and bankProvince !=''"  > and `bank_province`= #{bankProvince}</if>
+			<if test="bankCity != null and bankCity !=''"  > and `bank_city`= #{bankCity}</if>
+			<if test="legalPerson != null and legalPerson !=''"  > and `legal_person`= #{legalPerson}</if>
+			<if test="legalPersonCard != null and legalPersonCard !=''"  > and `legal_person_card`= #{legalPersonCard}</if>
+			<if test="personCardUp != null and personCardUp !=''"  > and `person_card_up`= #{personCardUp}</if>
+			<if test="personCardDown != null and personCardDown !=''"  > and `person_card_down`= #{personCardDown}</if>
+			<if test="personPhone != null and personPhone !=''"  > and `person_phone`= #{personPhone}</if>
+			<if test="email != null and email !=''"  > and `email`= #{email}</if>
+			<if test="state != null and state !=''"  > and `state`= #{state}</if>
+			<if test="type != null and type !=''"  > and `type`= #{type}</if>
+			<if test="optId != null and optId !=''"  > and `opt_id`= #{optId}</if>
+			<if test="bond != null and bond !=''"  > and `bond`= #{bond}</if>
+			<if test="createTime != null and createTime !=''"  > and `create_time`= #{createTime}</if>
+			<if test="updateTime != null and updateTime !=''"  > and `update_time`= #{updateTime}</if>
+		</trim>
+	</sql>
+	
+</mapper>

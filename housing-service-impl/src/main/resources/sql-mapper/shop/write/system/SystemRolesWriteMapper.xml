@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.system.SystemRolesWriteDao">
+	<resultMap id="SystemRolesResult" type="com.ejavashop.entity.system.SystemRoles">
+			<result property="id" column="id" />
+			<result property="rolesName" column="roles_name" />
+			<result property="content" column="content" />
+			<result property="userId" column="user_id" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+			<result property="status" column="status" />
+			<result property="roleCode" column="role_code" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SystemRolesResult">
+		select
+		   *
+		from `system_roles`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from `system_roles` t1
+		<include refid="whereConditions" />
+	</select>
+	
+	<delete id="del">
+        delete from `system_roles` where `id` = #{id}
+	</delete>
+	
+	<select id="page" parameterType="java.util.Map" resultType="com.ejavashop.entity.system.SystemRoles">
+		select * from `system_roles` t1
+		<include refid="whereConditions" />
+		order by id
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<select id="list" resultType="com.ejavashop.entity.system.SystemRoles">
+		select * from `system_roles` t1
+		order by id
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="whereConditions">
+		<where>
+			<if test="queryMap.id != null and queryMap.id !=''"  > and `id`= #{queryMap.id}</if>
+			<if test="queryMap.rolesName != null and queryMap.rolesName !=''"  > and `roles_name`= #{queryMap.rolesName}</if>
+			<if test="queryMap.q_rolesName != null and queryMap.q_rolesName !=''"  > and `roles_name` like CONCAT('%',#{queryMap.q_rolesName},'%')</if>
+			<if test="queryMap.content != null and queryMap.content !=''"  > and `content`= #{queryMap.content}</if>
+			<if test="queryMap.userId != null and queryMap.userId !=''"  > and `user_id`= #{queryMap.userId}</if>
+			<if test="queryMap.createTime != null and queryMap.createTime !=''"  > and `create_time`= #{queryMap.createTime}</if>
+			<if test="queryMap.updateTime != null and queryMap.updateTime !=''"  > and `update_time`= #{queryMap.updateTime}</if>
+			<if test="queryMap.status != null and queryMap.status !=''"  > and `status`= #{queryMap.status}</if>
+			<if test="queryMap.roleCode != null and queryMap.roleCode !=''"  > and `role_code`= #{queryMap.roleCode}</if>
+		</where>
+	</sql>
+	
+	<update id="update" parameterType="com.ejavashop.entity.system.SystemRoles">
+        update `system_roles` 
+    	<set>
+			<!-- <if test="id != null">`id`= #{id},</if> -->
+			<if test="rolesName != null">`roles_name`= #{rolesName},</if>
+			<if test="content != null">`content`= #{content},</if>
+			<if test="userId != null">`user_id`= #{userId},</if>
+			<if test="status != null">`status`= #{status},</if>
+			<if test="roleCode != null">`role_code`= #{roleCode},</if>
+			`update_time`= now()
+	    </set>
+        where `id` = #{id}
+	</update>
+	
+	<insert id="save" parameterType="com.ejavashop.entity.system.SystemRoles" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`system_roles`
+		(
+			
+			`roles_name`,
+			`content`,
+			`user_id`,
+			`create_time`,
+			`update_time`,
+			`status`,
+			`role_code`
+		)
+		values
+		(
+			
+			#{rolesName},
+			#{content},
+			#{userId},
+			now(),
+			now(),
+			#{status},
+			#{roleCode}
+		)
+	</insert>
+	
+</mapper>

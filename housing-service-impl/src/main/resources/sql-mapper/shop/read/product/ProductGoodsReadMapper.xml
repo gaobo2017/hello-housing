@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.product.ProductGoodsReadDao">
+	<resultMap id="ProductGoodsResult" type="com.ejavashop.entity.product.ProductGoods">
+			<result property="id" column="id" />
+			<result property="productId" column="product_id" />
+			<result property="normAttrId" column="norm_attr_id" />
+			<result property="normName" column="norm_name" />
+			<result property="mallPcPrice" column="mall_pc_price" />
+			<result property="mallMobilePrice" column="mall_mobile_price" />
+			<result property="productStock" column="product_stock" />
+			<result property="productStockWarning" column="product_stock_warning" />
+			<result property="actualSales" column="actual_sales" />
+			<result property="sku" column="sku" />
+			<result property="images" column="images" />
+	</resultMap>
+
+	<select id="getByProductId" resultMap="ProductGoodsResult">
+		select 
+		  * 
+		from product_goods 
+		where product_id = #{productId}
+		order by product_stock desc
+	</select>
+
+
+
+
+
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="q_id != null and q_id !=''"  > and `id`= #{q_id}</if>
+			<if test="q_productId != null and q_productId !=''"  > and `product_id`= #{q_productId}</if>
+			<if test="q_normAttrId != null and q_normAttrId !=''"  > and `norm_attr_id`= #{q_normAttrId}</if>
+			<if test="q_mallPcPrice != null and q_mallPcPrice !=''"  > and `mall_pc_price`= #{q_mallPcPrice}</if>
+			<if test="q_mallMobilePrice != null and q_mallMobilePrice !=''"  > and `mall_mobile_price`= #{q_mallMobilePrice}</if>
+			<if test="q_productStock != null and q_productStock !=''"  > and `product_stock`= #{q_productStock}</if>
+			<if test="q_productStockWarning != null and q_productStockWarning !=''"  > and `product_stock_warning`= #{q_productStockWarning}</if>
+			<if test="q_actualSales != null and q_actualSales !=''"  > and `actual_sales`= #{q_actualSales}</if>
+			<if test="q_sku != null and q_sku !=''"  > and `sku`= #{q_sku}</if>
+			<if test="q_images != null and q_images !=''"  > and `images`= #{q_images}</if>
+		</trim>
+	</sql>
+	
+	
+	<select id="get" parameterType="Integer" resultMap="ProductGoodsResult">
+		select
+		   *
+		from `product_goods`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getByCondition" parameterType="Integer" resultMap="ProductGoodsResult">
+		select
+		   *
+		from `product_goods`
+		<include refid="Where_Clause"/>
+		limit 1
+	</select>
+	
+	<!-- 货品表 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from product_goods
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询货品表列表 -->
+	<select id="queryList" resultMap="ProductGoodsResult"  parameterType="map">
+		select 
+		  * 
+		from product_goods 
+		<include refid="Where_Clause"/>
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.seller.SellerComplaintWriteDao">
+	<resultMap id="SellerComplaintResult" type="com.ejavashop.entity.seller.SellerComplaint">
+			<result property="id" column="id" />
+			<result property="userId" column="user_id" />
+			<result property="userName" column="user_name" />
+			<result property="orderId" column="order_id" />
+			<result property="orderProductId" column="order_product_id" />
+			<result property="productBackId" column="product_back_id" />
+			<result property="productExchangeId" column="product_exchange_id" />
+			<result property="content" column="content" />
+			<result property="image" column="image" />
+			<result property="complaintTime" column="complaint_time" />
+			<result property="sellerId" column="seller_id" />
+			<result property="sellerComplaintTime" column="seller_complaint_time" />
+			<result property="sellerCompContent" column="seller_comp_content" />
+			<result property="sellerCompImage" column="seller_comp_image" />
+			<result property="state" column="state" />
+			<result property="optId" column="opt_id" />
+			<result property="optContent" column="opt_content" />
+			<result property="userContent" column="user_content" />
+			<result property="createTime" column="create_time" />
+			<result property="optTime" column="opt_time" />
+	</resultMap>
+	
+	<select id="getCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(1) from seller_complaint t1
+		<include refid="Where_Clause" />
+	</select>
+	
+	<delete id="del">
+        delete from `seller_complaint` where `id` = #{id}
+	</delete>
+	
+	<select id="page" resultType="com.ejavashop.entity.seller.SellerComplaint">
+		select * from seller_complaint t1
+		<include refid="Where_Clause" />
+		order by id desc,create_time desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="Where_Clause">
+		where 1=1
+		<trim  suffixOverrides="," >
+			<if test="id != null and id !=''"  > and `id`= #{id}</if>
+			<if test="userId != null and userId !=''"  > and `user_id`= #{userId}</if>
+			<if test="userName != null and userName !=''"  > and `user_name`= #{userName}</if>
+			<if test="orderId != null and orderId !=''"  > and `order_id`= #{orderId}</if>
+			<if test="orderProductId != null and orderProductId !=''"  > and `order_product_id`= #{orderProductId}</if>
+			<if test="productBackId != null and productBackId !=''"  > and `product_back_id`= #{productBackId}</if>
+			<if test="productExchangeId != null and productExchangeId !=''"  > and `product_exchange_id`= #{productExchangeId}</if>
+			<if test="content != null and content !=''"  > and `content`= #{content}</if>
+			<if test="image != null and image !=''"  > and `image`= #{image}</if>
+			<if test="complaintTime != null and complaintTime !=''"  > and `complaint_time`= #{complaintTime}</if>
+			<if test="sellerId != null and sellerId !=''"  > and `seller_id`= #{sellerId}</if>
+			<if test="sellerComplaintTime != null and sellerComplaintTime !=''"  > and `seller_complaint_time`= #{sellerComplaintTime}</if>
+			<if test="sellerCompContent != null and sellerCompContent !=''"  > and `seller_comp_content`= #{sellerCompContent}</if>
+			<if test="sellerCompImage != null and sellerCompImage !=''"  > and `seller_comp_image`= #{sellerCompImage}</if>
+			<if test="state != null and state !=''"  > and `state`= #{state}</if>
+			<if test="q_state != null and q_state !=''"  > and `state`= #{q_state}</if>
+			<if test="optId != null and optId !=''"  > and `opt_id`= #{optId}</if>
+			<if test="optContent != null and optContent !=''"  > and `opt_content`= #{optContent}</if>
+			<if test="userContent != null and userContent !=''"  > and `user_content`= #{userContent}</if>
+			<if test="createTime != null and createTime !=''"  > and `create_time`= #{createTime}</if>
+			<if test="optTime != null and optTime !=''"  > and `opt_time`= #{optTime}</if>
+		</trim>
+	</sql>
+	
+	
+	<select id="get" parameterType="Integer" resultMap="SellerComplaintResult">
+		select
+		   *
+		from `seller_complaint`
+		where `id` = #{id}
+	</select>
+	
+	<update id="update" parameterType="com.ejavashop.entity.seller.SellerComplaint">
+        update `seller_complaint` 
+    	<set>
+    	<trim  suffixOverrides="," >
+				<if test="id != null">`id`= #{id},</if>
+				<if test="userId != null">`user_id`= #{userId},</if>
+				<if test="userName != null">`user_name`= #{userName},</if>
+				<if test="orderId != null">`order_id`= #{orderId},</if>
+				<if test="orderProductId != null">`order_product_id`= #{orderProductId},</if>
+				<if test="productBackId != null">`product_back_id`= #{productBackId},</if>
+				<if test="productExchangeId != null">`product_exchange_id`= #{productExchangeId},</if>
+				<if test="content != null">`content`= #{content},</if>
+				<if test="image != null">`image`= #{image},</if>
+				<if test="complaintTime != null">`complaint_time`= #{complaintTime},</if>
+				<if test="sellerId != null">`seller_id`= #{sellerId},</if>
+				<if test="sellerComplaintTime != null">`seller_complaint_time`= #{sellerComplaintTime},</if>
+				<if test="sellerCompContent != null">`seller_comp_content`= #{sellerCompContent},</if>
+				<if test="sellerCompImage != null">`seller_comp_image`= #{sellerCompImage},</if>
+				<if test="state != null">`state`= #{state},</if>
+				<if test="optId != null">`opt_id`= #{optId},</if>
+				<if test="optContent != null">`opt_content`= #{optContent},</if>
+				<if test="userContent != null">`user_content`= #{userContent},</if>
+				<if test="optTime != null">`opt_time`= #{optTime}</if>
+			</trim>
+		</set>
+		  
+        where `id` = #{id}
+	</update>
+	
+	<insert id="save" parameterType="com.ejavashop.entity.seller.SellerComplaint" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into 
+		`seller_complaint`
+		(
+			
+			`user_id`,
+			`user_name`,
+			`order_id`,
+			`order_product_id`,
+			`product_back_id`,
+			`product_exchange_id`,
+			`content`,
+			`image`,
+			`complaint_time`,
+			`seller_id`,
+			`seller_complaint_time`,
+			`seller_comp_content`,
+			`seller_comp_image`,
+			`state`,
+			`opt_id`,
+			`opt_content`,
+			`user_content`,
+			`create_time`,
+			`opt_time`
+		)
+		values
+		(
+			
+			#{userId},
+			#{userName},
+			#{orderId},
+			#{orderProductId},
+			#{productBackId},
+			#{productExchangeId},
+			#{content},
+			#{image},
+			now(),
+			#{sellerId},
+			#{sellerComplaintTime},
+			#{sellerCompContent},
+			#{sellerCompImage},
+			#{state},
+			#{optId},
+			#{optContent},
+			#{userContent},
+			now(),
+			#{optTime}
+		)
+	</insert>
+	
+	<!-- 商家投诉管理 列表总数-->
+	<select id="queryCount" resultType="java.lang.Integer"  parameterType="map">
+		select count(1) from seller_complaint
+		<include refid="Where_Clause"/>
+	</select>
+	  	
+	<!-- 查询商家投诉管理列表 -->
+	<select id="queryList" resultMap="SellerComplaintResult"  parameterType="map">
+		select 
+		  * 
+		from seller_complaint 
+		<include refid="Where_Clause"/>
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+</mapper>

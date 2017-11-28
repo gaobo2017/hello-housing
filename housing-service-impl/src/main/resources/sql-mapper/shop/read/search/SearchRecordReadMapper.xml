@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.search.SearchRecordReadDao">
+	<resultMap id="SearchRecordResult" type="com.ejavashop.entity.search.SearchRecord">
+			<result property="id" column="id" />
+			<result property="keyword" column="keyword" />
+			<result property="keywordPinyin" column="keyword_pinyin" />
+			<result property="keywordIndex" column="keyword_index" />
+			<result property="createId" column="create_id" />
+			<result property="createName" column="create_name" />
+			<result property="createTime" column="create_time" />
+			<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<select id="get" parameterType="Integer" resultMap="SearchRecordResult">
+		select
+		   *
+		from `search_record`
+		where `id` = #{id}
+	</select>
+	
+	<select id="getSearchRecordByKeyword" parameterType="String" resultMap="SearchRecordResult">
+		select
+		   *
+		from `search_record`
+		where `keyword` like CONCAT('%',#{keyword},'%')
+		or `keyword_pinyin` like CONCAT('%',#{keyword},'%')
+		order by create_time desc
+		limit ${number}
+	</select>
+	
+	<select id="count" resultType="java.lang.Integer">
+        select count(1) from `search_record` t1
+        <include refid="whereConditions"/>
+    </select>
+
+    <select id="getSearchRecords" resultType="com.ejavashop.entity.search.SearchRecord">
+        select * from `search_record` t1
+        <include refid="whereConditions"/>
+        order by id desc
+        <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+    </select>
+    
+    <sql id="whereConditions">
+        <where>
+            <if test="param1.q_keyword != null and param1.q_keyword != ''">
+                and t1.`keyword` like CONCAT('%',#{param1.q_keyword},'%')
+            </if>
+        </where>
+    </sql>
+    
+</mapper>

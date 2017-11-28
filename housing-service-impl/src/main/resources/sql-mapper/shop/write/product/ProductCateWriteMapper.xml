@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.product.ProductCateWriteDao">
+	<insert id="insert"  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into `product_cate`(
+            `product_type_id`,
+            `pid`,
+            `name`,
+            `path`,
+            `scaling`,
+            `create_id`,
+            `update_id`,
+            `create_time`,
+            `update_time`,
+            `sort`,
+            `status`
+        )
+        values(
+            #{productTypeId},
+            #{pid},
+            #{name},
+            #{path},
+            #{scaling},
+            #{createId},
+            #{updateId},
+            now(),
+            now(),
+            #{sort},
+            #{status}
+        )
+	</insert>
+	<update id="update">
+        update `product_cate`
+		<set>
+			<if test = "null != id and '' != id">`id`= #{id},</if>
+			<if test = "null != productTypeId and '' != productTypeId">`product_type_id`= #{productTypeId},</if>
+			<if test = "null != pid">`pid`= #{pid},</if>
+			<if test = "null != name and '' != name">`name`= #{name},</if>
+			<if test = "null != path and '' != path">`path`= #{path},</if>
+			<if test = "null != scaling">`scaling`= #{scaling},</if>
+			<if test = "null != createId">`create_id`= #{createId},</if>
+			<if test = "null != updateId">`update_id`= #{updateId},</if>
+			<if test = "null != createTime and '' != createTime">`create_time`= #{createTime},</if>
+			<if test = "null != updateTime and '' != updateTime">`update_time`= #{updateTime},</if>
+			<if test = "null != sort and '' != sort">`sort`= #{sort},</if>
+			<if test = "null != status and '' != state">`status`= #{status},</if>
+		</set>
+        where `id` = #{id}
+	</update>
+	<delete id="del">
+        delete from `product_cate` where `id` = #{id}
+	</delete>
+
+	<select id="get" resultType="com.ejavashop.entity.product.ProductCate">
+        select
+		<include refid="selectColumn"/>
+        from `product_cate`
+        where `id` = #{id} and `status` = 1
+	</select>
+
+    <select id="getByTypeId" resultType="com.ejavashop.entity.product.ProductCate">
+        select
+		<include refid="selectColumn"/>
+        from `product_cate`
+        where `product_type_id` = #{typeId} limit 1
+	</select>
+
+	<select id="page" resultType="com.ejavashop.vo.product.ProductCateVO">
+		select 
+			   seller_cate.id,
+		       product_type_id,
+		       pid,
+		       name,
+		       path,
+		       scaling,
+		       cate. create_id,
+		       update_id,
+		       update_time,
+		       sort,
+		       seller_cate.seller as seller,
+		       seller_cate.create_time as create_time,
+               seller_cate.state as status
+		  from product_cate cate, seller_manage_cate seller_cate
+		 where cate.id = seller_cate.product_cate_id
+         <if test="q_state != null and q_state!=''">and seller_cate.state = #{q_state}</if>
+		 <if test="q_name != null and q_name!=''">and name like CONCAT('%',#{q_name},'%')</if>
+          order by cate.id desc
+		 <if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+
+	<select id="getByPid" resultType="com.ejavashop.entity.product.ProductCate">
+        select
+        if((select count(1) from `product_cate` where pid = t1.`id` and `status` = 1)=0,'open','closed') state,
+		<include refid="selectColumn"/>
+        from `product_cate` t1
+        where pid = #{pid} and `status` = 1
+	</select>
+
+	<select id="getBySellerId" resultType="com.ejavashop.entity.product.ProductCate">
+        select
+		<include refid="selectColumn"/>
+        from product_cate
+        where status = 1
+          and id in (select product_cate_id from seller_manage_cate where seller = #{sellerId} and state=2)
+	</select>
+
+	<select id="count" resultType="java.lang.Integer">
+        select count(1)
+        from product_cate cate, seller_manage_cate seller_cate
+        where cate.id = seller_cate.product_cate_id
+        <if test="q_state != null and q_state!=''">and seller_cate.state = #{q_state}</if>
+        <if test="q_name != null and q_name!=''">and cate.name like CONCAT('%',#{q_name},'%')</if>
+	</select>
+
+	<sql id="selectColumn">
+        `id`,
+        `product_type_id`,
+        `pid`,
+        `name`,
+        `path`,
+        `scaling`,
+        `create_id`,
+        `update_id`,
+        `create_time`,
+        `update_time`,
+        `sort`,
+        `status`
+	</sql>
+	<sql id="whereConditions">
+		<where>
+			<if test="id != null and '' != id">
+                and `id`= #{id}
+			</if>
+			<if test="productTypeId != null and '' != productTypeId">
+                and `product_type_id`= #{productTypeId}
+			</if>
+			<if test="pid != null and '' != pid">
+                and `pid`= #{pid}
+			</if>
+			<if test="name != null and '' != name">
+                and `name`= #{name}
+			</if>
+			<if test="path != null and '' != path">
+                and `path`= #{path}
+			</if>
+			<if test="scaling != null and '' != scaling">
+                and `scaling`= #{scaling}
+			</if>
+			<if test="createId != null and '' != createId">
+                and `create_id`= #{createId}
+			</if>
+			<if test="updateId != null and '' != updateId">
+                and `update_id`= #{updateId}
+			</if>
+			<if test="createTime != null and '' != createTime">
+                and `create_time`= #{createTime}
+			</if>
+			<if test="updateTime != null and '' != updateTime">
+                and `update_time`= #{updateTime}
+			</if>
+			<if test="sort != null and '' != sort">
+                and `sort`= #{sort}
+			</if>
+			<if test="status != null and '' != status">
+                and `status`= #{status}
+			</if>
+		</where>
+	</sql>
+</mapper>
