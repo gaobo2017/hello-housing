@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.house.HousingVacancyDaysWriteDao">
+  <resultMap id="HousingVacancyDaysResult" type="com.ejavashop.entity.house.HousingVacancyDays">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="lease_id" jdbcType="INTEGER" property="leaseId" />
+    <result column="house_id" jdbcType="INTEGER" property="houseId" />
+    <result column="vacancy_day" jdbcType="INTEGER" property="vacancyDay" />
+    <result column="vacancy_start_time" jdbcType="TIMESTAMP" property="vacancyStartTime" />
+    <result column="vacancy_end_time" jdbcType="TIMESTAMP" property="vacancyEndTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, lease_id, house_id, vacancy_day, vacancy_start_time, vacancy_end_time, remark, 
+    create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingVacancyDaysResult">
+    select 
+    <include refid="Base_Column_List" />
+    from housing_vacancy_days
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from housing_vacancy_days
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ejavashop.entity.house.HousingVacancyDays">
+    insert into housing_vacancy_days (id, lease_id, house_id, 
+      vacancy_day, vacancy_start_time, vacancy_end_time, 
+      remark, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{leaseId,jdbcType=INTEGER}, #{houseId,jdbcType=INTEGER}, 
+      #{vacancyDay,jdbcType=INTEGER}, #{vacancyStartTime,jdbcType=TIMESTAMP}, #{vacancyEndTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ejavashop.entity.house.HousingVacancyDays">
+    insert into housing_vacancy_days
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="leaseId != null">
+        lease_id,
+      </if>
+      <if test="houseId != null">
+        house_id,
+      </if>
+      <if test="vacancyDay != null">
+        vacancy_day,
+      </if>
+      <if test="vacancyStartTime != null">
+        vacancy_start_time,
+      </if>
+      <if test="vacancyEndTime != null">
+        vacancy_end_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="leaseId != null">
+        #{leaseId,jdbcType=INTEGER},
+      </if>
+      <if test="houseId != null">
+        #{houseId,jdbcType=INTEGER},
+      </if>
+      <if test="vacancyDay != null">
+        #{vacancyDay,jdbcType=INTEGER},
+      </if>
+      <if test="vacancyStartTime != null">
+        #{vacancyStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vacancyEndTime != null">
+        #{vacancyEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ejavashop.entity.house.HousingVacancyDays">
+    update housing_vacancy_days
+    <set>
+      <if test="leaseId != null">
+        lease_id = #{leaseId,jdbcType=INTEGER},
+      </if>
+      <if test="houseId != null">
+        house_id = #{houseId,jdbcType=INTEGER},
+      </if>
+      <if test="vacancyDay != null">
+        vacancy_day = #{vacancyDay,jdbcType=INTEGER},
+      </if>
+      <if test="vacancyStartTime != null">
+        vacancy_start_time = #{vacancyStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vacancyEndTime != null">
+        vacancy_end_time = #{vacancyEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ejavashop.entity.house.HousingVacancyDays">
+    update housing_vacancy_days
+    set lease_id = #{leaseId,jdbcType=INTEGER},
+      house_id = #{houseId,jdbcType=INTEGER},
+      vacancy_day = #{vacancyDay,jdbcType=INTEGER},
+      vacancy_start_time = #{vacancyStartTime,jdbcType=TIMESTAMP},
+      vacancy_end_time = #{vacancyEndTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

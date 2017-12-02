@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.house.HousingIncomeWriteDao">
+  <resultMap id="HousingIncomeResult" type="com.ejavashop.entity.house.HousingIncome">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="house_id" jdbcType="INTEGER" property="houseId" />
+    <result column="all_rent_sum" jdbcType="DECIMAL" property="allRentSum" />
+    <result column="gross_profit_sum" jdbcType="DECIMAL" property="grossProfitSum" />
+    <result column="rent_income_again_sum" jdbcType="DECIMAL" property="rentIncomeAgainSum" />
+    <result column="return_rent_cost_sum" jdbcType="DECIMAL" property="returnRentCostSum" />
+    <result column="pure_profit_sum" jdbcType="DECIMAL" property="pureProfitSum" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, house_id, all_rent_sum, gross_profit_sum, rent_income_again_sum, return_rent_cost_sum, 
+    pure_profit_sum, remark, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingIncomeResult">
+    select 
+    <include refid="Base_Column_List" />
+    from housing_income
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from housing_income
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ejavashop.entity.house.HousingIncome">
+    insert into housing_income (id, house_id, all_rent_sum, 
+      gross_profit_sum, rent_income_again_sum, return_rent_cost_sum, 
+      pure_profit_sum, remark, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{houseId,jdbcType=INTEGER}, #{allRentSum,jdbcType=DECIMAL}, 
+      #{grossProfitSum,jdbcType=DECIMAL}, #{rentIncomeAgainSum,jdbcType=DECIMAL}, #{returnRentCostSum,jdbcType=DECIMAL}, 
+      #{pureProfitSum,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ejavashop.entity.house.HousingIncome">
+    insert into housing_income
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="houseId != null">
+        house_id,
+      </if>
+      <if test="allRentSum != null">
+        all_rent_sum,
+      </if>
+      <if test="grossProfitSum != null">
+        gross_profit_sum,
+      </if>
+      <if test="rentIncomeAgainSum != null">
+        rent_income_again_sum,
+      </if>
+      <if test="returnRentCostSum != null">
+        return_rent_cost_sum,
+      </if>
+      <if test="pureProfitSum != null">
+        pure_profit_sum,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="houseId != null">
+        #{houseId,jdbcType=INTEGER},
+      </if>
+      <if test="allRentSum != null">
+        #{allRentSum,jdbcType=DECIMAL},
+      </if>
+      <if test="grossProfitSum != null">
+        #{grossProfitSum,jdbcType=DECIMAL},
+      </if>
+      <if test="rentIncomeAgainSum != null">
+        #{rentIncomeAgainSum,jdbcType=DECIMAL},
+      </if>
+      <if test="returnRentCostSum != null">
+        #{returnRentCostSum,jdbcType=DECIMAL},
+      </if>
+      <if test="pureProfitSum != null">
+        #{pureProfitSum,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ejavashop.entity.house.HousingIncome">
+    update housing_income
+    <set>
+      <if test="houseId != null">
+        house_id = #{houseId,jdbcType=INTEGER},
+      </if>
+      <if test="allRentSum != null">
+        all_rent_sum = #{allRentSum,jdbcType=DECIMAL},
+      </if>
+      <if test="grossProfitSum != null">
+        gross_profit_sum = #{grossProfitSum,jdbcType=DECIMAL},
+      </if>
+      <if test="rentIncomeAgainSum != null">
+        rent_income_again_sum = #{rentIncomeAgainSum,jdbcType=DECIMAL},
+      </if>
+      <if test="returnRentCostSum != null">
+        return_rent_cost_sum = #{returnRentCostSum,jdbcType=DECIMAL},
+      </if>
+      <if test="pureProfitSum != null">
+        pure_profit_sum = #{pureProfitSum,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ejavashop.entity.house.HousingIncome">
+    update housing_income
+    set house_id = #{houseId,jdbcType=INTEGER},
+      all_rent_sum = #{allRentSum,jdbcType=DECIMAL},
+      gross_profit_sum = #{grossProfitSum,jdbcType=DECIMAL},
+      rent_income_again_sum = #{rentIncomeAgainSum,jdbcType=DECIMAL},
+      return_rent_cost_sum = #{returnRentCostSum,jdbcType=DECIMAL},
+      pure_profit_sum = #{pureProfitSum,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

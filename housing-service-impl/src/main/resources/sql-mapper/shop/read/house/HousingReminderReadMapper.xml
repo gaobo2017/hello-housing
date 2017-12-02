@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.read.house.HousingReminderReadDao">
+  <resultMap id="HousingReminderResult" type="com.ejavashop.entity.house.HousingReminder">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="lease_id" jdbcType="INTEGER" property="leaseId" />
+    <result column="house_id" jdbcType="INTEGER" property="houseId" />
+    <result column="lease_start_time" jdbcType="TIMESTAMP" property="leaseStartTime" />
+    <result column="lease_end_time" jdbcType="TIMESTAMP" property="leaseEndTime" />
+    <result column="remindery_way" jdbcType="INTEGER" property="reminderyWay" />
+    <result column="remindery_status" jdbcType="INTEGER" property="reminderyStatus" />
+    <result column="operation_name" jdbcType="VARCHAR" property="operationName" />
+    <result column="operation_id" jdbcType="INTEGER" property="operationId" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, lease_id, house_id, lease_start_time, lease_end_time, remindery_way, remindery_status, 
+    operation_name, operation_id, remark, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingReminderResult">
+    select 
+    <include refid="Base_Column_List" />
+    from housing_reminder
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from housing_reminder
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ejavashop.entity.house.HousingReminder">
+    insert into housing_reminder (id, lease_id, house_id, 
+      lease_start_time, lease_end_time, remindery_way, 
+      remindery_status, operation_name, operation_id, 
+      remark, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{leaseId,jdbcType=INTEGER}, #{houseId,jdbcType=INTEGER}, 
+      #{leaseStartTime,jdbcType=TIMESTAMP}, #{leaseEndTime,jdbcType=TIMESTAMP}, #{reminderyWay,jdbcType=INTEGER}, 
+      #{reminderyStatus,jdbcType=INTEGER}, #{operationName,jdbcType=VARCHAR}, #{operationId,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ejavashop.entity.house.HousingReminder">
+    insert into housing_reminder
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="leaseId != null">
+        lease_id,
+      </if>
+      <if test="houseId != null">
+        house_id,
+      </if>
+      <if test="leaseStartTime != null">
+        lease_start_time,
+      </if>
+      <if test="leaseEndTime != null">
+        lease_end_time,
+      </if>
+      <if test="reminderyWay != null">
+        remindery_way,
+      </if>
+      <if test="reminderyStatus != null">
+        remindery_status,
+      </if>
+      <if test="operationName != null">
+        operation_name,
+      </if>
+      <if test="operationId != null">
+        operation_id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="leaseId != null">
+        #{leaseId,jdbcType=INTEGER},
+      </if>
+      <if test="houseId != null">
+        #{houseId,jdbcType=INTEGER},
+      </if>
+      <if test="leaseStartTime != null">
+        #{leaseStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaseEndTime != null">
+        #{leaseEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reminderyWay != null">
+        #{reminderyWay,jdbcType=INTEGER},
+      </if>
+      <if test="reminderyStatus != null">
+        #{reminderyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="operationName != null">
+        #{operationName,jdbcType=VARCHAR},
+      </if>
+      <if test="operationId != null">
+        #{operationId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ejavashop.entity.house.HousingReminder">
+    update housing_reminder
+    <set>
+      <if test="leaseId != null">
+        lease_id = #{leaseId,jdbcType=INTEGER},
+      </if>
+      <if test="houseId != null">
+        house_id = #{houseId,jdbcType=INTEGER},
+      </if>
+      <if test="leaseStartTime != null">
+        lease_start_time = #{leaseStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaseEndTime != null">
+        lease_end_time = #{leaseEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reminderyWay != null">
+        remindery_way = #{reminderyWay,jdbcType=INTEGER},
+      </if>
+      <if test="reminderyStatus != null">
+        remindery_status = #{reminderyStatus,jdbcType=INTEGER},
+      </if>
+      <if test="operationName != null">
+        operation_name = #{operationName,jdbcType=VARCHAR},
+      </if>
+      <if test="operationId != null">
+        operation_id = #{operationId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ejavashop.entity.house.HousingReminder">
+    update housing_reminder
+    set lease_id = #{leaseId,jdbcType=INTEGER},
+      house_id = #{houseId,jdbcType=INTEGER},
+      lease_start_time = #{leaseStartTime,jdbcType=TIMESTAMP},
+      lease_end_time = #{leaseEndTime,jdbcType=TIMESTAMP},
+      remindery_way = #{reminderyWay,jdbcType=INTEGER},
+      remindery_status = #{reminderyStatus,jdbcType=INTEGER},
+      operation_name = #{operationName,jdbcType=VARCHAR},
+      operation_id = #{operationId,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

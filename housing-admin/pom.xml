@@ -157,6 +157,7 @@
             <artifactId>jackson-module-jaxb-annotations</artifactId>
         </dependency>
 
+			
         <!--db-->
         <dependency>
             <groupId>com.alibaba</groupId>

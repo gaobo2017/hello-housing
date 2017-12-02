@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ejavashop.dao.shop.write.house.HousingResourcesWriteDao">
+  <resultMap id="HousingResourcesResult" type="com.ejavashop.entity.house.HousingResources">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="room_code_no" jdbcType="VARCHAR" property="roomCodeNo" />
+    <result column="house_name" jdbcType="VARCHAR" property="houseName" />
+    <result column="house_block" jdbcType="VARCHAR" property="houseBlock" />
+    <result column="house_address" jdbcType="VARCHAR" property="houseAddress" />
+    <result column="floor" jdbcType="VARCHAR" property="floor" />
+    <result column="room_code" jdbcType="VARCHAR" property="roomCode" />
+    <result column="house_type" jdbcType="VARCHAR" property="houseType" />
+    <result column="toward" jdbcType="VARCHAR" property="toward" />
+    <result column="gain_time" jdbcType="TIMESTAMP" property="gainTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="is_sold" jdbcType="INTEGER" property="isSold" />
+    <result column="contract_start_time" jdbcType="TIMESTAMP" property="contractStartTime" />
+    <result column="contract_end_time" jdbcType="TIMESTAMP" property="contractEndTime" />
+    <result column="monthly_rent" jdbcType="DECIMAL" property="monthlyRent" />
+    <result column="prices_sum" jdbcType="DECIMAL" property="pricesSum" />
+    <result column="seller" jdbcType="VARCHAR" property="seller" />
+    <result column="last_sold_time" jdbcType="TIMESTAMP" property="lastSoldTime" />
+    <result column="operation_name" jdbcType="VARCHAR" property="operationName" />
+    <result column="operation_id" jdbcType="INTEGER" property="operationId" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, room_code_no,house_name, house_block, house_address, floor, room_code, house_type, toward, 
+    gain_time, status, is_sold, contract_start_time, contract_end_time, monthly_rent, 
+    prices_sum, seller, last_sold_time, operation_name, operation_id, remark, create_time, 
+    update_time
+  </sql>
+  
+  
+  	<select id="getHousingResourcesCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from housing_resources
+		<include refid="getHousingResourcesListCondition" />
+	</select>
+
+	<select id="getHousingResourcesList" resultType="com.ejavashop.entity.house.HousingResources">
+		select * from housing_resources
+		<include refid="getHousingResourcesListCondition" />
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+  <sql id="getHousingResourcesListCondition">
+		<where>
+		<!-- 页面暂时没有参数
+			<if test="queryMap.q_name != null and queryMap.q_name != ''">
+				and `name` like CONCAT('%',#{queryMap.q_name},'%')
+			</if>
+			<if test="queryMap.q_state != null and queryMap.q_state != ''">
+				and `state` = #{queryMap.q_state}
+			</if>
+			<if test="queryMap.q_taxLicense != null and queryMap.q_taxLicense != ''">
+				and `tax_license` like CONCAT('%',#{queryMap.q_taxLicense},'%')
+			</if>
+			<if test="queryMap.q_userId != null and queryMap.q_userId != ''">
+				and `user_id` = #{queryMap.q_userId}
+			</if>
+			<if test="queryMap.q_company != null and queryMap.q_company != ''">
+				and `company` = #{queryMap.q_company}
+			</if> -->
+		</where>
+	</sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingResourcesResult">
+    select 
+    <include refid="Base_Column_List" />
+    from housing_resources
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from housing_resources
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ejavashop.entity.house.HousingResources">
+    insert into housing_resources (id, room_code_no,house_name, house_block, 
+      house_address, floor, room_code, 
+      house_type, toward, gain_time, 
+      status, is_sold, contract_start_time, 
+      contract_end_time, monthly_rent, prices_sum, 
+      seller, last_sold_time, operation_name, 
+      operation_id, remark, create_time, 
+      update_time)  
+    values (#{id,jdbcType=INTEGER}, #{roomCodeNo,jdbcType=VARCHAR},#{houseName,jdbcType=VARCHAR}, #{houseBlock,jdbcType=VARCHAR}, 
+      #{houseAddress,jdbcType=VARCHAR}, #{floor,jdbcType=VARCHAR}, #{roomCode,jdbcType=VARCHAR}, 
+      #{houseType,jdbcType=VARCHAR}, #{toward,jdbcType=VARCHAR}, #{gainTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{isSold,jdbcType=INTEGER}, #{contractStartTime,jdbcType=TIMESTAMP}, 
+      #{contractEndTime,jdbcType=TIMESTAMP}, #{monthlyRent,jdbcType=DECIMAL}, #{pricesSum,jdbcType=DECIMAL}, 
+      #{seller,jdbcType=VARCHAR}, #{lastSoldTime,jdbcType=TIMESTAMP}, #{operationName,jdbcType=VARCHAR}, 
+      #{operationId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ejavashop.entity.house.HousingResources">
+    insert into housing_resources
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="roomCodeNo != null">
+        room_code_no,
+      </if>
+      <if test="houseName != null">
+        house_name,
+      </if>
+      <if test="houseBlock != null">
+        house_block,
+      </if>
+      <if test="houseAddress != null">
+        house_address,
+      </if>
+      <if test="floor != null">
+        floor,
+      </if>
+      <if test="roomCode != null">
+        room_code,
+      </if>
+      <if test="houseType != null">
+        house_type,
+      </if>
+      <if test="toward != null">
+        toward,
+      </if>
+      <if test="gainTime != null">
+        gain_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="isSold != null">
+        is_sold,
+      </if>
+      <if test="contractStartTime != null">
+        contract_start_time,
+      </if>
+      <if test="contractEndTime != null">
+        contract_end_time,
+      </if>
+      <if test="monthlyRent != null">
+        monthly_rent,
+      </if>
+      <if test="pricesSum != null">
+        prices_sum,
+      </if>
+      <if test="seller != null">
+        seller,
+      </if>
+      <if test="lastSoldTime != null">
+        last_sold_time,
+      </if>
+      <if test="operationName != null">
+        operation_name,
+      </if>
+      <if test="operationId != null">
+        operation_id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},  
+      </if>  
+       <if test="roomCodeNo != null">
+        #{roomCodeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="houseName != null">
+        #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBlock != null">
+        #{houseBlock,jdbcType=VARCHAR},
+      </if>
+      <if test="houseAddress != null">
+        #{houseAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="floor != null">
+        #{floor,jdbcType=VARCHAR},
+      </if>
+      <if test="roomCode != null">
+        #{roomCode,jdbcType=VARCHAR},
+      </if>
+      <if test="houseType != null">
+        #{houseType,jdbcType=VARCHAR},
+      </if>
+      <if test="toward != null">
+        #{toward,jdbcType=VARCHAR},
+      </if>
+      <if test="gainTime != null">
+        #{gainTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isSold != null">
+        #{isSold,jdbcType=INTEGER},
+      </if>
+      <if test="contractStartTime != null">
+        #{contractStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contractEndTime != null">
+        #{contractEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="monthlyRent != null">
+        #{monthlyRent,jdbcType=DECIMAL},
+      </if>
+      <if test="pricesSum != null">
+        #{pricesSum,jdbcType=DECIMAL},
+      </if>
+      <if test="seller != null">
+        #{seller,jdbcType=VARCHAR},
+      </if>
+      <if test="lastSoldTime != null">
+        #{lastSoldTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operationName != null">
+        #{operationName,jdbcType=VARCHAR},
+      </if>
+      <if test="operationId != null">
+        #{operationId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ejavashop.entity.house.HousingResources">
+    update housing_resources
+    <set>
+    
+    
+      <if test="roomCodeNo != null">
+        room_code_no = #{roomCodeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="houseName != null">
+        house_name = #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="houseBlock != null">
+        house_block = #{houseBlock,jdbcType=VARCHAR},
+      </if>
+      <if test="houseAddress != null">
+        house_address = #{houseAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="floor != null">
+        floor = #{floor,jdbcType=VARCHAR},
+      </if>
+      <if test="roomCode != null">
+        room_code = #{roomCode,jdbcType=VARCHAR},
+      </if>
+      <if test="houseType != null">
+        house_type = #{houseType,jdbcType=VARCHAR},
+      </if>
+      <if test="toward != null">
+        toward = #{toward,jdbcType=VARCHAR},
+      </if>
+      <if test="gainTime != null">
+        gain_time = #{gainTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isSold != null">
+        is_sold = #{isSold,jdbcType=INTEGER},
+      </if>
+      <if test="contractStartTime != null">
+        contract_start_time = #{contractStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contractEndTime != null">
+        contract_end_time = #{contractEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="monthlyRent != null">
+        monthly_rent = #{monthlyRent,jdbcType=DECIMAL},
+      </if>
+      <if test="pricesSum != null">
+        prices_sum = #{pricesSum,jdbcType=DECIMAL},
+      </if>
+      <if test="seller != null">
+        seller = #{seller,jdbcType=VARCHAR},
+      </if>
+      <if test="lastSoldTime != null">
+        last_sold_time = #{lastSoldTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operationName != null">
+        operation_name = #{operationName,jdbcType=VARCHAR},
+      </if>
+      <if test="operationId != null">
+        operation_id = #{operationId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ejavashop.entity.house.HousingResources">
+    update housing_resources 
+    set room_code_no = #{roomCodeNo,jdbcType=VARCHAR},
+      house_name = #{houseName,jdbcType=VARCHAR},
+      house_block = #{houseBlock,jdbcType=VARCHAR},
+      house_address = #{houseAddress,jdbcType=VARCHAR},
+      floor = #{floor,jdbcType=VARCHAR},
+      room_code = #{roomCode,jdbcType=VARCHAR},
+      house_type = #{houseType,jdbcType=VARCHAR},
+      toward = #{toward,jdbcType=VARCHAR},
+      gain_time = #{gainTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      is_sold = #{isSold,jdbcType=INTEGER},
+      contract_start_time = #{contractStartTime,jdbcType=TIMESTAMP},
+      contract_end_time = #{contractEndTime,jdbcType=TIMESTAMP},
+      monthly_rent = #{monthlyRent,jdbcType=DECIMAL},
+      prices_sum = #{pricesSum,jdbcType=DECIMAL},
+      seller = #{seller,jdbcType=VARCHAR},
+      last_sold_time = #{lastSoldTime,jdbcType=TIMESTAMP},
+      operation_name = #{operationName,jdbcType=VARCHAR},
+      operation_id = #{operationId,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

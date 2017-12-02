@@ -13,6 +13,49 @@
 <div id="aa" class="easyui-accordion" data-options="fit:true"
      style="height: auto;">
 
+    <@shiro.hasPermission name="/admin_menu_house">
+	<div title="房源管理" class="ra_div">
+		<@shiro.hasPermission name="/admin/house/manage">
+		<a id='599' href="javascript:void(0);" onclick="addTab('房源列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/house/manage')">房源列表</a>
+		</@shiro.hasPermission>
+	    <@shiro.hasPermission name="/admin/house/manage/add">
+		<a id='598' href="javascript:void(0);" onclick="addTab('新增房源', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/house/manage/add')">新增房源</a>
+		</@shiro.hasPermission>
+	</div>
+	</@shiro.hasPermission>
+	
+	    <@shiro.hasPermission name="/admin_menu_house">
+	<div title="成本管理" class="ra_div">
+		<@shiro.hasPermission name="/admin/cost/manage">
+		<a id='601' href="javascript:void(0);" onclick="addTab('成本列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage')">成本列表</a>
+		</@shiro.hasPermission>
+	    <@shiro.hasPermission name="/admin/cost/manage/add">
+		<a id='602' href="javascript:void(0);" onclick="addTab('新增成本', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage/add')">新增成本</a>
+		</@shiro.hasPermission>
+	</div>
+	</@shiro.hasPermission>
+	
+	    <@shiro.hasPermission name="/admin_menu_house">
+	<div title="租房管理" class="ra_div">
+		<@shiro.hasPermission name="/admin/rent/manage">
+		<a id='604' href="javascript:void(0);" onclick="addTab('租房列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage')">租房列表</a>
+		</@shiro.hasPermission>
+	    <@shiro.hasPermission name="/admin/rent/manage/add">
+		<a id='605' href="javascript:void(0);" onclick="addTab('新增租房', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage/add')">新增租房</a>
+		</@shiro.hasPermission>
+	</div>
+	</@shiro.hasPermission>
+	
+	    <@shiro.hasPermission name="/admin_menu_house">
+	<div title="收入管理" class="ra_div">
+		<@shiro.hasPermission name="/admin/income/manage">
+		<a id='607' href="javascript:void(0);" onclick="addTab('收入列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/income/manage')">收入列表</a>
+		</@shiro.hasPermission>
+
+	</div>
+	</@shiro.hasPermission>
+	
+	
 	<@shiro.hasPermission name="/admin_menu_product">
 	<div title="商品管理" class="ra_div">
 		<@shiro.hasPermission name="/admin/product/brand">
