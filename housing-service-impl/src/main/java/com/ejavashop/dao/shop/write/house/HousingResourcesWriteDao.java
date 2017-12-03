@@ -10,7 +10,7 @@ import com.ejavashop.entity.house.HousingResources;
 
 @Repository
 public interface HousingResourcesWriteDao {
-	
+
     /**
      * 根据条件查询count
      * @param queryMap
@@ -26,10 +26,23 @@ public interface HousingResourcesWriteDao {
      * @return
      */
     List<HousingResources> getHousingResourcesList(@Param("queryMap") Map<String, String> queryMap,
-                                      @Param("start") Integer start, @Param("size") Integer size);
-    
-    
-    
+                                                   @Param("start") Integer start,
+                                                   @Param("size") Integer size);
+
+    /**
+     * 根据ID查询
+     * @param Id
+     * @return
+     */
+    HousingResources get(Integer id);
+
+    /**
+     * 根据ID查询
+     * @param Id
+     * @return
+     */
+    Integer update(HousingResources record);
+
     int deleteByPrimaryKey(Integer id);
 
     int insert(HousingResources record);

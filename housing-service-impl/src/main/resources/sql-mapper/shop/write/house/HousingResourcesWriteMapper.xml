@@ -47,24 +47,32 @@
 	</select>
   <sql id="getHousingResourcesListCondition">
 		<where>
-		<!-- 页面暂时没有参数
-			<if test="queryMap.q_name != null and queryMap.q_name != ''">
-				and `name` like CONCAT('%',#{queryMap.q_name},'%')
+		
+			<if test="queryMap.q_roomCodeNo != null and queryMap.q_roomCodeNo != ''">
+				and `room_code_no` like CONCAT('%',#{queryMap.q_roomCodeNo},'%')
 			</if>
-			<if test="queryMap.q_state != null and queryMap.q_state != ''">
-				and `state` = #{queryMap.q_state}
+
+			<if test="queryMap.q_houseName != null and queryMap.q_houseName != ''">
+				and `house_name` like CONCAT('%',#{queryMap.q_houseName},'%')
 			</if>
-			<if test="queryMap.q_taxLicense != null and queryMap.q_taxLicense != ''">
-				and `tax_license` like CONCAT('%',#{queryMap.q_taxLicense},'%')
+			
+	    	<if test="queryMap.q_sold_state != null and queryMap.q_sold_state != ''">
+				and `is_sold` = #{queryMap.q_sold_state}
 			</if>
-			<if test="queryMap.q_userId != null and queryMap.q_userId != ''">
-				and `user_id` = #{queryMap.q_userId}
-			</if>
-			<if test="queryMap.q_company != null and queryMap.q_company != ''">
-				and `company` = #{queryMap.q_company}
-			</if> -->
+
+			<if test="queryMap.q_used_state != null and queryMap.q_used_state != ''">
+				and `status` = #{queryMap.q_used_state}
+			</if> 
 		</where>
 	</sql>
+  
+  	<select id="get" parameterType="java.lang.Integer" resultMap="HousingResourcesResult">
+		select
+			*
+		from `housing_resources`
+		where `id` = #{id}
+	</select>
+  
   
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingResourcesResult">
     select 

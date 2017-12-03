@@ -2,9 +2,11 @@
 <#assign currentBaseUrl="${domainUrlUtil.EJS_URL_RESOURCES}/admin/house/manage"/>
 <script language="javascript">
 	var codeBox;
+	var code2Box;
 	$(function() {
 		<#noescape>
-			codeBox = eval('(${initJSCodeContainer("SELLER_APPLY_STATE")})');
+			codeBox = eval('(${initJSCodeContainer("HOUSE_SOLD_STATE")})');
+			code2Box = eval('(${initJSCodeContainer("HOUSE_USED_STATE")})');
 		</#noescape>
 		
 		$('#btn_audit').click(function(){
@@ -52,7 +54,7 @@
 		});
 		
 		$("#btn-gridAdd").click(function(){
-	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/seller/audit/add";
+	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/add";
 		});
 		
 		$("#btn-gridEdit").click(function(){
@@ -61,16 +63,21 @@
 				$.messager.alert('提示','请选择操作行。');
 				return;
 			}
-			if (selected.state != 1 && selected.state != 4) {
-				$.messager.alert('提示','只能修改提交申请和审核失败状态的商家申请。');
+			if (selected.status != 1) {
+				$.messager.alert('提示','只能修改房源租期内 未出租的房源。');
 				return;
 			}
-	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/seller/audit/edit?sellerApplyId="+selected.id;
+	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/edit?id="+selected.id;
 		});
 	});
 
-	function getState(value, row, index) {
-		var box = codeBox["SELLER_APPLY_STATE"][value];
+	function getSoldState(value, row, index) {
+		var box = codeBox["HOUSE_SOLD_STATE"][value];
+ 		return box;
+	}
+	
+		function getUsedState(value, row, index) {
+		var box = code2Box["HOUSE_USED_STATE"][value];
  		return box;
 	}
 </script>
@@ -78,19 +85,27 @@
 <div id="searchbar" data-options="region:'north'" style="margin:0 auto;"
 	border="false">
 	<h2 class="h2-title">
-		商家申请列表 <span class="s-poar"><a class="a-extend" href="#">收起</a></span>
+		房源管理列表 <span class="s-poar"><a class="a-extend" href="#">收起</a></span>
 	</h2>
 	<div id="searchbox" class="head-seachbox">
 		<div class="w-p99 marauto searchCont">
 			<form class="form-search" action="doForm" method="post" id="queryForm" name="queryForm">
 				<div class="fluidbox">
 					<p class="p4 p-item">
-						<label class="lab-item">税务登记号 :</label> <input type="text"
-							class="txt" id="q_taxLicense" name="q_taxLicense" value="${q_taxLicense!''}" />
+						<label class="lab-item">房源编号 :</label> <input type="text"
+							class="txt" id="q_roomCodeNo" name="q_roomCodeNo" value="${q_roomCodeNo!''}" />
 					</p>
 					<p class="p4 p-item">
-						<label class="lab-item">状态 :</label> <@cont.select id="q_state"
-						codeDiv="SELLER_APPLY_STATE" name="q_state" style="width:100px"/>
+						<label class="lab-item">房源名称 :</label> <input type="text"
+							class="txt" id="q_houseName" name="q_houseName" value="${q_houseName!''}" />
+					</p>
+					<p class="p4 p-item">
+						<label class="lab-item">出租状态 :</label> <@cont.select id="q_sold_state"
+						codeDiv="HOUSE_SOLD_STATE" name="q_sold_state" style="width:100px"/>
+					</p>
+					<p class="p4 p-item">
+						<label class="lab-item">房源状态 :</label> <@cont.select id="q_used_state"
+						codeDiv="HOUSE_USED_STATE" name="q_used_state" style="width:100px"/>
 					</p>
 				</div>
 			</form>
@@ -110,6 +125,7 @@
 						,pagination:true
 						,pageSize:'${pageSize}'
 						,fit:true
+						,cache:false
     					,url:'${currentBaseUrl}/list'
     					,queryParams:queryParamsHandler()
     					,onLoadSuccess:dataGridLoadSuccess
@@ -125,8 +141,8 @@
 				<th field="roomCode" width="120" align="center">房号</th>
 				<th field="floor" width="100" align="center">楼层</th>
 				<th field="houseAddress" width="100" align="center">小区地址</th>
-				<th field="isSold" width="90" align="center" formatter="getState">出租状态</th>
-				<th field="status" width="90" align="center" formatter="getState">房子状态</th>
+				<th field="isSold" width="90" align="center" formatter="getSoldState">出租状态</th>
+				<th field="status" width="90" align="center" formatter="getUsedState">房子状态</th>
 				
 				<th field="contractStartTime" width="110" align="center">合同开始时间</th>
 				<th field="contractEndTime" width="110" align="center">合同结束时间</th>	
@@ -144,12 +160,12 @@
 	<div id="gridTools">
 
 		<@shiro.hasPermission name="/admin/house/manage/add">
-		<a id="btn-gridAdd" href="/admin/house/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
+		<a id="btn-gridAdd" href="/admin/house/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
 		</@shiro.hasPermission>
 		<@shiro.hasPermission name="/admin/house/manage/edit">
-		<a id="btn-gridEdit" href="/admin/house/edit" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
+		<a id="btn-gridEdit" href="/admin/house/manage/edit" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
 		</@shiro.hasPermission>
-		<@shiro.hasPermission name="/admin/house/manage/del">
+		<@shiro.hasPermission name="/admin/house/manage/manage/del">
 		<a id="btn_del" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-delete" plain="true">删除</a>
 		</@shiro.hasPermission>
 		
