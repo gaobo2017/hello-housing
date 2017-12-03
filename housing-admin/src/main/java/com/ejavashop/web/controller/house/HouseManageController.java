@@ -75,7 +75,7 @@ public class HouseManageController extends BaseController {
      * @param dataMap
      * @return
      */
-    @RequestMapping(value = "list", method = { RequestMethod.GET })
+    @RequestMapping(value = "list", method = { RequestMethod.POST })
     public @ResponseBody HttpJsonResult<List<HousingResources>> list(HttpServletRequest request,
                                                                      Map<String, Object> dataMap) {
         Map<String, String> queryMap = WebUtil.handlerQueryMap(request);

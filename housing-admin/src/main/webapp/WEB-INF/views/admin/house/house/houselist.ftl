@@ -129,7 +129,7 @@
     					,url:'${currentBaseUrl}/list'
     					,queryParams:queryParamsHandler()
     					,onLoadSuccess:dataGridLoadSuccess
-    					,method:'get'">
+    					,method:'post'">
 		<thead>
 			<tr>
 				<th field="id" hidden="hidden"></th>
