@@ -15,46 +15,76 @@ import com.ejavashop.core.PagerInfo;
 import com.ejavashop.core.ServiceResult;
 import com.ejavashop.core.exception.BusinessException;
 import com.ejavashop.entity.house.HousingResources;
-import com.ejavashop.model.house.HouseManageModel;
-import com.ejavashop.service.house.IHouseManageService;
+import com.ejavashop.model.house.HouseCostModel;
+import com.ejavashop.service.house.IHouseCostService;
+import com.ejavashop.vo.house.HousingCostVO;
 
-@Service(value = "houseManageService")
-public class HouseManageServiceImpl implements IHouseManageService {
+@Service(value = "houseCostService")
+public class HouseCostServiceImpl implements IHouseCostService {
 
-    private static Logger    log = LogManager.getLogger(HouseManageServiceImpl.class);
+    private static Logger  log = LogManager.getLogger(HouseCostServiceImpl.class);
 
     @Resource
-    private HouseManageModel houseManageModel;
+    private HouseCostModel houseCostModel;
 
     @Override
-    public ServiceResult<List<HousingResources>> getHousingResourcesList(Map<String, String> queryMap,
-                                                                         PagerInfo pager) {
-        ServiceResult<List<HousingResources>> serviceResult = new ServiceResult<List<HousingResources>>();
+    public ServiceResult<List<HousingCostVO>> getHousingCostList(Map<String, String> queryMap,
+                                                                 PagerInfo pager) {
+        ServiceResult<List<HousingCostVO>> serviceResult = new ServiceResult<List<HousingCostVO>>();
         try {
             Integer start = 0, size = 0;
             if (pager != null) {
-                pager.setRowsCount(houseManageModel.getHousingResourcesCount(queryMap));
+                pager.setRowsCount(houseCostModel.getHousingCostCount(queryMap));
                 start = pager.getStart();
                 size = pager.getPageSize();
             }
 
-            List<HousingResources> list = houseManageModel.getHousingResourcesList(queryMap, start,
-                size);
+            List<HousingCostVO> list = houseCostModel.getHousingCostList(queryMap, start, size);
             serviceResult.setResult(list);
         } catch (BusinessException e) {
             serviceResult.setMessage(e.getMessage());
             serviceResult.setSuccess(Boolean.FALSE);
             log.error(
-                "[HouseManageService][getHousingResourcesList]根据条件分页查询房源信息时出现异常：" + e.getMessage());
+                "[HouseCostService][getHousingCostList]根据条件分页查询房源成本信息时出现异常：" + e.getMessage());
         } catch (Exception e) {
             serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR,
                 ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
-            log.error("[HouseManageService][getHousingResourcesList] param1:"
-                      + JSON.toJSONString(queryMap) + " &param2:" + JSON.toJSONString(pager));
-            log.error("[HouseManageService][getHousingResourcesList] exception:", e);
+            log.error("[HouseCostService][getHousingCostList] param1:" + JSON.toJSONString(queryMap)
+                      + " &param2:" + JSON.toJSONString(pager));
+            log.error("[HouseCostService][getHousingCostList] exception:", e);
         }
         return serviceResult;
     }
+
+    //    @Override
+    //    public ServiceResult<List<HousingResources>> getHousingResourcesList(Map<String, String> queryMap,
+    //                                                                         PagerInfo pager) {
+    //        ServiceResult<List<HousingResources>> serviceResult = new ServiceResult<List<HousingResources>>();
+    //        try {
+    //            Integer start = 0, size = 0;
+    //            if (pager != null) {
+    //                pager.setRowsCount(houseCostModel.getHousingResourcesCount(queryMap));
+    //                start = pager.getStart();
+    //                size = pager.getPageSize();
+    //            }
+    //
+    //            List<HousingResources> list = houseCostModel.getHousingResourcesList(queryMap, start,
+    //                size);
+    //            serviceResult.setResult(list);
+    //        } catch (BusinessException e) {
+    //            serviceResult.setMessage(e.getMessage());
+    //            serviceResult.setSuccess(Boolean.FALSE);
+    //            log.error(
+    //                "[HouseCostService][getHousingResourcesList]根据条件分页查询房源信息时出现异常：" + e.getMessage());
+    //        } catch (Exception e) {
+    //            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR,
+    //                ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+    //            log.error("[HouseCostService][getHousingResourcesList] param1:"
+    //                      + JSON.toJSONString(queryMap) + " &param2:" + JSON.toJSONString(pager));
+    //            log.error("[HouseCostService][getHousingResourcesList] exception:", e);
+    //        }
+    //        return serviceResult;
+    //    }
 
     //    @Override
     //    public ServiceResult<Boolean> deleteSellerApply(Integer id, Integer memberId) {
@@ -73,38 +103,37 @@ public class HouseManageServiceImpl implements IHouseManageService {
     //        return serviceResult;
     //    }
     //
-    @Override
-    public ServiceResult<HousingResources> getHousingResourcesById(Integer housingResourcesId) {
-        ServiceResult<HousingResources> serviceResult = new ServiceResult<HousingResources>();
-        try {
-            serviceResult.setResult(houseManageModel.getHousingResourcesById(housingResourcesId));
-        } catch (BusinessException e) {
-            serviceResult.setSuccess(false);
-            serviceResult.setMessage(e.getMessage());
-            log.error("[HouseManageService][getHousingResourcesById]根据id[" + housingResourcesId
-                      + "]取得房源信息时出现异常：" + e.getMessage());
-        } catch (Exception e) {
-            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
-            log.error("[HouseManageService][getHousingResourcesById]根据id[" + housingResourcesId
-                      + "]取得房源信息时出现未知异常：",
-                e);
-        }
-        return serviceResult;
-    }
+    //    @Override
+    //    public ServiceResult<HousingResources> getHousingResourcesById(Integer housingResourcesId) {
+    //        ServiceResult<HousingResources> serviceResult = new ServiceResult<HousingResources>();
+    //        try {
+    //            serviceResult.setResult(houseCostModel.getHousingResourcesById(housingResourcesId));
+    //        } catch (BusinessException e) {
+    //            serviceResult.setSuccess(false);
+    //            serviceResult.setMessage(e.getMessage());
+    //            log.error("[HouseCostService][getHousingResourcesById]根据id[" + housingResourcesId
+    //                      + "]取得房源信息时出现异常：" + e.getMessage());
+    //        } catch (Exception e) {
+    //            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
+    //            log.error("[HouseCostService][getHousingResourcesById]根据id[" + housingResourcesId
+    //                      + "]取得房源信息时出现未知异常：",
+    //                e);
+    //        }
+    //        return serviceResult;
+    //    }
 
     @Override
     public ServiceResult<Integer> createHousingResources(HousingResources housingResources) {
         ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
         try {
-            serviceResult.setResult(houseManageModel.createHousingResources(housingResources));
+            serviceResult.setResult(houseCostModel.createHousingResources(housingResources));
         } catch (BusinessException e) {
             serviceResult.setSuccess(false);
             serviceResult.setMessage(e.getMessage());
-            log.error(
-                "[HouseManageService][createHousingResources]平台新增房源信息时出现异常：" + e.getMessage());
+            log.error("[HouseCostService][createHousingResources]平台新增房源信息时出现异常：" + e.getMessage());
         } catch (Exception e) {
             serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
-            log.error("[HouseManageService][createHousingResources]平台新增房源信息时出现未知异常：", e);
+            log.error("[HouseCostService][createHousingResources]平台新增房源信息时出现未知异常：", e);
         }
         return serviceResult;
     }
@@ -113,14 +142,14 @@ public class HouseManageServiceImpl implements IHouseManageService {
     public ServiceResult<Boolean> deleteHousingResources(Integer housingResourcesId) {
         ServiceResult<Boolean> serviceResult = new ServiceResult<Boolean>();
         try {
-            serviceResult.setResult(houseManageModel.deleteHousingResources(housingResourcesId));
+            serviceResult.setResult(houseCostModel.deleteHousingResources(housingResourcesId));
         } catch (BusinessException e) {
             serviceResult.setSuccess(false);
             serviceResult.setMessage(e.getMessage());
-            log.error("[HouseManageService][deleteHousingResources]删除房源时出现异常：" + e.getMessage());
+            log.error("[HouseCostService][deleteHousingResources]删除房源时出现异常：" + e.getMessage());
         } catch (Exception e) {
             serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
-            log.error("[HouseManageService][deleteHousingResources]删除房源时出现未知异常：", e);
+            log.error("[HouseCostService][deleteHousingResources]删除房源时出现未知异常：", e);
         }
         return serviceResult;
     }
@@ -167,15 +196,14 @@ public class HouseManageServiceImpl implements IHouseManageService {
     public ServiceResult<Integer> updateHousingResources(HousingResources housingResources) {
         ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
         try {
-            serviceResult.setResult(houseManageModel.updateHousingResources(housingResources));
+            serviceResult.setResult(houseCostModel.updateHousingResources(housingResources));
         } catch (BusinessException e) {
             serviceResult.setSuccess(false);
             serviceResult.setMessage(e.getMessage());
-            log.error(
-                "[HouseManageService][updateHousingResources]平台修改房源信息时出现异常：" + e.getMessage());
+            log.error("[HouseCostService][updateHousingResources]平台修改房源信息时出现异常：" + e.getMessage());
         } catch (Exception e) {
             serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
-            log.error("[HouseManageService][updateHousingResources]平台修改房源信息时出现未知异常：", e);
+            log.error("[HouseCostService][updateHousingResources]平台修改房源信息时出现未知异常：", e);
         }
         return serviceResult;
     }
@@ -237,4 +265,5 @@ public class HouseManageServiceImpl implements IHouseManageService {
     //        }
     //        return serviceResult;
     //    }
+
 }

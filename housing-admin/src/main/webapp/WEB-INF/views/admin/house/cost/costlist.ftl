@@ -1,7 +1,5 @@
 <#include "/admin/commons/_detailheader.ftl" />
-<#assign currentBaseUrl="${domainUrlUtil.EJS_URL_RESOURCES}/admin/house/manage"/>
-<#include "housecss.ftl"/>
-
+<#assign currentBaseUrl="${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage"/>
 <script language="javascript">
 	var codeBox;
 	var code2Box;
@@ -29,7 +27,7 @@
 					
 					$.ajax({
 						type:"GET",
-					    url: "${currentBaseUrl}/delete?id="+selected.id,
+					    url: "${currentBaseUrl}/delete?id=2",
 						success:function(data, textStatus){
 							if (data.success) {
 								$.messager.alert('提示','删除成功。');
@@ -74,84 +72,10 @@
  		return box;
 	}
 	
-   function getUsedState(value, row, index) {
+		function getUsedState(value, row, index) {
 		var box2 = code2Box["HOUSE_USED_STATE"][value];
  		return box2;
 	}
-
-   function openwin(id){
-  // window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/edit?id="+selected.id;
-            window.open("${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/edit?id="+id);
-    }
-
-   
-    function proTitle(value,row,index){
-        return "<font style='color:blue;cursor:pointer' title='"+
-                value+"' onclick='openwin("+row.id+")'>"+value+"</font>";
-    }
-  
-  //操作
-    function handler(value,row,index){
-        var html ="";
-        
-        if(row.isTop==1){
-            html += "<a href='javascript:;' onclick='recommond("+row.id+
-                    ",true,"+row.state+")'>推荐</a>&nbsp;&nbsp;<a href='javascript:;' onclick='del("+
-                    row.id+")'>删除";
-        } else{
-            html += "&nbsp;&nbsp;<a href='javascript:;' onclick='del("+
-                    row.id+")'>删除";
-        }
-        html += "</a>";
-        return html;
-    }
-
-    //推荐/取消推荐
-    function recommond(id,isRec,status){
-        if(status==5){
-            $.messager.alert('提示','该商品已被删除');
-            return;
-        }
-        try{
-            $.ajax({
-                url:'${currentBaseUrl}/recommond?id='+id+'&isRec='+isRec,
-                success:function(e){
-                    $.messager.show({
-                        title:'提示',
-                        msg:e,
-                        showType:'show'
-                    });
-                    $('#dataGrid').datagrid('reload');
-                }
-            });
-        } catch(e){
-            throw new Error(e);
-        }
-    }
-
-    function del(id){
-    
-        $.messager.confirm('确认', '确定删除该房源吗？', function(r){
-            if (r){
-                $.messager.progress({text:"提交中..."});
-                $.ajax({
-                    type:"get",
-                    url: "${currentBaseUrl}/delete?id="+id,
-                    success:function(e){
-                     
-                        $.messager.show({
-                            title:'提示',
-                            msg:e,
-                            showType:'show'
-                        });
-                        $.messager.progress('close');
-                        $('#dataGrid').datagrid('reload');
-                    }
-                });
-            }
-        });
-    }
-    
 </script>
 
 <div id="searchbar" data-options="region:'north'" style="margin:0 auto;"
@@ -205,8 +129,8 @@
 			<tr>
 				<th field="id" hidden="hidden"></th>
 				
-				<th field="roomCodeNo" width="100" align="center"     formatter="proTitle">房源编号</th>
-				<th field="houseName" width="100" align="center" formatter="proTitle">房源名称</th>
+				<th field="roomCodeNo" width="100" align="center">房源编号</th>
+				<th field="houseName" width="100" align="center">房源名称</th>
 				<th field="houseType" width="50" align="center">户型</th>
 				<th field="toward" width="50" align="center">朝向</th>
 				<th field="roomCode" width="120" align="center">房号</th>
@@ -215,7 +139,6 @@
 				<th field="isSold" width="90" align="center" formatter="getSoldState">出租状态</th>
 				<th field="status" width="90" align="center" formatter="getUsedState">房子状态</th>
 				
-				<th field="handler" width="90" align="center" formatter="handler">操作</th>
 				<th field="contractStartTime" width="110" align="center">合同开始时间</th>
 				<th field="contractEndTime" width="110" align="center">合同结束时间</th>	
 				<th field="monthlyRent" width="120" align="center">每月价格</th>
@@ -237,7 +160,7 @@
 		<@shiro.hasPermission name="/admin/house/manage/edit">
 		<a id="btn-gridEdit" href="/admin/house/manage/edit" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
 		</@shiro.hasPermission>
-		<@shiro.hasPermission name="/admin/house/manage/deete">
+		<@shiro.hasPermission name="/admin/house/manage/del">
 		<a id="btn_del" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-delete" plain="true">删除</a>
 		</@shiro.hasPermission>
 		

@@ -24,18 +24,25 @@
 	</div>
 	</@shiro.hasPermission>
 	
-	    <@shiro.hasPermission name="/admin_menu_house">
+	    <@shiro.hasPermission name="/admin_menu_cost">
 	<div title="成本管理" class="ra_div">
 		<@shiro.hasPermission name="/admin/cost/manage">
-		<a id='601' href="javascript:void(0);" onclick="addTab('成本列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage')">成本列表</a>
+		<a id='601' href="javascript:void(0);" onclick="addTab('房源总成本列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage')">房源总成本列表</a>
 		</@shiro.hasPermission>
 	    <@shiro.hasPermission name="/admin/cost/manage/add">
-		<a id='602' href="javascript:void(0);" onclick="addTab('新增成本', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage/add')">新增成本</a>
+		<a id='602' href="javascript:void(0);" onclick="addTab('新增成本详情', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage/add')">新增成本详情</a>
+		</@shiro.hasPermission>
+	    <@shiro.hasPermission name="/admin/cost/manage/add">
+		<a id='602' href="javascript:void(0);" onclick="addTab('成本详情列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage/add')">成本详情列表</a>
+		</@shiro.hasPermission>
+		
+	    <@shiro.hasPermission name="/admin/cost/manage/add">
+		<a id='602' href="javascript:void(0);" onclick="addTab('空置期列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage/add')">空置期列表</a>
 		</@shiro.hasPermission>
 	</div>
 	</@shiro.hasPermission>
 	
-	    <@shiro.hasPermission name="/admin_menu_house">
+	    <@shiro.hasPermission name="/admin_menu_rent">
 	<div title="租房管理" class="ra_div">
 		<@shiro.hasPermission name="/admin/rent/manage">
 		<a id='604' href="javascript:void(0);" onclick="addTab('租房列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage')">租房列表</a>
@@ -46,7 +53,7 @@
 	</div>
 	</@shiro.hasPermission>
 	
-	    <@shiro.hasPermission name="/admin_menu_house">
+	    <@shiro.hasPermission name="/admin_menu_income">
 	<div title="收入管理" class="ra_div">
 		<@shiro.hasPermission name="/admin/income/manage">
 		<a id='607' href="javascript:void(0);" onclick="addTab('收入列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/income/manage')">收入列表</a>

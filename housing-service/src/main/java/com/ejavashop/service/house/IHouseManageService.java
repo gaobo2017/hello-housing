@@ -38,6 +38,21 @@ public interface IHouseManageService {
      * @return
      */
     ServiceResult<Integer> updateHousingResources(HousingResources housingResources);
+
+    /**
+     * 新增
+     * @param HousingResources
+     * @return
+     */
+    ServiceResult<Integer> createHousingResources(HousingResources housingResources);
+
+    /**
+     * delete
+     * @param housingResourcesId
+     * @return
+     */
+    ServiceResult<Boolean> deleteHousingResources(Integer housingResourcesId);
+
     //
     //    /**
     //     * 删除该商家申请,同时删除该商家账号

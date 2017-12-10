@@ -1,5 +1,7 @@
 package com.ejavashop.web.controller.house;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +24,12 @@ import com.ejavashop.core.WebUtil;
 import com.ejavashop.core.exception.BusinessException;
 import com.ejavashop.entity.house.HousingResources;
 import com.ejavashop.entity.seller.SellerApply;
-import com.ejavashop.entity.system.Regions;
 import com.ejavashop.entity.system.SystemAdmin;
 import com.ejavashop.service.house.IHouseManageService;
 import com.ejavashop.service.seller.ISellerApplyService;
 import com.ejavashop.service.seller.ISellerService;
 import com.ejavashop.service.system.IRegionsService;
 import com.ejavashop.web.controller.BaseController;
-import com.ejavashop.web.util.UploadUtil;
 import com.ejavashop.web.util.WebAdminSession;
 
 /**
@@ -214,27 +214,74 @@ public class HouseManageController extends BaseController {
         return "redirect:/admin/house/manage";
     }
 
+    @RequestMapping(value = "create", method = { RequestMethod.POST })
+    public String create(HousingResources housingResources, HttpServletRequest request,
+                         Map<String, Object> dataMap) {
+        Map<String, String> param = new HashMap<>();
+        //获取操作人name和id 
+        SystemAdmin systemAdmin = WebAdminSession.getAdminUser(request);
+        housingResources.setOperationId(systemAdmin.getId());
+        housingResources.setOperationName(systemAdmin.getName());
+
+        ServiceResult<Integer> serviceResult = houseManageService
+            .createHousingResources(housingResources);
+        if (!serviceResult.getSuccess()) {
+            if (ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR.equals(serviceResult.getCode())) {
+                throw new RuntimeException(serviceResult.getMessage());
+            } else {
+
+                dataMap.put("housingResources", housingResources);
+                dataMap.put("message", serviceResult.getMessage());
+
+                return "admin/house/house/houseadd";
+            }
+        }
+        return "redirect:/admin/house/manage";
+
+    }
+
     /**
-     * 删除商家申请
+     * 删除房源
      * @param dataMap
      * @param id
      * @return
      * @throws Exception
      */
+    //    @RequestMapping(value = "delete", method = { RequestMethod.GET })
+    //    public @ResponseBody HttpJsonResult<Boolean> delete(HttpServletResponse response, Integer id) {
+    //
+    //        ServiceResult<Boolean> serviceResult = houseManageService.deleteHousingResources(id);
+    //        HttpJsonResult<Boolean> jsonResult = null;
+    //        if (serviceResult.getSuccess()) {
+    //            jsonResult = new HttpJsonResult<Boolean>();
+    //        } else {
+    //            jsonResult = new HttpJsonResult<Boolean>(serviceResult.getMessage());
+    //        }
+    //
+    //        return jsonResult;
+    //    }
+
     @RequestMapping(value = "delete", method = { RequestMethod.GET })
-    public @ResponseBody HttpJsonResult<Boolean> delete(HttpServletResponse response,
-                                                        Map<String, Object> dataMap, Integer id,
-                                                        Integer userId) throws Exception {
+    public void del(HttpServletRequest request, HttpServletResponse response, Integer id) {
+        response.setContentType("text/plain;charset=utf-8");
+        String msg = "删除成功";
+        PrintWriter pw = null;
 
-        ServiceResult<Boolean> serviceResult = sellerApplyService.deleteSellerApply(id, userId);
-        HttpJsonResult<Boolean> jsonResult = null;
-        if (serviceResult.getSuccess()) {
-            jsonResult = new HttpJsonResult<Boolean>();
-        } else {
-            jsonResult = new HttpJsonResult<Boolean>(serviceResult.getMessage());
+        try {
+            ServiceResult<Boolean> serviceResult = houseManageService.deleteHousingResources(id);
+            if (!serviceResult.getSuccess()) {
+                if (ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR.equals(serviceResult.getCode())) {
+                    throw new RuntimeException(serviceResult.getMessage());
+                } else {
+                    throw new BusinessException(serviceResult.getMessage());
+                }
+            }
+            pw = response.getWriter();
+        } catch (IOException e) {
+            log.error("[admin][HouseManageController] del exception", e);
+            msg = e.getMessage();
         }
-
-        return jsonResult;
+        pw.print(msg);
     }
 
     /**
@@ -296,79 +343,6 @@ public class HouseManageController extends BaseController {
             jsonResult = new HttpJsonResult<Boolean>(serviceResult.getMessage());
         }
         return jsonResult;
-    }
-
-    @RequestMapping(value = "create", method = { RequestMethod.POST })
-    public String create(SellerApply sellerApply, HttpServletRequest request,
-                         Map<String, Object> dataMap) {
-        Map<String, String> param = new HashMap<>();
-        param.put("admin", "sellerapply");
-
-        //营业执照扫描件
-        String bli = UploadUtil.getInstance().uploadFile2ImageServer("up_bussinessLicenseImage",
-            request, param);
-        if (!StringUtil.isEmpty(bli)) {
-            sellerApply.setBussinessLicenseImage(bli);
-        }
-
-        //身份证正面
-        String pcu = UploadUtil.getInstance().uploadFile2ImageServer("up_personCardUp", request,
-            param);
-        if (!StringUtil.isEmpty(pcu)) {
-            sellerApply.setPersonCardUp(pcu);
-        }
-
-        //身份证反面
-        String pdw = UploadUtil.getInstance().uploadFile2ImageServer("up_personCardDown", request,
-            param);
-        if (!StringUtil.isEmpty(pdw)) {
-            sellerApply.setPersonCardDown(pdw);
-        }
-
-        sellerApply.setState(SellerApply.STATE_1_SEND);
-        sellerApply.setType(2);
-
-        String userName = request.getParameter("userName");
-        String sellerName = request.getParameter("sellerName");
-
-        if (StringUtil.isEmpty(userName, true)) {
-            dataMap.put("userName", userName);
-            dataMap.put("sellerName", sellerName);
-            dataMap.put("sellerApply", sellerApply);
-            dataMap.put("message", "商家账号不能为空！");
-            ServiceResult<List<Regions>> provinceResult = regionsService.getRegionsByParentId(0);
-            dataMap.put("provinceList", provinceResult.getResult());
-            return "admin/seller/audit/sellerapplyadd";
-        }
-        if (StringUtil.isEmpty(sellerName, true)) {
-            dataMap.put("userName", userName);
-            dataMap.put("sellerName", sellerName);
-            dataMap.put("sellerApply", sellerApply);
-            dataMap.put("message", "商家店铺名称不能为空！");
-            ServiceResult<List<Regions>> provinceResult = regionsService.getRegionsByParentId(0);
-            dataMap.put("provinceList", provinceResult.getResult());
-            return "admin/seller/audit/sellerapplyadd";
-        }
-
-        String ip = WebUtil.getIpAddr(request);
-
-        ServiceResult<Boolean> serviceResult = sellerApplyService
-            .saveSellerApplyForAdmin(sellerApply, userName, sellerName, ip);
-        if (!serviceResult.getSuccess()) {
-            if (ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR.equals(serviceResult.getCode())) {
-                throw new RuntimeException(serviceResult.getMessage());
-            } else {
-                dataMap.put("userName", userName);
-                dataMap.put("sellerName", sellerName);
-                dataMap.put("sellerApply", sellerApply);
-                dataMap.put("message", serviceResult.getMessage());
-                ServiceResult<List<Regions>> provinceResult = regionsService
-                    .getRegionsByParentId(0);
-                dataMap.put("provinceList", provinceResult.getResult());
-                return "admin/seller/audit/sellerapplyadd";
-            }
-        }
-        return "redirect:/admin/seller/audit";
     }
 
 }

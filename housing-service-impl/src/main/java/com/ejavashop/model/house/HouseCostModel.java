@@ -1,56 +1,56 @@
 package com.ejavashop.model.house;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.stereotype.Component;
 
+import com.ejavashop.dao.shop.write.house.HousingCostWriteDao;
 import com.ejavashop.dao.shop.write.house.HousingResourcesWriteDao;
+import com.ejavashop.entity.house.HousingCost;
 import com.ejavashop.entity.house.HousingResources;
+import com.ejavashop.vo.house.HousingCostVO;
 
-@Component(value = "houseManageModel")
-public class HouseManageModel {
-    //    @Resource
-    //    private SellerApplyWriteDao          sellerApplyWriteDao;
+@Component(value = "houseCostModel")
+public class HouseCostModel {
+
     @Resource
     private HousingResourcesWriteDao housingResourcesWriteDao;
 
-    //    @Resource
-    //    private DataSourceTransactionManager transactionManager;
-    //    @Resource
-    //    private SellerWriteDao               sellerWriteDao;
-    //    @Resource
-    //    private SellerReadDao                sellerReadDao;
-    //    @Resource
-    //    private SellerRolesReadDao           sellerRolesReadDao;
-    //    @Resource
-    //    private SellerRolesWriteDao          sellerRolesWriteDao;
-    //    @Resource
-    //    private SellerResourcesRolesWriteDao sellerResourcesRolesWriteDao;
-    //    @Resource
-    //    private SystemResourcesReadDao       systemResourcesReadDao;
-    //    @Resource
-    //    private MemberReadDao                memberReadDao;
-    //    @Resource
-    //    private MemberWriteDao               memberWriteDao;
-    //    @Resource
-    //    private SellerUserReadDao            sellerUserReadDao;
-    //    @Resource
-    //    private SellerUserWriteDao           sellerUserWriteDao;
+    @Resource
+    private HousingCostWriteDao      housingCostWriteDao;
 
-    //    public boolean updateSellerApply(SellerApply sellerApply) {
-    //        return sellerApplyWriteDao.update(sellerApply) > 0;
-    //    }
-
-    public Integer getHousingResourcesCount(Map<String, String> queryMap) {
-        return housingResourcesWriteDao.getHousingResourcesCount(queryMap);
+    public Integer getHousingCostCount(Map<String, String> queryMap) {
+        return housingCostWriteDao.getHousingCostCount(queryMap);
     }
 
-    public List<HousingResources> getHousingResourcesList(Map<String, String> queryMap,
-                                                          Integer start, Integer size) {
-        return housingResourcesWriteDao.getHousingResourcesList(queryMap, start, size);
+    public List<HousingCostVO> getHousingCostList(Map<String, String> queryMap, Integer start,
+                                                  Integer size) throws IllegalAccessException,
+                                                                InvocationTargetException,
+                                                                NoSuchMethodException {
+
+        List<HousingCostVO> volist = new ArrayList<HousingCostVO>();
+
+        List<HousingCost> list = housingCostWriteDao.getHousingCostList(queryMap, start, size);
+
+        for (HousingCost cost : list) {
+
+            HousingResources hr = housingResourcesWriteDao.get(cost.getHouseId());
+
+            HousingCostVO vo = new HousingCostVO();
+
+            PropertyUtils.copyProperties(vo, hr);
+
+            PropertyUtils.copyProperties(vo, cost);
+
+            volist.add(vo);
+        }
+        return volist;
     }
 
     /**
