@@ -1,5 +1,5 @@
 <#include "/admin/commons/_detailheader.ftl" />
-<#assign currentBaseUrl="${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage"/>
+<#assign currentBaseUrl="${domainUrlUtil.EJS_URL_RESOURCES}/admin/costdetail/manage"/>
 <#include "housecss.ftl"/>
 
 <script language="javascript">
@@ -7,8 +7,8 @@
 	var code2Box;
 	$(function() {
 		<#noescape>
-			codeBox = eval('(${initJSCodeContainer("HOUSE_SOLD_STATE")})');
-			code2Box = eval('(${initJSCodeContainer("HOUSE_USED_STATE")})');
+			codeBox = eval('(${initJSCodeContainer("HOUSE_COST_TYPE")})');
+			
 		</#noescape>
 		
 
@@ -69,15 +69,12 @@
 		});
 	});
 
-	function getSoldState(value, row, index) {
-		var box = codeBox["HOUSE_SOLD_STATE"][value];
+	function getCostType(value, row, index) {
+		var box = codeBox["HOUSE_COST_TYPE"][value];
  		return box;
 	}
 	
-		function getUsedState(value, row, index) {
-		var box2 = code2Box["HOUSE_USED_STATE"][value];
- 		return box2;
-	}
+		
 	
 	function openwin(id){
   // window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/edit?id="+selected.id;
@@ -98,7 +95,7 @@
 <div id="searchbar" data-options="region:'north'" style="margin:0 auto;"
 	border="false">
 	<h2 class="h2-title">
-		成本管理列表 <span class="s-poar"><a class="a-extend" href="#">收起</a></span>
+		成本详情列表 <span class="s-poar"><a class="a-extend" href="#">收起</a></span>
 	</h2>
 	<div id="searchbox" class="head-seachbox">
 		<div class="w-p99 marauto searchCont">
@@ -149,8 +146,8 @@
 				<th field="houseId" hidden="hidden"></th>
 				<th field="roomCodeNo" width="100" align="center" formatter="proTitle">房源编号</th>
 				<th field="houseName" width="100" align="center">房源名称</th>
-				<th field="isSold" width="90" align="center" formatter="getSoldState">出租状态</th>
-				<th field="status" width="90" align="center" formatter="getUsedState">房子状态</th>
+				<th field="costType" width="90" align="center" formatter="getCostType">费用类型</th>
+				
 				<th field="renovationCostSum" width="100" align="center">装修成本</th>
 				<th field="otherCostSum" width="100" align="center">其他成本</th>
 				<th field="dayRentCost" width="100" align="center">每天房租成本</th>
@@ -161,6 +158,7 @@
 				<th field="allCostSum" width="100" align="center">成本总计</th>
 				<th field="monthlyRent" width="100" align="center">月租</th>
 				
+<th field="handler" width="90" align="center" formatter="handler">操作</th>
 				
 				<th field="contractStartTime" width="100" align="center">合同开始时间</th>
 				<th field="contractEndTime" width="100" align="center">合同结束时间</th>	
@@ -177,13 +175,13 @@
 
 	<div id="gridTools">
 
-		<@shiro.hasPermission name="/admin/cost/manage/add">
+		<@shiro.hasPermission name="/admin/costdetail/manage/add">
 		<a id="btn-gridAdd" href="/admin/cost/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
 		</@shiro.hasPermission>
-		<@shiro.hasPermission name="/admin/house/manage/edit">
+		<@shiro.hasPermission name="/admin/costdetail/manage/edit">
 		<a id="btn-gridEdit" href="/admin/house/manage/edit" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
 		</@shiro.hasPermission>
-		<@shiro.hasPermission name="/admin/house/manage/del">
+		<@shiro.hasPermission name="/admin/costdetail/manage/del">
 		<a id="btn_del" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-delete" plain="true">删除</a>
 		</@shiro.hasPermission>
 		

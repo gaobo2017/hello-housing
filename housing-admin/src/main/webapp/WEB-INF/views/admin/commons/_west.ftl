@@ -32,8 +32,8 @@
 	    <@shiro.hasPermission name="/admin/cost/manage/add">
 		<a id='602' href="javascript:void(0);" onclick="addTab('新增成本详情', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage/add')">新增成本详情</a>
 		</@shiro.hasPermission>
-	    <@shiro.hasPermission name="/admin/cost/manage/add">
-		<a id='602' href="javascript:void(0);" onclick="addTab('成本详情列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage/add')">成本详情列表</a>
+	    <@shiro.hasPermission name="/admin/costdetail/manage">
+		<a id='602' href="javascript:void(0);" onclick="addTab('成本详情列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/costdetail/manage')">成本详情列表</a>
 		</@shiro.hasPermission>
 		
 	    <@shiro.hasPermission name="/admin/cost/manage/add">
