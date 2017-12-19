@@ -27,16 +27,16 @@ import com.ejavashop.vo.house.HousingCostVO;
 public class HouseCostModel {
 
     @Resource
-    private HousingResourcesWriteDao  housingResourcesWriteDao;
-    
-    @Resource
-    private DataSourceTransactionManager transactionManager;
-    
-    @Resource
-    private HousingCostDetailWriteDao housingCostDetailWriteDao;
+    private HousingResourcesWriteDao     housingResourcesWriteDao;
 
     @Resource
-    private HousingCostWriteDao       housingCostWriteDao;
+    private DataSourceTransactionManager transactionManager;
+
+    @Resource
+    private HousingCostDetailWriteDao    housingCostDetailWriteDao;
+
+    @Resource
+    private HousingCostWriteDao          housingCostWriteDao;
 
     public Integer getHousingCostCount(Map<String, String> queryMap) {
         return housingCostWriteDao.getHousingCostCount(queryMap);
@@ -95,8 +95,6 @@ public class HouseCostModel {
         return volist;
     }
 
-    
-    
     /**
     * 更新表
     * @param  housingCostDetail
@@ -104,39 +102,42 @@ public class HouseCostModel {
     */
 
     public Integer updateHousingCostDetail(HousingCostDetail housingCostDetail) {
-        
-        
+
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         TransactionStatus status = transactionManager.getTransaction(def);
 
         try {
-        	boolean isUpdateHousingCostDetail =  housingCostDetailWriteDao.updateByPrimaryKeySelective(housingCostDetail) > 0;
-        	
-        	//重新统计 成本总表数据
-        	List<HousingCostDetail> housingCostDetailSumlist = housingCostDetailWriteDao.getHousingCostDetailSum(housingCostDetail.getCostId());
-        	
-        	HousingCost housingCost =housingCostWriteDao.selectByPrimaryKey(housingCostDetail.getCostId());
-       	
-        	 for (HousingCostDetail CostDetailSum : housingCostDetailSumlist) {
-        		
-        		if(HousingCostDetail.COST_TYPE_1 == CostDetailSum.getCostType().intValue()) {
-        			housingCost.setRenovationCostSum(CostDetailSum.getMoney());// 装修费统计
-        		}else {
-        			housingCost.setOtherCostSum(CostDetailSum.getMoney()); //其他费用统计
-        		}
-             }
-        	
-        	 //总成本=装修成本总额+其他成本总额+房源总价
-          	housingCost.setAllCostSum(housingCost.getRenovationCostSum().add(housingCost.getOtherCostSum()).add(housingCost.getPricesSum()));
+            boolean isUpdateHousingCostDetail = housingCostDetailWriteDao
+                .updateByPrimaryKeySelective(housingCostDetail) > 0;
 
-        	boolean isCreateHousingCost = housingCostWriteDao.updateByPrimaryKeySelective(housingCost)> 0;
-        	
-            if (!isUpdateHousingCostDetail
-                || !isCreateHousingCost) {
+            //重新统计 成本总表数据
+            List<HousingCostDetail> housingCostDetailSumlist = housingCostDetailWriteDao
+                .getHousingCostDetailSum(housingCostDetail.getCostId());
+
+            HousingCost housingCost = housingCostWriteDao
+                .selectByPrimaryKey(housingCostDetail.getCostId());
+
+            for (HousingCostDetail CostDetailSum : housingCostDetailSumlist) {
+
+                if (HousingCostDetail.COST_TYPE_1 == CostDetailSum.getCostType().intValue()) {
+                    housingCost.setRenovationCostSum(CostDetailSum.getMoney());// 装修费统计
+                } else {
+                    housingCost.setOtherCostSum(CostDetailSum.getMoney()); //其他费用统计
+                }
+            }
+
+            //总成本=装修成本总额+其他成本总额+房源总价
+            housingCost.setAllCostSum(housingCost.getRenovationCostSum()
+                .add(housingCost.getOtherCostSum()).add(housingCost.getPricesSum()));
+
+            boolean isCreateHousingCost = housingCostWriteDao
+                .updateByPrimaryKeySelective(housingCost) > 0;
+
+            if (!isUpdateHousingCostDetail || !isCreateHousingCost) {
                 throw new BusinessException(" 更新成本明细失败！");
             }
-                 
+
             transactionManager.commit(status);
 
             return 1;
@@ -145,7 +146,7 @@ public class HouseCostModel {
             throw e;
         }
     }
-    
+
     /**
     * 更新表
     * @param  housingResources
@@ -164,7 +165,7 @@ public class HouseCostModel {
     public HousingResources getHousingResourcesById(Integer housingResourcesId) {
         return housingResourcesWriteDao.get(housingResourcesId);
     }
-    
+
     /**
      * 根据id取得成本信息
      * @param  housingCostDetailId
@@ -183,7 +184,7 @@ public class HouseCostModel {
     public Integer createHousingResources(HousingResources housingResources) {
         return housingResourcesWriteDao.insertSelective(housingResources);
     }
-    
+
     /**
      * 新增成本明细表
      * @param  housingCostDetail
@@ -191,47 +192,52 @@ public class HouseCostModel {
      */
 
     public Integer createHousingCostDetailAndSummaryCost(HousingCostDetail housingCostDetail) {
-    	      
-    	DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-                def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-                TransactionStatus status = transactionManager.getTransaction(def);
-        
-                try {
-                	boolean isCreateHousingCostDetail = housingCostDetailWriteDao.insertSelective(housingCostDetail) > 0;
-                	
-                	//重新统计 成本总表数据
-                	List<HousingCostDetail> housingCostDetailSumlist = housingCostDetailWriteDao.getHousingCostDetailSum(housingCostDetail.getCostId());
-                	
-                	HousingCost housingCost =housingCostWriteDao.selectByPrimaryKey(housingCostDetail.getCostId());
-               	
-                	 for (HousingCostDetail CostDetailSum : housingCostDetailSumlist) {
-                		
-                		if(HousingCostDetail.COST_TYPE_1 == CostDetailSum.getCostType().intValue()) {
-                			housingCost.setRenovationCostSum(CostDetailSum.getMoney());// 装修费统计
-                		}else {
-                			housingCost.setOtherCostSum(CostDetailSum.getMoney()); //其他费用统计
-                		}
-                     }
-                	
-                	 //总成本=装修成本总额+其他成本总额+房源总价
-                  	housingCost.setAllCostSum(housingCost.getRenovationCostSum().add(housingCost.getOtherCostSum()).add(housingCost.getPricesSum()));
 
-                	boolean isCreateHousingCost = housingCostWriteDao.updateByPrimaryKeySelective(housingCost)> 0;
-                	
-                    if (!isCreateHousingCostDetail
-                        || !isCreateHousingCost) {
-                        throw new BusinessException(" 添加成本明细失败！");
-                    }
-                         
-                    transactionManager.commit(status);
-        
-                    return 1;
-                } catch (Exception e) {
-                    transactionManager.rollback(status);
-                    throw e;
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus status = transactionManager.getTransaction(def);
+
+        try {
+            boolean isCreateHousingCostDetail = housingCostDetailWriteDao
+                .insertSelective(housingCostDetail) > 0;
+
+            //重新统计 成本总表数据
+            List<HousingCostDetail> housingCostDetailSumlist = housingCostDetailWriteDao
+                .getHousingCostDetailSum(housingCostDetail.getCostId());
+
+            HousingCost housingCost = housingCostWriteDao
+                .selectByPrimaryKey(housingCostDetail.getCostId());
+
+            for (HousingCostDetail CostDetailSum : housingCostDetailSumlist) {
+
+                if (HousingCostDetail.COST_TYPE_1 == CostDetailSum.getCostType().intValue()) {
+                    housingCost.setRenovationCostSum(CostDetailSum.getMoney());// 装修费统计
+                } else {
+                    housingCost.setOtherCostSum(CostDetailSum.getMoney()); //其他费用统计
                 }
-      // return housingCostDetailWriteDao.insertSelective(housingCostDetail);
+            }
+
+            //总成本=装修成本总额+其他成本总额+房源总价
+            housingCost.setAllCostSum(housingCost.getRenovationCostSum()
+                .add(housingCost.getOtherCostSum()).add(housingCost.getPricesSum()));
+
+            boolean isCreateHousingCost = housingCostWriteDao
+                .updateByPrimaryKeySelective(housingCost) > 0;
+
+            if (!isCreateHousingCostDetail || !isCreateHousingCost) {
+                throw new BusinessException(" 添加成本明细失败！");
+            }
+
+            transactionManager.commit(status);
+
+            return 1;
+        } catch (Exception e) {
+            transactionManager.rollback(status);
+            throw e;
+        }
+        // return housingCostDetailWriteDao.insertSelective(housingCostDetail);
     }
+
     /**
      * 删除成本明细
      * @param  housingResources
@@ -239,38 +245,44 @@ public class HouseCostModel {
      */
 
     public Boolean deleteHousingCostDetail(Integer housingCostDetailId) {
-    	
-    	DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         TransactionStatus status = transactionManager.getTransaction(def);
 
         try {
-        	boolean isDeteleHousingCostDetail = housingCostDetailWriteDao.deleteByPrimaryKey(housingCostDetailId) > 0;
-        	HousingCostDetail housingCostDetail = housingCostDetailWriteDao.selectByPrimaryKey(housingCostDetailId);
-        	//重新统计 成本总表数据
-        	List<HousingCostDetail> housingCostDetailSumlist = housingCostDetailWriteDao.getHousingCostDetailSum(housingCostDetail.getCostId());
-        	
-        	HousingCost housingCost =housingCostWriteDao.selectByPrimaryKey(housingCostDetail.getCostId());
-       	
-        	 for (HousingCostDetail CostDetailSum : housingCostDetailSumlist) {
-        		
-        		if(HousingCostDetail.COST_TYPE_1 == CostDetailSum.getCostType().intValue()) {
-        			housingCost.setRenovationCostSum(CostDetailSum.getMoney());// 装修费统计
-        		}else {
-        			housingCost.setOtherCostSum(CostDetailSum.getMoney()); //其他费用统计
-        		}
-             }
-        	
-        	 //总成本=装修成本总额+其他成本总额+房源总价
-          	housingCost.setAllCostSum(housingCost.getRenovationCostSum().add(housingCost.getOtherCostSum()).add(housingCost.getPricesSum()));
+            HousingCostDetail housingCostDetail = housingCostDetailWriteDao
+                .selectByPrimaryKey(housingCostDetailId);
+            boolean isDeteleHousingCostDetail = housingCostDetailWriteDao
+                .deleteByPrimaryKey(housingCostDetailId) > 0;
 
-        	boolean isCreateHousingCost = housingCostWriteDao.updateByPrimaryKeySelective(housingCost)> 0;
-        	
-            if (!isDeteleHousingCostDetail
-                || !isCreateHousingCost) {
+            //重新统计 成本总表数据
+            List<HousingCostDetail> housingCostDetailSumlist = housingCostDetailWriteDao
+                .getHousingCostDetailSum(housingCostDetail.getCostId());
+
+            HousingCost housingCost = housingCostWriteDao
+                .selectByPrimaryKey(housingCostDetail.getCostId());
+
+            for (HousingCostDetail CostDetailSum : housingCostDetailSumlist) {
+
+                if (HousingCostDetail.COST_TYPE_1 == CostDetailSum.getCostType().intValue()) {
+                    housingCost.setRenovationCostSum(CostDetailSum.getMoney());// 装修费统计
+                } else {
+                    housingCost.setOtherCostSum(CostDetailSum.getMoney()); //其他费用统计
+                }
+            }
+
+            //总成本=装修成本总额+其他成本总额+房源总价
+            housingCost.setAllCostSum(housingCost.getRenovationCostSum()
+                .add(housingCost.getOtherCostSum()).add(housingCost.getPricesSum()));
+
+            boolean isCreateHousingCost = housingCostWriteDao
+                .updateByPrimaryKeySelective(housingCost) > 0;
+
+            if (!isDeteleHousingCostDetail || !isCreateHousingCost) {
                 throw new BusinessException(" 删除成本明细失败！");
             }
-                 
+
             transactionManager.commit(status);
 
             return true;
@@ -278,7 +290,7 @@ public class HouseCostModel {
             transactionManager.rollback(status);
             throw e;
         }
-        
+
     }
     //    public boolean delete(Integer id, Integer memberId) throws Exception {
     //        DefaultTransactionDefinition def = new DefaultTransactionDefinition();

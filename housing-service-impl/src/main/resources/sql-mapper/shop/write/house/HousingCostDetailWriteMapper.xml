@@ -161,7 +161,7 @@
         house_id = #{houseId,jdbcType=INTEGER},
       </if> 
       <if test="roomCodeNo != null">
-        room_code_no = #{operationName,jdbcType=VARCHAR},
+        room_code_no = #{roomCodeNo,jdbcType=VARCHAR},
       </if>
       <if test="costType != null">
         cost_type = #{costType,jdbcType=INTEGER},
@@ -178,9 +178,10 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-    
-      
-        update_time = NOW(),
+      <if test="updateTime != null">
+       update_time =  #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+  
       
     </set>
     where id = #{id,jdbcType=INTEGER}
