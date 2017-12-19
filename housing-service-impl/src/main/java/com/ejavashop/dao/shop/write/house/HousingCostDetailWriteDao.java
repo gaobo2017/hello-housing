@@ -6,11 +6,13 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.ejavashop.entity.house.HousingCost;
 import com.ejavashop.entity.house.HousingCostDetail;
 
 @Repository
 public interface HousingCostDetailWriteDao {
-    int deleteByPrimaryKey(Integer id);
+    
+	int deleteByPrimaryKey(Integer id);
 
     int insert(HousingCostDetail record);
 
@@ -32,6 +34,13 @@ public interface HousingCostDetailWriteDao {
     List<HousingCostDetail> getHousingCostDetailList(@Param("queryMap") Map<String, String> queryMap,
                                                      @Param("start") Integer start,
                                                      @Param("size") Integer size);
+    /**
+     * 统计该成本主表ID下的数据 
+     * @param costId
+     * @return
+     */
+    
+    List<HousingCostDetail> getHousingCostDetailSum(Integer costId);
 
     /**
      * 根据条件查询count

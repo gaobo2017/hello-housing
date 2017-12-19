@@ -19,17 +19,14 @@
 				$.messager.alert('提示','请选择操作行。');
 				return;
 			}
-	 		if (selected.isSold == 1) {
-				$.messager.alert('提示','只能删除未出租的房源。');
-				return;
-			}
-	 		$.messager.confirm('确认', '确定删除该房源吗?删除后,此操作不可撤销', function(r){
+	 		
+	 		$.messager.confirm('确认', '确定删除该成本明细吗?', function(r){
 				if (r){
 					$.messager.progress({text:"提交中..."});
 					
 					$.ajax({
 						type:"GET",
-					    url: "${currentBaseUrl}/delete?id=2",
+					    url: "${currentBaseUrl}/delete?id="+selected.id,
 						success:function(data, textStatus){
 							if (data.success) {
 								$.messager.alert('提示','删除成功。');
@@ -61,10 +58,7 @@
 				$.messager.alert('提示','请选择操作行。');
 				return;
 			}
-			if (selected.isSold == 1) {
-				$.messager.alert('提示','只能修改房 未出租的房源。');
-				return;
-			}
+			
 	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/costdetail/manage/edit?id="+selected.id;
 		});
 	});
@@ -219,13 +213,11 @@
 
 	<div id="gridTools">
 
-		<@shiro.hasPermission name="/admin/costdetail/manage/add">
-		<a id="btn-gridAdd" href="/admin/cost/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
-		</@shiro.hasPermission>
+
 		<@shiro.hasPermission name="/admin/costdetail/manage/edit">
 		<a id="btn-gridEdit" href="/admin/house/manage/edit" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
 		</@shiro.hasPermission>
-		<@shiro.hasPermission name="/admin/costdetail/manage/del">
+		<@shiro.hasPermission name="/admin/costdetail/manage/delete2222">
 		<a id="btn_del" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-delete" plain="true">删除</a>
 		</@shiro.hasPermission>
 		

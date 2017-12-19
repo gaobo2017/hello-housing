@@ -14,6 +14,7 @@ import com.ejavashop.core.ConstantsEJS;
 import com.ejavashop.core.PagerInfo;
 import com.ejavashop.core.ServiceResult;
 import com.ejavashop.core.exception.BusinessException;
+import com.ejavashop.entity.house.HousingCostDetail;
 import com.ejavashop.entity.house.HousingResources;
 import com.ejavashop.model.house.HouseCostModel;
 import com.ejavashop.service.house.IHouseCostService;
@@ -150,7 +151,59 @@ public class HouseCostServiceImpl implements IHouseCostService {
     //        }
     //        return serviceResult;
     //    }
+    @Override
+    public ServiceResult<Integer> createHousingCostDetailAndSummaryCost(HousingCostDetail housingCostDetail) {
+        ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
+        try {
+            serviceResult.setResult(houseCostModel.createHousingCostDetailAndSummaryCost(housingCostDetail));
+        } catch (BusinessException e) {
+            serviceResult.setSuccess(false);
+            serviceResult.setMessage(e.getMessage());
+            log.error("[HouseCostService][createHousingResources]平台新增房源信息时出现异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
+            log.error("[HouseCostService][createHousingResources]平台新增房源信息时出现未知异常：", e);
+        }
+        return serviceResult;
+    }
 
+	@Override
+	public ServiceResult<HousingCostDetail> getHousingCostDetailById(Integer id) {
+	            ServiceResult<HousingCostDetail> serviceResult = new ServiceResult<HousingCostDetail>();
+	            try {
+	                serviceResult.setResult(houseCostModel.getHousingCostDetailById(id));
+	            } catch (BusinessException e) {
+	                serviceResult.setSuccess(false);
+	                serviceResult.setMessage(e.getMessage());
+	                log.error("[HouseCostService][getHousingCostDetailById]根据id[" + id
+	                          + "]取得成本明细时出现异常：" + e.getMessage());
+	            } catch (Exception e) {
+	                serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
+	                log.error("[HouseCostService][getHousingCostDetailById]根据id[" + id
+	                          + "]取得成本明细信息时出现未知异常：",
+	                    e);
+	            }
+	            return serviceResult;
+	}
+	
+	@Override
+	public ServiceResult<Integer> updateHousingCostDetail(HousingCostDetail housingCostDetail) {
+		  ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
+	        try {
+	            serviceResult.setResult(houseCostModel.updateHousingCostDetail(housingCostDetail));
+	        } catch (BusinessException e) {
+	            serviceResult.setSuccess(false);
+	            serviceResult.setMessage(e.getMessage());
+	            log.error("[HouseCostService][updateHousingCostDetail]平台修改成本明细时出现异常：" + e.getMessage());
+	        } catch (Exception e) {
+	            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
+	            log.error("[HouseCostService][updateHousingCostDetail]平台修改成本明细时出现未知异常：", e);
+	        }
+	        return serviceResult;
+	}
+	
+	
+	
     @Override
     public ServiceResult<Integer> createHousingResources(HousingResources housingResources) {
         ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
@@ -168,10 +221,10 @@ public class HouseCostServiceImpl implements IHouseCostService {
     }
 
     @Override
-    public ServiceResult<Boolean> deleteHousingResources(Integer housingResourcesId) {
+    public ServiceResult<Boolean> deleteHousingCostDetail(Integer housingCostDetail) {
         ServiceResult<Boolean> serviceResult = new ServiceResult<Boolean>();
         try {
-            serviceResult.setResult(houseCostModel.deleteHousingResources(housingResourcesId));
+            serviceResult.setResult(houseCostModel.deleteHousingCostDetail(housingCostDetail));
         } catch (BusinessException e) {
             serviceResult.setSuccess(false);
             serviceResult.setMessage(e.getMessage());
@@ -182,7 +235,24 @@ public class HouseCostServiceImpl implements IHouseCostService {
         }
         return serviceResult;
     }
-
+    
+    @Override
+    public ServiceResult<Integer> updateHousingResources(HousingResources housingResources) {
+        ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
+        try {
+            serviceResult.setResult(houseCostModel.updateHousingResources(housingResources));
+        } catch (BusinessException e) {
+            serviceResult.setSuccess(false);
+            serviceResult.setMessage(e.getMessage());
+            log.error("[HouseCostService][updateHousingResources]平台修改房源信息时出现异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
+            log.error("[HouseCostService][updateHousingResources]平台修改房源信息时出现未知异常：", e);
+        }
+        return serviceResult;
+    }
+    
+    
     //
     //    @Override
     //    public ServiceResult<SellerApply> getSellerApplyByUser(Integer memberId) {
@@ -201,6 +271,8 @@ public class HouseCostServiceImpl implements IHouseCostService {
     //        return serviceResult;
     //    }
     //
+
+
 
     //    @Override
     //    public ServiceResult<Boolean> saveSellerApplyForAdmin(SellerApply sellerApply, String userName,
@@ -221,21 +293,7 @@ public class HouseCostServiceImpl implements IHouseCostService {
     //        return serviceResult;
     //    }
     //
-    @Override
-    public ServiceResult<Integer> updateHousingResources(HousingResources housingResources) {
-        ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
-        try {
-            serviceResult.setResult(houseCostModel.updateHousingResources(housingResources));
-        } catch (BusinessException e) {
-            serviceResult.setSuccess(false);
-            serviceResult.setMessage(e.getMessage());
-            log.error("[HouseCostService][updateHousingResources]平台修改房源信息时出现异常：" + e.getMessage());
-        } catch (Exception e) {
-            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
-            log.error("[HouseCostService][updateHousingResources]平台修改房源信息时出现未知异常：", e);
-        }
-        return serviceResult;
-    }
+
     //
     //    @Override
     //    public ServiceResult<Boolean> saveSellerApplyForFront(SellerApply sellerApply, String userName,

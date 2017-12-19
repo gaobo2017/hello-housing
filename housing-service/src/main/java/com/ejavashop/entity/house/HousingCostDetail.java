@@ -9,7 +9,11 @@ public class HousingCostDetail implements Serializable {
      * 
      */
     private static final long serialVersionUID = 1506851343261830419L;
-
+    /** 费用类型：装修费用  */
+    public static final int   COST_TYPE_1     = 1;
+    /** 费用类型：其他费用 */
+    public static final int   COST_TYPE_0     = 0;
+    
     private Integer           id;
 
     private Integer           costId;

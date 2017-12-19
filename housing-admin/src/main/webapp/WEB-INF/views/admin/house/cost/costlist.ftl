@@ -57,8 +57,8 @@
 				$.messager.alert('提示','请选择一個房源。');
 				return;
 			}
-			                      
-	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/costdetail/manage/add?costId="+selected.id+"&houseId="+selected.houseId+"&roomCodeNo="+selected.roomCodeNo;
+			           window.open("${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/costdetail/manage/add?costId="+selected.id+"&houseId="+selected.houseId+"&roomCodeNo="+selected.roomCodeNo);                   
+	 		//window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/costdetail/manage/add?costId="+selected.id+"&houseId="+selected.houseId+"&roomCodeNo="+selected.roomCodeNo;
 		});
 		
 		$("#btn-gridEdit").click(function(){
@@ -97,7 +97,24 @@
                 value+"' onclick='openwin("+row.id+")'>"+value+"</font>";
     }
     
-    
+ //操作
+    function handler(value,row,index){
+        var html ="";
+        
+
+            html += "&nbsp;&nbsp;<a href='javascript:;' onclick='newopenwin("+row.id+","+row.houseId+","+row.roomCodeNo+")'>新增成本明细";
+      
+        html += "</a>";
+        
+        alert (html);
+        return html;
+    }
+
+	
+	function newopenwin(id,houseId,roomCodeNo){
+           alert (id); alert (houseId); alert (roomCodeNo);
+            window.open("${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/costdetail/manage/add?costId="+id+"&houseId="+houseId+"&roomCodeNo="+roomCodeNo);
+    }
     
     
 </script>
@@ -154,15 +171,16 @@
 				<th field="id" hidden="hidden"></th>
 				
 				<th field="houseId" hidden="hidden"></th>
-				<th field="roomCodeNo" width="100" align="center" formatter="proTitle">房源编号</th>
 				<th field="houseName" width="100" align="center">房源名称</th>
+				<th field="roomCodeNo" width="100" align="center" formatter="proTitle">房源编号</th>
+				
 				<th field="isSold" width="90" align="center" formatter="getSoldState">出租状态</th>
 				<th field="status" width="90" align="center" formatter="getUsedState">房子状态</th>
 				<th field="renovationCostSum" width="100" align="center">装修总成本</th>
 				<th field="otherCostSum" width="100" align="center">其他总成本</th>
 				<th field="dayRentCost" width="100" align="center">每天房租成本</th>
 				<th field="vacancyDays" width="120" align="center">空闲总天数</th>
-				<th field="vacancyDay" width="120" align="center">最近一次空闲天数</th>
+				<th field="vacancyDay" width="60" align="center">最近一次空闲天数</th>
 				<th field="vacancyFeeSumt" width="100" align="center">空闲费用总计</th>
 				
 				<th field="allCostSum" width="100" align="center">成本总计</th>
@@ -176,8 +194,8 @@
 				
 				<th field="gainTime" width="100" align="center">收房时间</th>
 				
-				<th field="operationName" width="100" align="center">登记人名字</th>
-								
+				<th field="operationName" width="90" align="center">登记人名字</th>
+				
 			</tr>
 		</thead>
 	</table>

@@ -18,7 +18,15 @@
 		select count(1) from housing_cost_detail
 		<include refid="getHousingCostListCondition" />
 	</select>
-   
+      
+      
+    <select id="getHousingCostDetailSum"  parameterType="java.lang.Integer" resultType="com.ejavashop.entity.house.HousingCostDetail">
+
+		  select cost_type  , SUM(money) as  money  from housing_cost_detail 
+          where cost_id = #{costId,jdbcType=INTEGER}
+
+          group by cost_type
+	</select>
 
 	<select id="getHousingCostDetailList" resultType="com.ejavashop.entity.house.HousingCostDetail">
 		select * from housing_cost_detail
@@ -170,12 +178,10 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+    
+      
+        update_time = NOW(),
+      
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>

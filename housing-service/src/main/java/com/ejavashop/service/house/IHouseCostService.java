@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ejavashop.core.PagerInfo;
 import com.ejavashop.core.ServiceResult;
+import com.ejavashop.entity.house.HousingCostDetail;
 import com.ejavashop.entity.house.HousingResources;
 import com.ejavashop.vo.house.HousingCostVO;
 
@@ -19,12 +20,12 @@ import com.ejavashop.vo.house.HousingCostVO;
  */
 public interface IHouseCostService {
 
-    //    /**
-    //     * 根据id取得房源
-    //     * @param  housingResourcesId
-    //     * @return
-    //     */
-    //    ServiceResult<HousingResources> getHousingResourcesById(Integer housingResourcesId);
+        /**
+         * 根据id取得成本明细
+         * @param  housingCostDetailId
+         * @return
+         */
+        ServiceResult<HousingCostDetail> getHousingCostDetailById(Integer id);
 
     //    /**
     //     * 保存商家申请表
@@ -46,13 +47,29 @@ public interface IHouseCostService {
      * @return
      */
     ServiceResult<Integer> createHousingResources(HousingResources housingResources);
-
+  
     /**
-     * delete
-     * @param housingResourcesId
+     * 新增
+     * @param HousingCostDetail
      * @return
      */
-    ServiceResult<Boolean> deleteHousingResources(Integer housingResourcesId);
+    ServiceResult<Integer> createHousingCostDetailAndSummaryCost(HousingCostDetail housingCostDetail);
+
+    /**
+     * 修改
+     * @param HousingCostDetail
+     * @return
+     */
+    ServiceResult<Integer> updateHousingCostDetail(HousingCostDetail housingCostDetail);
+    
+    
+    
+    /**
+     * delete
+     * @param housingCostDetail
+     * @return
+     */
+    ServiceResult<Boolean> deleteHousingCostDetail(Integer housingCostDetail);
 
     //
     //    /**
