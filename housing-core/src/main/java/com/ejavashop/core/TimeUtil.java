@@ -20,6 +20,19 @@ public class TimeUtil {
      */
     public static void main(String[] args) {
         System.out.println(dateFlag(-7, "2014-07-23"));
+
+        long day = 0;
+        try {
+            Date date1 = new SimpleDateFormat("yyyy-mm-dd").parse("2017-12-01");
+            Date date2 = new SimpleDateFormat("yyyy-mm-dd").parse("2018-12-01");
+            day = compareDate(date1, date2);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        System.out.println(day);
+
     }
 
     /**
@@ -61,8 +74,8 @@ public class TimeUtil {
      */
     public static String getTodaytime() {
         Calendar cl = new GregorianCalendar();
-        return getToday() + " " + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE)
-               + ":" + cl.get(Calendar.SECOND) + " ";
+        return getToday() + " " + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE) + ":"
+               + cl.get(Calendar.SECOND) + " ";
     }
 
     /**
@@ -344,6 +357,34 @@ public class TimeUtil {
             return -2;
         }
         return calendar1.compareTo(calendar2);
+    }
+
+    /**比较两个日期类型的字符串，格式为（yyyy-mm-dd）
+     * 如果cale1大于cale2，返回1
+     * 如果cale1小于cale2，返回-1
+     * 如果相等，返回0
+     * 如果格式错误，返回-2
+     * @param cale1
+     * @param cale2
+     * @return
+     */
+    public static long compareDate(Date begin_date, Date end_date) {
+        long day = 0;
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String sdate = format.format(Calendar.getInstance().getTime());
+
+            if (begin_date == null) {
+                begin_date = format.parse(sdate);
+            }
+            if (end_date == null) {
+                end_date = format.parse(sdate);
+            }
+            day = (end_date.getTime() - begin_date.getTime()) / (24 * 60 * 60 * 1000);
+        } catch (Exception e) {
+            return -1;
+        }
+        return day;
     }
 
     /**获取当前日期   格式 yyyy-MM-01 00:00:01

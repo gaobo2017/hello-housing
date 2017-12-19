@@ -1,24 +1,33 @@
 package com.ejavashop.model.house;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import com.ejavashop.core.TimeUtil;
+import com.ejavashop.core.exception.BusinessException;
+import com.ejavashop.dao.shop.write.house.HousingCostWriteDao;
 import com.ejavashop.dao.shop.write.house.HousingResourcesWriteDao;
+import com.ejavashop.entity.house.HousingCost;
 import com.ejavashop.entity.house.HousingResources;
 
 @Component(value = "houseManageModel")
 public class HouseManageModel {
-    //    @Resource
-    //    private SellerApplyWriteDao          sellerApplyWriteDao;
     @Resource
-    private HousingResourcesWriteDao housingResourcesWriteDao;
+    private HousingCostWriteDao          housingCostWriteDao;
+    @Resource
+    private HousingResourcesWriteDao     housingResourcesWriteDao;
 
-    //    @Resource
-    //    private DataSourceTransactionManager transactionManager;
+    @Resource
+    private DataSourceTransactionManager transactionManager;
     //    @Resource
     //    private SellerWriteDao               sellerWriteDao;
     //    @Resource
@@ -79,7 +88,62 @@ public class HouseManageModel {
      */
 
     public Integer createHousingResources(HousingResources housingResources) {
-        return housingResourcesWriteDao.insertSelective(housingResources);
+
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus status = transactionManager.getTransaction(def);
+
+        try {
+
+            boolean isCreateHousingCostDetail = housingResourcesWriteDao
+                .insertSelective(housingResources) > 0;
+
+            //重新统计 成本总表数据
+            //            List<HousingCostDetail> housingCostDetailSumlist = housingCostDetailWriteDao
+            //                .getHousingCostDetailSum(housingCostDetail.getCostId());
+
+            HousingCost housingCost = new HousingCost();
+
+            long days = TimeUtil.compareDate(housingResources.getContractStartTime(),
+                housingResources.getContractEndTime());
+
+            housingCost.setHouseId(housingResources.getId());
+            //            housingCost.setOperationId(housingResources.getOperationId());
+            //            housingCost.setOperationName(housingResources.getOperationName());
+            housingCost
+                .setDayRentCost(housingResources.getPricesSum().divide(new BigDecimal(days), 2));
+            housingCost.setPricesSum(housingResources.getPricesSum());
+
+            housingCost.setAllCostSum(housingResources.getPricesSum());
+            //            NumberFormat percent = NumberFormat.getPercentInstance(); //建立百分比格式化用
+            //            percent.setMaximumFractionDigits(2); //百分比小数点最多2位
+            //            for (HousingCostDetail CostDetailSum : housingCostDetailSumlist) {
+            //
+            //                if (HousingCostDetail.COST_TYPE_1 == CostDetailSum.getCostType().intValue()) {
+            //                    housingCost.setRenovationCostSum(CostDetailSum.getMoney());// 装修费统计
+            //                } else {
+            //                    housingCost.setOtherCostSum(CostDetailSum.getMoney()); //其他费用统计
+            //                }
+            //            }
+
+            //            //总成本=装修成本总额+其他成本总额+房源总价
+            //            housingCost.setAllCostSum(housingCost.getRenovationCostSum()
+            //                .add(housingCost.getOtherCostSum()).add(housingCost.getPricesSum()));
+
+            boolean isCreateHousingCost = housingCostWriteDao.insertSelective(housingCost) > 0;
+
+            if (!isCreateHousingCostDetail || !isCreateHousingCost) {
+                throw new BusinessException(" 添加房源失败！");
+            }
+
+            transactionManager.commit(status);
+
+            return 1;
+        } catch (Exception e) {
+            transactionManager.rollback(status);
+            throw e;
+        }
+
     }
 
     /**
