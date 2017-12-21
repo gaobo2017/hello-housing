@@ -95,8 +95,8 @@ public class HouseManageModel {
 
         try {
 
-            boolean isCreateHousingCostDetail = housingResourcesWriteDao
-                .insertSelective(housingResources) > 0;
+            int hrId = housingResourcesWriteDao
+                .insertSelective(housingResources) ;
 
             //重新统计 成本总表数据
             //            List<HousingCostDetail> housingCostDetailSumlist = housingCostDetailWriteDao
@@ -105,13 +105,17 @@ public class HouseManageModel {
             HousingCost housingCost = new HousingCost();
 
             long days = TimeUtil.compareDate(housingResources.getContractStartTime(),
-                housingResources.getContractEndTime());
+                housingResources.getContractEndTime()) +1;//加一天
 
-            housingCost.setHouseId(housingResources.getId());
+            housingCost.setHouseId(housingResources.getId());// insert后会赋值，insert前是null
             //            housingCost.setOperationId(housingResources.getOperationId());
             //            housingCost.setOperationName(housingResources.getOperationName());
-            housingCost
-                .setDayRentCost(housingResources.getPricesSum().divide(new BigDecimal(days), 2));
+           
+            // 计算日租成本， day=合同结束日期-合同开始日期    ，四舍五入，保留2位小数
+            BigDecimal dayRentCost = housingResources.getPricesSum().divide(new BigDecimal(days),2,BigDecimal.ROUND_HALF_UP);
+            
+            housingCost.setDayRentCost(dayRentCost);
+                                  
             housingCost.setPricesSum(housingResources.getPricesSum());
 
             housingCost.setAllCostSum(housingResources.getPricesSum());
@@ -132,7 +136,7 @@ public class HouseManageModel {
 
             boolean isCreateHousingCost = housingCostWriteDao.insertSelective(housingCost) > 0;
 
-            if (!isCreateHousingCostDetail || !isCreateHousingCost) {
+            if (hrId<=0 || !isCreateHousingCost) {
                 throw new BusinessException(" 添加房源失败！");
             }
 
@@ -141,6 +145,7 @@ public class HouseManageModel {
             return 1;
         } catch (Exception e) {
             transactionManager.rollback(status);
+            e.printStackTrace();
             throw e;
         }
 

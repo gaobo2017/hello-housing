@@ -1,5 +1,6 @@
 package com.ejavashop.core;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -21,17 +22,26 @@ public class TimeUtil {
     public static void main(String[] args) {
         System.out.println(dateFlag(-7, "2014-07-23"));
 
-        long day = 0;
+       
+        
+        
+        
+        long day = 6;
         try {
-            Date date1 = new SimpleDateFormat("yyyy-mm-dd").parse("2017-12-01");
-            Date date2 = new SimpleDateFormat("yyyy-mm-dd").parse("2018-12-01");
-            day = compareDate(date1, date2);
-        } catch (ParseException e) {
+        	  BigDecimal dayRentCost = new BigDecimal(1000).divide(new BigDecimal(day),2,BigDecimal.ROUND_HALF_UP);
+        	  //.setScale(2, BigDecimal.ROUND_HALF_UP);
+              
+//            Date date1 = new SimpleDateFormat("yyyy-mm-dd").parse("2017-12-01");
+//            Date date2 = new SimpleDateFormat("yyyy-mm-dd").parse("2017-12-01");
+//            day = compareDate(date1, date2);
+            
+            System.out.println(dayRentCost);
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        System.out.println(day);
+       
 
     }
 
