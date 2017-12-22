@@ -180,7 +180,7 @@
 				<th field="otherCostSum" width="100" align="center">其他费用合计</th>
 				<th field="dayRentCost" width="100" align="center">每天房租成本</th>
 				<th field="vacancyDays" width="120" align="center">空闲总天数</th>
-				<th field="vacancyDay" width="60" align="center">最近一次空闲天数</th>
+				<th field="vacancyDay" width="60" align="center">最近空闲天数</th>
 				<th field="vacancyFeeSumt" width="100" align="center">空闲费用合计</th>
 				<th field="pricesSum" width="100" align="center">房源总价</th>
 				<th field="allCostSum" width="100" align="center">成本合计</th>
