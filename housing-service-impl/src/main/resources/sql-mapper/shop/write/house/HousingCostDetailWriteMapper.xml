@@ -55,6 +55,15 @@
     id, cost_id, room_code_no,house_id, cost_type, money, operation_name, operation_id, remark, create_time, 
     update_time
   </sql>
+ 
+ 
+  <select id="getHousingCostDetailByCostId" parameterType="java.lang.Integer" resultMap="HousingCostDetailResult">
+    select 
+    <include refid="Base_Column_List" />
+    from housing_cost_detail
+    where cost_id = #{costId,jdbcType=INTEGER}
+  </select>
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingCostDetailResult">
     select 
     <include refid="Base_Column_List" />

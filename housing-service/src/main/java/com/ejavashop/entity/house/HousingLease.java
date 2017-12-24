@@ -4,47 +4,55 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class HousingLease implements Serializable{
+public class HousingLease implements Serializable {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -5048823834892861407L;
+     * 
+     */
+    private static final long serialVersionUID = -5048823834892861407L;
 
-	private Integer id;
+    private Integer           id;
 
-    private Integer houseId;
+    private Integer           houseId;
 
-    private Date leaseStartTime;
+    private String            roomCodeNo;
 
-    private Date leaseEndTime;
+    private Date              leaseStartTime;
 
-    private BigDecimal rent;
+    private Date              leaseEndTime;
 
-    private BigDecimal allRent;
+    private BigDecimal        rent;
 
-    private Integer status;
+    private BigDecimal        allRent;
 
-    private Integer payWay;
+    private Integer           status;
 
-    private String seller;
+    private Integer           payWay;
 
-    private String contract;
+    private String            seller;
 
-    private String operationName;
+    private String            contract;
 
-    private Integer operationId;
+    private String            operationName;
 
-    private String remark;
+    private Integer           operationId;
 
-    private BigDecimal dayRentCost;
+    private String            remark;
 
-    private BigDecimal dayRentIncome;
+    private BigDecimal        dayRentCost;
 
-    private BigDecimal grossProfit;
+    private BigDecimal        dayRentIncome;
 
-    private Date createTime;
+    private BigDecimal        grossProfit;
 
-    private Date updateTime;
+    private Date              createTime;
+
+    private Date              updateTime;
+
+    private Date              finalLeaveTime;
+
+    private BigDecimal        rentIncomeAgain;
+
+    private BigDecimal        returnRentCost;
 
     public Integer getId() {
         return id;
@@ -80,6 +88,14 @@ public class HousingLease implements Serializable{
 
     public BigDecimal getRent() {
         return rent;
+    }
+
+    public String getRoomCodeNo() {
+        return roomCodeNo;
+    }
+
+    public void setRoomCodeNo(String roomCodeNo) {
+        this.roomCodeNo = roomCodeNo;
     }
 
     public void setRent(BigDecimal rent) {
@@ -189,4 +205,29 @@ public class HousingLease implements Serializable{
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    public Date getFinalLeaveTime() {
+        return finalLeaveTime;
+    }
+
+    public void setFinalLeaveTime(Date finalLeaveTime) {
+        this.finalLeaveTime = finalLeaveTime;
+    }
+
+    public BigDecimal getRentIncomeAgain() {
+        return rentIncomeAgain;
+    }
+
+    public void setRentIncomeAgain(BigDecimal rentIncomeAgain) {
+        this.rentIncomeAgain = rentIncomeAgain;
+    }
+
+    public BigDecimal getReturnRentCost() {
+        return returnRentCost;
+    }
+
+    public void setReturnRentCost(BigDecimal returnRentCost) {
+        this.returnRentCost = returnRentCost;
+    }
+
 }

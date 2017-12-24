@@ -53,7 +53,7 @@ $(function(){
 						</p>
 					</div>
 					<br/>
-					
+	 <!--				
 				    <div class="fluidbox">
 						<p class="p12 p-item">
 							<label class="lab-item"><font class="red">*</font>户型：</label>
@@ -84,10 +84,10 @@ $(function(){
 						</p>
 					</div>
 					<br/>
-					
+		-->			
 				    <div class="fluidbox">
 						<p class="p12 p-item">
-							<label class="lab-item"><font class="red">*</font>小区地址：</label>
+							<label class="lab-item"><font class="red">*</font>房子简介：</label>
 							<input class="easyui-validatebox txt w280" type="text" id="houseAddress" name="houseAddress" value="${(housingResources.houseAddress)!''}" data-options="validType:'length[0,20]'" >
 						</p>
 					</div>

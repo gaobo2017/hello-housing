@@ -19,6 +19,8 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+  
+  
   <sql id="Base_Column_List">
     id, house_id, renovation_cost_sum, other_cost_sum, day_rent_cost, vacancy_days, vacancy_day, 
     vacancy_fee_sumt, prices_sum, all_cost_sum, last_sold_time, operation_name, operation_id, 
@@ -56,7 +58,12 @@
 			</if> 
 		</where>
 	</sql>
-	
+  <select id="selectByHouseId" parameterType="java.lang.Integer" resultMap="HousingCostResult">
+    select 
+    <include refid="Base_Column_List" />
+    from housing_cost
+    where house_id = #{houseId,jdbcType=INTEGER}
+  </select>
 	
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingCostResult">
     select 

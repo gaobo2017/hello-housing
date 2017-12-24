@@ -22,26 +22,21 @@ public class TimeUtil {
     public static void main(String[] args) {
         System.out.println(dateFlag(-7, "2014-07-23"));
 
-       
-        
-        
-        
         long day = 6;
         try {
-        	  BigDecimal dayRentCost = new BigDecimal(1000).divide(new BigDecimal(day),2,BigDecimal.ROUND_HALF_UP);
-        	  //.setScale(2, BigDecimal.ROUND_HALF_UP);
-              
-//            Date date1 = new SimpleDateFormat("yyyy-mm-dd").parse("2017-12-01");
-//            Date date2 = new SimpleDateFormat("yyyy-mm-dd").parse("2017-12-01");
-//            day = compareDate(date1, date2);
-            
+            BigDecimal dayRentCost = new BigDecimal(1000).divide(new BigDecimal(day), 2,
+                BigDecimal.ROUND_HALF_UP);
+            //.setScale(2, BigDecimal.ROUND_HALF_UP);
+
+            //            Date date1 = new SimpleDateFormat("yyyy-mm-dd").parse("2017-12-01");
+            //            Date date2 = new SimpleDateFormat("yyyy-mm-dd").parse("2017-12-01");
+            //            day = compareDate(date1, date2);
+
             System.out.println(dayRentCost);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-       
 
     }
 
@@ -369,16 +364,14 @@ public class TimeUtil {
         return calendar1.compareTo(calendar2);
     }
 
-    /**比较两个日期类型的字符串，格式为（yyyy-mm-dd）
-     * 如果cale1大于cale2，返回1
-     * 如果cale1小于cale2，返回-1
+    /**返回两个日期 之前的天数间隔
      * 如果相等，返回0
      * 如果格式错误，返回-2
-     * @param cale1
-     * @param cale2
-     * @return
+     * @param begin_date 开始
+     * @param end_date 截止
+     * @return days
      */
-    public static long compareDate(Date begin_date, Date end_date) {
+    public static long getDaysBetweenDates(Date begin_date, Date end_date) {
         long day = 0;
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -395,6 +388,33 @@ public class TimeUtil {
             return -1;
         }
         return day;
+    }
+
+    /**
+     * 返回N天前（后的）日期，正数是后的日期，负数是前的日期。例如：2009-02-11 12:12:12
+     * @param number
+     * @return
+     */
+    public static Date getBeforeOrAfterDay(Date begin_date, int number) {
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String sdate = format.format(Calendar.getInstance().getTime());
+
+        if (begin_date == null) {
+            try {
+                begin_date = format.parse(sdate);
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(begin_date);
+        c.add(Calendar.DAY_OF_MONTH, number);// +1天
+
+        return c.getTime();
+
     }
 
     /**获取当前日期   格式 yyyy-MM-01 00:00:01

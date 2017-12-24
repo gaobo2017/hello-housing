@@ -36,6 +36,8 @@ public interface HousingResourcesWriteDao {
      */
     HousingResources get(Integer id);
 
+    HousingResources getHousingResourcesByCostId(Integer costId);
+
     /**
      * 根据ID查询
      * @param Id

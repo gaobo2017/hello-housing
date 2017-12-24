@@ -56,6 +56,10 @@
 				and `house_name` like CONCAT('%',#{queryMap.q_houseName},'%')
 			</if>
 			
+			<if test="queryMap.q_houseAddress != null and queryMap.q_houseAddress != ''">
+				and `house_address` like CONCAT('%',#{queryMap.q_houseAddress},'%')
+			</if>
+			
 	    	<if test="queryMap.q_sold_state != null and queryMap.q_sold_state != ''">
 				and `is_sold` = #{queryMap.q_sold_state}
 			</if>

@@ -176,13 +176,12 @@ public class HouseCostModel {
     }
 
     /**
-     * 新增房源表
-     * @param  housingResources
+     * 根据id取得成本信息
+     * @param  housingCostDetailId
      * @return
      */
-
-    public Integer createHousingResources(HousingResources housingResources) {
-        return housingResourcesWriteDao.insertSelective(housingResources);
+    public HousingCostDetail getHousingCostDetailByCostId(Integer costId) {
+        return housingCostDetailWriteDao.getHousingCostDetailByCostId(costId);
     }
 
     /**

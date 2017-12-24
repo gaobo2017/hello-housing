@@ -5,61 +5,62 @@ import java.util.Map;
 
 import com.ejavashop.core.PagerInfo;
 import com.ejavashop.core.ServiceResult;
-import com.ejavashop.entity.house.HousingCostDetail;
+import com.ejavashop.entity.house.HousingLease;
 import com.ejavashop.vo.house.HousingCostVO;
+import com.ejavashop.vo.house.HousingLeaseVO;
 
 /**
- * 房源成本管理
+ * 房源出租管理
  *                       
- * @Filename: IHouseCostService.java
+ * @Filename: IHouseLeaseService.java
  * @Version: 1.0
  * @Author: gao
  * @Email: 
  *
  */
-public interface IHouseCostService {
+public interface IHouseLeaseService {
 
     /**
      * 根据id取得成本明细
      * @param  housingCostDetailId
      * @return
      */
-    ServiceResult<HousingCostDetail> getHousingCostDetailById(Integer id);
-
-    /**
-     * 根据id取得成本明细
-     * @param  costid
-     * @return
-     */
-    ServiceResult<HousingCostDetail> getHousingCostDetailByCostId(Integer costid);
-    //    /**
-    //     * 保存商家申请表
-    //     * @param  sellerApply
-    //     * @return
-    //     */
-    //    ServiceResult<Integer> saveSellerApply(SellerApply sellerApply);
-    //
-
-    /**
-     * 新增
-     * @param HousingCostDetail
-     * @return
-     */
-    ServiceResult<Integer> createHousingCostDetailAndSummaryCost(HousingCostDetail housingCostDetail);
+    ServiceResult<HousingLease> getHousingLeaseById(Integer id);
 
     /**
      * 修改
-     * @param HousingCostDetail
+     * @param HousingLease
      * @return
      */
-    ServiceResult<Integer> updateHousingCostDetail(HousingCostDetail housingCostDetail);
+    ServiceResult<Integer> updateHousingLease(HousingLease housingLease);
+
+    /**
+     * 新增
+     * @param HousingLease
+     * @return
+     */
+    ServiceResult<Integer> createHousingLease(HousingLease housingLease);
+
+    /**
+     * 新增
+     * @param HousingLease
+     * @return
+     */
+    ServiceResult<Integer> createHousingLeaseAndSummaryIncome(HousingLease housingLease);
+
+    //    /**
+    //     * 修改
+    //     * @param HousingLease
+    //     * @return
+    //     */
+    //    ServiceResult<Integer> updateHousingLease(HousingLease housingCostDetail);
 
     /**
      * delete
-     * @param housingCostDetail
+     * @param HousingLease
      * @return
      */
-    ServiceResult<Boolean> deleteHousingCostDetail(Integer housingCostDetail);
+    ServiceResult<Boolean> deleteHousingLease(Integer housingLease);
 
     //
     //    /**
@@ -78,13 +79,13 @@ public interface IHouseCostService {
     //    ServiceResult<List<HousingResources>> getHousingResourcesList(Map<String, String> queryMap,
     //                                                                  PagerInfo pager);
     /**
-     * 根据条件分页查询房源总成本信息，PagerInfo传null取全部数据
+     * 根据条件分页查询租房记录，PagerInfo传null取全部数据
      * @param queryMap
      * @param pager
      * @return
      */
-    ServiceResult<List<HousingCostVO>> getHousingCostDetailList(Map<String, String> queryMap,
-                                                                PagerInfo pager);
+    ServiceResult<List<HousingLeaseVO>> getHousingLeaseList(Map<String, String> queryMap,
+                                                            PagerInfo pager);
 
     /**
      * 根据条件分页查询房源总成本信息，PagerInfo传null取全部数据

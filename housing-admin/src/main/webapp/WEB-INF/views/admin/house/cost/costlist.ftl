@@ -102,20 +102,23 @@
         var html ="";
         
 
-            html += "&nbsp;&nbsp;<a href='javascript:;' onclick='newopenwin("+row.id+","+row.houseId+","+row.roomCodeNo+")'>新增成本明细";
-      
-        html += "</a>";
-        
-        alert (html);
+            html += "&nbsp;&nbsp;<a href='javascript:;' onclick='newopenwin("+row.id+","+row.houseId+")'>新增明细</a>";
+            html += "&nbsp;&nbsp;<a href='javascript:;' onclick='opencostlist("+row.houseId+")'>查看</a>";
+       
+
         return html;
     }
 
 	
-	function newopenwin(id,houseId,roomCodeNo){
-           alert (id); alert (houseId); alert (roomCodeNo);
-            window.open("${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/costdetail/manage/add?costId="+id+"&houseId="+houseId+"&roomCodeNo="+roomCodeNo);
+	function newopenwin(id,houseId){
+          
+            window.open("${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/costdetail/manage/add?costId="+id+"&houseId="+houseId);
     }
-    
+   	
+	function opencostlist(houseId){
+           
+            window.open("${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/costdetail/manage?q_Id="+houseId);
+    } 
     
 </script>
 
@@ -184,17 +187,19 @@
 				<th field="vacancyFeeSumt" width="100" align="center">空闲费用合计</th>
 				<th field="pricesSum" width="100" align="center">房源总价</th>
 				<th field="allCostSum" width="100" align="center">成本合计</th>
-				<!-- <th field="monthlyRent" width="100" align="center">月租</th> -->
+				<th field="monthlyRent" width="100" align="center">月租</th> 
+			    
+			    <th field="handler" width="150" align="center" formatter="handler">操作</th>
+
+				
+				<th field="contractStartTime" width="92" align="center">合同开始时间</th>
+				<th field="contractEndTime" width="92" align="center">合同结束时间</th>	
+				<th field="lastSoldTime" width="92" align="center">最近租出时间</th>
 				
 				
-				<th field="contractStartTime" width="100" align="center">合同开始时间</th>
-				<th field="contractEndTime" width="100" align="center">合同结束时间</th>	
-				<th field="lastSoldTime" width="100" align="center">最近租出时间</th>
 				
 				
-				<th field="gainTime" width="100" align="center">收房时间</th>
-				
-				<th field="operationName" width="90" align="center">登记人名字</th>
+				<th field="operationName" width="90" align="center">登记人</th>
 				
 			</tr>
 		</thead>
@@ -203,7 +208,7 @@
 	<div id="gridTools">
 
 		<@shiro.hasPermission name="/admin/costdetail/manage/add">
-		<a id="btn-gridAdd" href="/admin/costdetail/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增成本明細</a>
+		<a id="btn-gridAdd" href="/admin/costdetail/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增明細</a>
 		</@shiro.hasPermission>
 
 

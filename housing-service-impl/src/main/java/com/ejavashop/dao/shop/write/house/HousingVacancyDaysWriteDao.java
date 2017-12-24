@@ -3,6 +3,7 @@ package com.ejavashop.dao.shop.write.house;
 import org.springframework.stereotype.Repository;
 
 import com.ejavashop.entity.house.HousingVacancyDays;
+
 @Repository
 public interface HousingVacancyDaysWriteDao {
     int deleteByPrimaryKey(Integer id);
@@ -12,6 +13,8 @@ public interface HousingVacancyDaysWriteDao {
     int insertSelective(HousingVacancyDays record);
 
     HousingVacancyDays selectByPrimaryKey(Integer id);
+
+    HousingVacancyDays selectByLeaseId(Integer leaseId);
 
     int updateByPrimaryKeySelective(HousingVacancyDays record);
 

@@ -37,6 +37,8 @@ public interface HousingCostWriteDao {
 
     HousingCost selectByPrimaryKey(Integer id);
 
+    HousingCost selectByHouseId(Integer houseId);
+
     int updateByPrimaryKeySelective(HousingCost record);
 
     int updateByPrimaryKey(HousingCost record);

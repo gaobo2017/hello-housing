@@ -4,6 +4,7 @@
   <resultMap id="HousingLeaseResult" type="com.ejavashop.entity.house.HousingLease">
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="house_id" jdbcType="INTEGER" property="houseId" />
+    <result column="room_code_no" jdbcType="VARCHAR" property="roomCodeNo" />
     <result column="lease_start_time" jdbcType="TIMESTAMP" property="leaseStartTime" />
     <result column="lease_end_time" jdbcType="TIMESTAMP" property="leaseEndTime" />
     <result column="rent" jdbcType="DECIMAL" property="rent" />
@@ -20,11 +21,59 @@
     <result column="gross_profit" jdbcType="DECIMAL" property="grossProfit" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    
+    <result column="rent_income_again" jdbcType="DECIMAL" property="rentIncomeAgain" />
+    <result column="return_rent_cost" jdbcType="DECIMAL" property="returnRentCost" />
+    <result column="final_leave_time" jdbcType="TIMESTAMP" property="finalLeaveTime" />
+  
+
   </resultMap>
-  <sql id="Base_Column_List">
-    id, house_id, lease_start_time, lease_end_time, rent, all_rent, status, pay_way, 
+ 
+    <select id="getHousingLeaseCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from housing_lease
+		<include refid="getHousingLeaseListCondition" />
+	</select>
+      
+      
+    <select id="getHousingLeaseSum"  parameterType="java.lang.Integer" resultType="com.ejavashop.entity.house.HousingLease">
+
+		  select t.all_rent ,t.gross_profit from housing_lease  t
+          where t.house_id = #{houseId,jdbcType=INTEGER}
+         
+	</select>
+
+	<select id="getHousingLeaseList" resultType="com.ejavashop.entity.house.HousingLease">
+		select * from housing_lease
+		<include refid="getHousingLeaseListCondition" />
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+  <sql id="getHousingLeaseListCondition">
+		<where>
+		
+			<if test="queryMap.q_roomCodeNo != null and queryMap.q_roomCodeNo != ''">
+				and `room_code_no` like CONCAT('%',#{queryMap.q_roomCodeNo},'%')
+			</if>
+
+			<if test="queryMap.q_id != null and queryMap.q_id != ''">
+				and `id` like CONCAT('%',#{queryMap.q_id},'%')
+			</if>
+
+		    <if test="queryMap.q_pay_way != null and queryMap.q_pay_way != ''">
+				and `pay_way` =#{queryMap.q_pay_way}
+			</if>
+		    <if test="queryMap.q_lease_state != null and queryMap.q_lease_state != ''">
+				and `status` =#{queryMap.q_lease_state}
+			</if>
+		</where>
+	</sql>
+	
+
+   
+  <sql id="Base_Column_List"> 
+    id, house_id, room_code_no,lease_start_time, lease_end_time, rent, all_rent, status, pay_way, 
     seller, contract, operation_name, operation_id, remark, day_rent_cost, day_rent_income, 
-    gross_profit, create_time, update_time
+    gross_profit,rent_income_again, return_rent_cost,final_leave_time,create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingLeaseResult">
     select 
@@ -37,22 +86,23 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.ejavashop.entity.house.HousingLease">
-    insert into housing_lease (id, house_id, lease_start_time, 
+    insert into housing_lease (id, house_id, room_code_no,lease_start_time, 
       lease_end_time, rent, all_rent, 
       status, pay_way, seller, 
       contract, operation_name, operation_id, 
       remark, day_rent_cost, day_rent_income, 
-      gross_profit, create_time, update_time
-      )
-    values (#{id,jdbcType=INTEGER}, #{houseId,jdbcType=INTEGER}, #{leaseStartTime,jdbcType=TIMESTAMP}, 
+      gross_profit, rent_income_again, return_rent_cost,final_leave_time, create_time, update_time
+      )    
+    values (#{id,jdbcType=INTEGER}, #{houseId,jdbcType=INTEGER}, #{roomCodeNo,jdbcType=VARCHAR},#{leaseStartTime,jdbcType=TIMESTAMP}, 
       #{leaseEndTime,jdbcType=TIMESTAMP}, #{rent,jdbcType=DECIMAL}, #{allRent,jdbcType=DECIMAL}, 
       #{status,jdbcType=INTEGER}, #{payWay,jdbcType=INTEGER}, #{seller,jdbcType=VARCHAR}, 
       #{contract,jdbcType=VARCHAR}, #{operationName,jdbcType=VARCHAR}, #{operationId,jdbcType=INTEGER}, 
       #{remark,jdbcType=VARCHAR}, #{dayRentCost,jdbcType=DECIMAL}, #{dayRentIncome,jdbcType=DECIMAL}, 
-      #{grossProfit,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{grossProfit,jdbcType=DECIMAL},#{rentIncomeAgain,jdbcType=DECIMAL},#{returnRentCost,jdbcType=DECIMAL}, 
+      #{finalLeaveTime,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      ) 
   </insert>
-  <insert id="insertSelective" parameterType="com.ejavashop.entity.house.HousingLease">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.ejavashop.entity.house.HousingLease">
     insert into housing_lease
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -61,6 +111,10 @@
       <if test="houseId != null">
         house_id,
       </if>
+      <if test="roomCodeNo != null">
+        room_code_no,
+      </if>
+      
       <if test="leaseStartTime != null">
         lease_start_time,
       </if>
@@ -103,12 +157,23 @@
       <if test="grossProfit != null">
         gross_profit,
       </if>
+      <if test="rentIncomeAgain != null">
+        rent_income_again,
+      </if>
+      <if test="returnRentCost != null">
+        return_rent_cost,
+      </if>
+      <if test="finalLeaveTime != null">
+        final_leave_time,
+      </if>
       <if test="createTime != null">
         create_time,
       </if>
       <if test="updateTime != null">
         update_time,
       </if>
+      
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -117,6 +182,10 @@
       <if test="houseId != null">
         #{houseId,jdbcType=INTEGER},
       </if>
+      <if test="roomCodeNo != null">
+        #{roomCodeNo,jdbcType=VARCHAR},
+      </if>
+      
       <if test="leaseStartTime != null">
         #{leaseStartTime,jdbcType=TIMESTAMP},
       </if>
@@ -159,12 +228,27 @@
       <if test="grossProfit != null">
         #{grossProfit,jdbcType=DECIMAL},
       </if>
+      
+      <if test="rentIncomeAgain != null">
+        #{rentIncomeAgain,jdbcType=DECIMAL},
+      </if>
+      <if test="returnRentCost != null">
+        #{returnRentCost,jdbcType=DECIMAL},
+      </if>
+      <if test="finalLeaveTime != null">
+        #{finalLeaveTime,jdbcType=TIMESTAMP},
+      </if>
+      
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      
+
+        
+        
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.ejavashop.entity.house.HousingLease">
@@ -173,6 +257,10 @@
       <if test="houseId != null">
         house_id = #{houseId,jdbcType=INTEGER},
       </if>
+      <if test="roomCodeNo != null">
+        room_code_no = #{roomCodeNo,jdbcType=VARCHAR},
+      </if>
+
       <if test="leaseStartTime != null">
         lease_start_time = #{leaseStartTime,jdbcType=TIMESTAMP},
       </if>
@@ -215,18 +303,31 @@
       <if test="grossProfit != null">
         gross_profit = #{grossProfit,jdbcType=DECIMAL},
       </if>
+      
+      <if test="rentIncomeAgain != null">
+        rent_income_again = #{rentIncomeAgain,jdbcType=DECIMAL},
+      </if>
+      <if test="returnRentCost != null">
+        return_rent_cost = #{returnRentCost,jdbcType=DECIMAL},
+      </if>
+      <if test="finalLeaveTime != null">
+        final_leave_time = #{finalLeaveTime,jdbcType=TIMESTAMP},
+      </if>      
+      
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.ejavashop.entity.house.HousingLease">
     update housing_lease
     set house_id = #{houseId,jdbcType=INTEGER},
+          room_code_no =  #{roomCodeNo,jdbcType=VARCHAR},      
       lease_start_time = #{leaseStartTime,jdbcType=TIMESTAMP},
       lease_end_time = #{leaseEndTime,jdbcType=TIMESTAMP},
       rent = #{rent,jdbcType=DECIMAL},
@@ -241,8 +342,12 @@
       day_rent_cost = #{dayRentCost,jdbcType=DECIMAL},
       day_rent_income = #{dayRentIncome,jdbcType=DECIMAL},
       gross_profit = #{grossProfit,jdbcType=DECIMAL},
+      rent_income_again=#{rentIncomeAgain,jdbcType=DECIMAL},
+      return_rent_cost=#{returnRentCost,jdbcType=DECIMAL},
+      final_leave_time= #{finalLeaveTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
 </mapper>

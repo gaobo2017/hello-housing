@@ -30,14 +30,14 @@
 		<a id='601' href="javascript:void(0);" onclick="addTab('房源总成本列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage')">房源总成本列表</a>
 		</@shiro.hasPermission>
 	    <@shiro.hasPermission name="/admin/cost/manage/add">
-		<a id='602' href="javascript:void(0);" onclick="addTab('新增成本详情', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage/add')">新增成本详情</a>
+		<a id='602' href="javascript:void(0);" onclick="addTab('新增XXX详情', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage/add')">新增成本详情</a>
 		</@shiro.hasPermission>
 	    <@shiro.hasPermission name="/admin/costdetail/manage">
-		<a id='602' href="javascript:void(0);" onclick="addTab('成本详情列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/costdetail/manage')">成本详情列表</a>
+		<a id='602' href="javascript:void(0);" onclick="addTab('成本明细列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/costdetail/manage')">成本明细列表</a>
 		</@shiro.hasPermission>
 		
-	    <@shiro.hasPermission name="/admin/cost/manage/add">
-		<a id='602' href="javascript:void(0);" onclick="addTab('空置期列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage/add')">空置期列表</a>
+	    <@shiro.hasPermission name="/admin/cost/manage">
+		<a id='603' href="javascript:void(0);" onclick="addTab('空置期列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/cost/manage/add')">空置期列表</a>
 		</@shiro.hasPermission>
 	</div>
 	</@shiro.hasPermission>
@@ -48,7 +48,7 @@
 		<a id='604' href="javascript:void(0);" onclick="addTab('租房列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage')">租房列表</a>
 		</@shiro.hasPermission>
 	    <@shiro.hasPermission name="/admin/rent/manage/add">
-		<a id='605' href="javascript:void(0);" onclick="addTab('新增租房', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage/add')">新增租房</a>
+		<a id='605' href="javascript:void(0);" onclick="addTab('收租提醒', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage/add')">收租提醒</a>
 		</@shiro.hasPermission>
 	</div>
 	</@shiro.hasPermission>

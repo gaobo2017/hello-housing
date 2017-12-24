@@ -16,6 +16,15 @@
     id, lease_id, house_id, vacancy_day, vacancy_start_time, vacancy_end_time, remark, 
     create_time, update_time
   </sql>
+  
+  
+    <select id="selectByLeaseId" parameterType="java.lang.Integer" resultMap="HousingVacancyDaysResult">
+    select 
+    <include refid="Base_Column_List" />
+    from housing_vacancy_days
+    where lease_id = #{leaseId,jdbcType=INTEGER}
+  </select>
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingVacancyDaysResult">
     select 
     <include refid="Base_Column_List" />

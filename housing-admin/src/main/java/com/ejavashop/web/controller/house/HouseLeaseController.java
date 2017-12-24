@@ -21,27 +21,31 @@ import com.ejavashop.core.PagerInfo;
 import com.ejavashop.core.ServiceResult;
 import com.ejavashop.core.WebUtil;
 import com.ejavashop.core.exception.BusinessException;
-import com.ejavashop.entity.house.HousingCostDetail;
+import com.ejavashop.entity.house.HousingLease;
 import com.ejavashop.entity.house.HousingResources;
 import com.ejavashop.entity.system.SystemAdmin;
 import com.ejavashop.service.house.IHouseCostService;
+import com.ejavashop.service.house.IHouseLeaseService;
 import com.ejavashop.service.house.IHouseManageService;
-import com.ejavashop.vo.house.HousingCostVO;
+import com.ejavashop.vo.house.HousingLeaseVO;
 import com.ejavashop.web.controller.BaseController;
 import com.ejavashop.web.util.WebAdminSession;
 
 /**
- * 成本明细管理controller
+ * 出租管理controller
  *                       
- * @Filename: HouseCostDetailController.java
+ * @Filename: HouseLeaseController.java
  * @Version: 1.0
  * @Author: gao
  * @Email: 
  *
  */
 @Controller
-@RequestMapping(value = "/admin/costdetail/manage")
-public class HouseCostDetailController extends BaseController {
+@RequestMapping(value = "/admin/rent/manage")
+public class HouseLeaseController extends BaseController {
+
+    @Resource(name = "houseLeaseService")
+    private IHouseLeaseService  houseLeaseService;
 
     @Resource(name = "houseCostService")
     private IHouseCostService   houseCostService;
@@ -57,21 +61,8 @@ public class HouseCostDetailController extends BaseController {
      */
     @RequestMapping(value = "", method = { RequestMethod.GET })
     public String index(HttpServletRequest request, Map<String, Object> dataMap) throws Exception {
-
-        Map<String, String> queryMap = WebUtil.handlerQueryMap(request);
-        if (queryMap.containsKey("q_Id")) {//总成本  点击查看传值
-
-            //houseId 
-            ServiceResult<HousingResources> serviceResult = houseManageService
-                .getHousingResourcesById(Integer.valueOf(queryMap.get("q_Id")));
-            HousingResources hcd = serviceResult.getResult();
-
-            dataMap.put("q_roomCodeNo", hcd.getRoomCodeNo());
-        }
-        ;
-
         dataMap.put("pageSize", ConstantsEJS.DEFAULT_PAGE_SIZE);
-        return "admin/house/cost/costdetaillist";
+        return "admin/house/rent/rentlist";
     }
 
     /**
@@ -81,12 +72,12 @@ public class HouseCostDetailController extends BaseController {
      * @return
      */
     @RequestMapping(value = "list", method = { RequestMethod.POST })
-    public @ResponseBody HttpJsonResult<List<HousingCostVO>> list(HttpServletRequest request,
-                                                                  Map<String, Object> dataMap) {
+    public @ResponseBody HttpJsonResult<List<HousingLeaseVO>> list(HttpServletRequest request,
+                                                                   Map<String, Object> dataMap) {
         Map<String, String> queryMap = WebUtil.handlerQueryMap(request);
         PagerInfo pager = WebUtil.handlerPagerInfo(request, dataMap);
-        ServiceResult<List<HousingCostVO>> serviceResult = houseCostService
-            .getHousingCostDetailList(queryMap, pager);
+        ServiceResult<List<HousingLeaseVO>> serviceResult = houseLeaseService
+            .getHousingLeaseList(queryMap, pager);
 
         if (!serviceResult.getSuccess()) {
             if (ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR.equals(serviceResult.getCode())) {
@@ -96,7 +87,7 @@ public class HouseCostDetailController extends BaseController {
             }
         }
 
-        HttpJsonResult<List<HousingCostVO>> jsonResult = new HttpJsonResult<List<HousingCostVO>>();
+        HttpJsonResult<List<HousingLeaseVO>> jsonResult = new HttpJsonResult<List<HousingLeaseVO>>();
         jsonResult.setRows(serviceResult.getResult());
         jsonResult.setTotal(pager.getRowsCount());
 
@@ -104,60 +95,58 @@ public class HouseCostDetailController extends BaseController {
     }
 
     /**
-     * 添加成本明細页面
+     * 添加出租页面
      * @param dataMap
      * @param id
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "add", method = { RequestMethod.GET })
-    public String add(Map<String, Object> dataMap, Integer costId,
-                      Integer houseId) throws Exception {
+    public String add(Map<String, Object> dataMap, Integer houseId) throws Exception {
 
-        HousingCostDetail hcd = new HousingCostDetail();
-        hcd.setCostId(costId);
-        hcd.setHouseId(houseId);
-
+        //获取 RoomCodeNo
         ServiceResult<HousingResources> serviceResult = houseManageService
             .getHousingResourcesById(houseId);
-        HousingResources hr = serviceResult.getResult();
+        HousingResources housingResources = serviceResult.getResult();
 
-        hcd.setRoomCodeNo(hr.getRoomCodeNo());
-        dataMap.put("housingCostDetail", hcd);
+        HousingLease hcd = new HousingLease();
 
-        return "admin/house/cost/costdetailadd";
+        hcd.setHouseId(houseId);
+        hcd.setRoomCodeNo(housingResources.getRoomCodeNo());
+        dataMap.put("housingLease", hcd);
+
+        return "admin/house/rent/rentadd";
     }
 
     @RequestMapping(value = "create", method = { RequestMethod.POST })
-    public String create(HousingCostDetail housingCostDetail, HttpServletRequest request,
+    public String create(HousingLease housingLease, HttpServletRequest request,
                          Map<String, Object> dataMap) {
         Map<String, String> param = new HashMap<>();
         //获取操作人name和id 
         SystemAdmin systemAdmin = WebAdminSession.getAdminUser(request);
-        housingCostDetail.setOperationId(systemAdmin.getId());
-        housingCostDetail.setOperationName(systemAdmin.getName());
+        housingLease.setOperationId(systemAdmin.getId());
+        housingLease.setOperationName(systemAdmin.getName());
 
-        ServiceResult<Integer> serviceResult = houseCostService
-            .createHousingCostDetailAndSummaryCost(housingCostDetail);
+        ServiceResult<Integer> serviceResult = houseLeaseService
+            .createHousingLeaseAndSummaryIncome(housingLease);
         if (!serviceResult.getSuccess()) {
             if (ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR.equals(serviceResult.getCode())) {
                 throw new RuntimeException(serviceResult.getMessage());
             } else {
 
-                dataMap.put("housingCostDetail", housingCostDetail);
+                dataMap.put("housingLease", housingLease);
                 dataMap.put("message", serviceResult.getMessage());
 
-                return "admin/house/cost/costdetailadd";
+                return "admin/house/rent/rentadd";
             }
         }
-        return "redirect:/admin/costdetail/manage";
+        return "redirect:/admin/rent/manage";
 
     }
 
     @RequestMapping(value = "edit", method = { RequestMethod.GET })
     public String edit(Integer id, Map<String, Object> dataMap) {
-        ServiceResult<HousingCostDetail> serviceResult = houseCostService
-            .getHousingCostDetailById(id);
+        ServiceResult<HousingLease> serviceResult = houseLeaseService.getHousingLeaseById(id);
 
         if (!serviceResult.getSuccess()) {
             if (ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR.equals(serviceResult.getCode())) {
@@ -165,42 +154,41 @@ public class HouseCostDetailController extends BaseController {
             } else {
                 dataMap.put("pageSize", ConstantsEJS.DEFAULT_PAGE_SIZE);
                 dataMap.put("message", serviceResult.getMessage());
-                return "admin/house/cost/costdetaillist";
+                return "admin/house/rent/rentlist";
             }
         }
 
-        HousingCostDetail housingCostDetail = serviceResult.getResult();
+        HousingLease housingLease = serviceResult.getResult();
 
-        dataMap.put("housingCostDetail", housingCostDetail);
+        dataMap.put("housingLease", housingLease);
 
-        return "admin/house/cost/costdetailedit";
+        return "admin/house/rent/rentedit";
     }
 
     @RequestMapping(value = "update", method = { RequestMethod.POST })
-    public String update(HousingCostDetail housingCostDetail, HttpServletRequest request,
+    public String update(HousingLease housingLease, HttpServletRequest request,
                          Map<String, Object> dataMap) {
         Map<String, String> param = new HashMap<>();
 
         //获取操作人name和id 
         SystemAdmin systemAdmin = WebAdminSession.getAdminUser(request);
-        housingCostDetail.setOperationId(systemAdmin.getId());
-        housingCostDetail.setOperationName(systemAdmin.getName());
+        housingLease.setOperationId(systemAdmin.getId());
+        housingLease.setOperationName(systemAdmin.getName());
 
-        ServiceResult<Integer> serviceResult = houseCostService
-            .updateHousingCostDetail(housingCostDetail);
+        ServiceResult<Integer> serviceResult = houseLeaseService.updateHousingLease(housingLease);
         if (!serviceResult.getSuccess()) {
             if (ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR.equals(serviceResult.getCode())) {
                 throw new RuntimeException(serviceResult.getMessage());
             } else {
                 //                dataMap.put("userName", userName);
                 //                dataMap.put("sellerName", sellerName);
-                dataMap.put("housingCostDetail", housingCostDetail);
+                dataMap.put("housingLease", housingLease);
                 dataMap.put("message", serviceResult.getMessage());
 
-                return "admin/house/cost/costdetailedit";
+                return "admin/house/rent/rentedit";
             }
         }
-        return "redirect:/admin/costdetail/manage";
+        return "redirect:/admin/rent/manage";
     }
 
     /**
