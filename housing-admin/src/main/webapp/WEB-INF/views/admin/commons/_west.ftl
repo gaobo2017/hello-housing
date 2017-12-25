@@ -44,23 +44,20 @@
 	
 	    <@shiro.hasPermission name="/admin_menu_rent">
 	<div title="租房管理" class="ra_div">
+
 		<@shiro.hasPermission name="/admin/rent/manage">
 		<a id='604' href="javascript:void(0);" onclick="addTab('租房列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage')">租房列表</a>
 		</@shiro.hasPermission>
-	    <@shiro.hasPermission name="/admin/rent/manage/add">
-		<a id='605' href="javascript:void(0);" onclick="addTab('收租提醒', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage/add')">收租提醒</a>
+	    <@shiro.hasPermission name="/admin/rent/manage/reminder">
+		<a id='605' href="javascript:void(0);" onclick="addTab('收租提醒', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage/reminder')">收租提醒</a>
+		</@shiro.hasPermission>
+	    <@shiro.hasPermission name="/admin/income/manage">
+		<a id='607' href="javascript:void(0);" onclick="addTab('房源收入列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/income/manage')">房源收入列表</a>
 		</@shiro.hasPermission>
 	</div>
 	</@shiro.hasPermission>
 	
-	    <@shiro.hasPermission name="/admin_menu_income">
-	<div title="收入管理" class="ra_div">
-		<@shiro.hasPermission name="/admin/income/manage">
-		<a id='607' href="javascript:void(0);" onclick="addTab('收入列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/income/manage')">收入列表</a>
-		</@shiro.hasPermission>
 
-	</div>
-	</@shiro.hasPermission>
 	
 	
 	<@shiro.hasPermission name="/admin_menu_product">

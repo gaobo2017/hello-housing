@@ -182,8 +182,8 @@
 				<th field="renovationCostSum" width="100" align="center">装修费用合计</th>
 				<th field="otherCostSum" width="100" align="center">其他费用合计</th>
 				<th field="dayRentCost" width="100" align="center">每天房租成本</th>
-				<th field="vacancyDays" width="120" align="center">空闲总天数</th>
-				<th field="vacancyDay" width="60" align="center">最近空闲天数</th>
+				<th field="vacancyDays" width="80" align="center">空闲总天数</th>
+				<th field="vacancyDay" width="80" align="center">最近空闲天数</th>
 				<th field="vacancyFeeSumt" width="100" align="center">空闲费用合计</th>
 				<th field="pricesSum" width="100" align="center">房源总价</th>
 				<th field="allCostSum" width="100" align="center">成本合计</th>
@@ -192,14 +192,12 @@
 			    <th field="handler" width="150" align="center" formatter="handler">操作</th>
 
 				
-				<th field="contractStartTime" width="92" align="center">合同开始时间</th>
-				<th field="contractEndTime" width="92" align="center">合同结束时间</th>	
-				<th field="lastSoldTime" width="92" align="center">最近租出时间</th>
+				<th field="contractStartTime" width="100" align="center">合同开始时间</th>
+				<th field="contractEndTime" width="100" align="center">合同结束时间</th>	
+	
 				
 				
 				
-				
-				<th field="operationName" width="90" align="center">登记人</th>
 				
 			</tr>
 		</thead>

@@ -1,5 +1,5 @@
 <#include "/admin/commons/_detailheader.ftl" />
-<#assign currentBaseUrl="${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage"/>
+<#assign currentBaseUrl="${domainUrlUtil.EJS_URL_RESOURCES}/admin/income/manage"/>
 <#include "housecss.ftl"/>
 
 <script language="javascript">
@@ -92,9 +92,13 @@
         
         if(row.status==1){//租期内
             html += "<a href='javascript:;' onclick='editRetrunRent("+row.id+
-                    ")'>退租</a>";
-        } 
-        
+                    ")'>退租</a>&nbsp;&nbsp;<a href='javascript:;' onclick='del("+
+                    row.id+")'>删除";
+        } else{
+            html += "&nbsp;&nbsp;<a href='javascript:;' onclick='del("+
+                    row.id+")'>删除";
+        }
+        html += "</a>";
         return html;
     }
 
@@ -154,7 +158,7 @@
 <div id="searchbar" data-options="region:'north'" style="margin:0 auto;"
 	border="false">
 	<h2 class="h2-title">
-		成本详情列表 <span class="s-poar"><a class="a-extend" href="#">收起</a></span>
+		收入列表 <span class="s-poar"><a class="a-extend" href="#">收起</a></span>
 	</h2>
 	<div id="searchbox" class="head-seachbox">
 		<div class="w-p99 marauto searchCont">
@@ -203,37 +207,29 @@
     					,method:'post'">
 		<thead>
 			<tr>
-				<th field="id" width="100" align="center">租房编号</th>
-				
+			
+				<th field="id" hidden="hidden"></th>
 				<th field="houseId" hidden="hidden"></th>
 				<th field="roomCodeNo" width="100" align="center" formatter="proTitle">房源编号</th>
 				<th field="houseName" width="100" align="center">房源名称</th>
-				<th field="payWay" width="90" align="center" formatter="getPayWay">交租方式</th>
+
+    
+				<th field="allRentSum" width="100" align="center">租金收入总计</th>
+				<th field="rentIncomeAgainSum" width="100" align="center">物损赔偿总计</th>
+
+				<th field="pricesSum" width="100" align="center">房源支出金额</th>
+				<th field="renovationCostSum" width="100" align="center">装修费用总计</th>
+				<th field="otherCostSum" width="100" align="center">其他费用总计</th>
+			<!--	<th field="grossProfitSum" width="100" align="center">毛利润总计</th> -->
+				<th field="returnRentCostSum" width="100" align="center">退租返款总计</th>
+				<th field="pureProfitSum" width="100" align="center">纯利润总计</th>
 				
 				
-				<th field="rent" width="100" align="center">月租</th>
-				<th field="allRent" width="100" align="center">合同租金总额</th>
-				
-				<th field="leaseStartTime" width="120" align="center">租赁开始时间</th>
-				<th field="leaseEndTime" width="120" align="center">租赁结束时间</th>
-				<th field="contract" width="100" align="center">租赁合同号</th>
-   
-				<th field="dayRentCost" width="100" align="center">日租成本</th>
-				<th field="dayRentIncome" width="100" align="center">日租收入</th>
-				<th field="grossProfit" width="100" align="center">单笔毛利润</th>
-				
-				<th field="status" width="90" align="center" formatter="getStatus">租赁状态</th>
-				<th field="finalLeaveTime" width="100" align="center">实际退房日期</th>
-				<th field="returnRentCost" width="100" align="center">退租返款</th>
-				<th field="rentIncomeAgain" width="100" align="center">物损赔偿金额</th>
-				<th field="remark" width="100" align="center">备注</th>				
+							
 				<th field="createTime" width="100" align="center">创建时间</th>
-				<th field="updateTime" width="100" align="center">更新时间</th>
 				
-				<th field="handler" width="90" align="center" formatter="handler">操作</th>
 				
-				<th field="seller" width="100" align="center">销售员</th>
-				<th field="operationName" width="100" align="center">操作人</th>
+				
 								
 			</tr>
 		</thead>

@@ -75,7 +75,7 @@ public class HouseLeaseModel {
 
             //=====================租赁数据====================================
             HousingCost housingCost = housingCostWriteDao
-                .selectByHouseId(housingLease.getHouseId()); 
+                .selectByHouseId(housingLease.getHouseId());
             //单记录
             //                housingLease.setStatus(1);//租期内
             //出租天数
@@ -109,10 +109,9 @@ public class HouseLeaseModel {
 
             housingIncome.setGrossProfitSum(housingLeaseSum.getGrossProfit()); //毛利润 多次
 
-            housingIncome.setPureProfitSum(
-                housingIncome.getAllRentSum().subtract(housingCost.getAllCostSum())
-                    .add(housingIncome
-                        .getRentIncomeAgainSum().subtract(housingIncome.getReturnRentCostSum()))); //存利润  该房纯利润= 房租总和 - 总成本   +退租补缴费用收入 - 返还房租总额
+            housingIncome.setPureProfitSum(housingIncome.getAllRentSum()
+                .subtract(housingCost.getAllCostSum()).add(housingIncome.getRentIncomeAgainSum()
+                    .subtract(housingIncome.getReturnRentCostSum()))); //存利润  该房纯利润= 房租总和 - 总成本   +退租补缴费用收入 - 返还房租总额
 
             boolean isUpdatehousingIncome = housingIncomeWriteDao
                 .updateByPrimaryKeySelective(housingIncome) > 0;
@@ -174,14 +173,15 @@ public class HouseLeaseModel {
                 throw new BusinessException(" 修改租赁明细失败！isUpdatehousingVacancyDays=false");
             }
 
+            transactionManager.commit(status);
+
             return 1;
         } catch (Exception e) {
             transactionManager.rollback(status);
             throw e;
         }
     }
-    
-    
+
     /**
      * 退租事件
      * @param  housingCostDetail
@@ -201,25 +201,25 @@ public class HouseLeaseModel {
             //单记录
             //                housingLease.setStatus(1);//租期内
             housingLease.setStatus(3);// 3提前到期  2正常到期  1租期内
-            
+
             boolean isUpdateHousingLease = housingLeaseWriteDao
                 .updateByPrimaryKeySelective(housingLease) > 0;
-                
-                
+
             //=====================重新统计 income总表数据====================================
             //重新统计 income总表数据   RentIncomeAgainSum  ReturnRentCostSum  PureProfitSum
-                HousingCost housingCost = housingCostWriteDao
-                        .selectByHouseId(housingLease.getHouseId()); 
+            HousingCost housingCost = housingCostWriteDao
+                .selectByHouseId(housingLease.getHouseId());
 
             HousingIncome housingIncome = housingIncomeWriteDao
                 .selectByHouseId(housingLease.getHouseId());
 
-
-            housingIncome.setRentIncomeAgainSum(housingIncome.getRentIncomeAgainSum().add(housingLease.getRentIncomeAgain()));//累加
-            housingIncome.setReturnRentCostSum(housingIncome.getReturnRentCostSum().add(housingLease.getReturnRentCost()));//累加
-            housingIncome.setPureProfitSum(
-                housingIncome.getAllRentSum().subtract(housingCost.getAllCostSum())
-                    .add(housingIncome.getRentIncomeAgainSum().subtract(housingIncome.getReturnRentCostSum()))); //存利润  该房纯利润= 房租总和 - 总成本   +退租补缴费用收入 - 返还房租总额
+            housingIncome.setRentIncomeAgainSum(
+                housingIncome.getRentIncomeAgainSum().add(housingLease.getRentIncomeAgain()));//累加
+            housingIncome.setReturnRentCostSum(
+                housingIncome.getReturnRentCostSum().add(housingLease.getReturnRentCost()));//累加
+            housingIncome.setPureProfitSum(housingIncome.getAllRentSum()
+                .subtract(housingCost.getAllCostSum()).add(housingIncome.getRentIncomeAgainSum()
+                    .subtract(housingIncome.getReturnRentCostSum()))); //存利润  该房纯利润= 房租总和 - 总成本   +退租补缴费用收入 - 返还房租总额
 
             boolean isUpdatehousingIncome = housingIncomeWriteDao
                 .updateByPrimaryKeySelective(housingIncome) > 0;
@@ -227,7 +227,7 @@ public class HouseLeaseModel {
 
             //===================修改房源 出租状态======================================
             HousingResources housingResources = housingResourcesWriteDao
-                    .get(housingLease.getHouseId());
+                .get(housingLease.getHouseId());
             housingResources.setIsSold(0);//1出租  0 未租
             housingResources.setLastSoldTime(housingLease.getFinalLeaveTime());//该房源最近租房实际结束日期
 
@@ -241,7 +241,9 @@ public class HouseLeaseModel {
                 throw new BusinessException(" 修改租赁明细失败！isUpdatehousingIncome=false");
             } else if (!isUpdateHousingResources) {
                 throw new BusinessException(" 修改租赁明细失败！isUpdateHousingResources=false");
-            } 
+            }
+
+            transactionManager.commit(status);
 
             return 1;
         } catch (Exception e) {
@@ -249,9 +251,13 @@ public class HouseLeaseModel {
             throw e;
         }
     }
-    
+
     public Integer getHousingLeaseCount(Map<String, String> queryMap) {
         return housingLeaseWriteDao.getHousingLeaseCount(queryMap);
+    }
+
+    public Integer getHousingIncomeCount(Map<String, String> queryMap) {
+        return housingIncomeWriteDao.getHousingIncomeCount(queryMap);
     }
 
     /**
@@ -313,11 +319,10 @@ public class HouseLeaseModel {
             housingIncome.setAllRentSum(housingLeaseSum.getAllRent()); //该房 全部租金  多次
 
             housingIncome.setGrossProfitSum(housingLeaseSum.getGrossProfit()); //毛利润 多次
-            
-            housingIncome.setPureProfitSum(
-                housingIncome.getAllRentSum().subtract(housingCost.getAllCostSum())
-                    .add(housingIncome
-                        .getRentIncomeAgainSum().subtract(housingIncome.getReturnRentCostSum()))); //存利润  该房纯利润= 房租总和 - 总成本  +退租补缴费用收入 - 返还房租总额
+
+            housingIncome.setPureProfitSum(housingIncome.getAllRentSum()
+                .subtract(housingCost.getAllCostSum()).add(housingIncome.getRentIncomeAgainSum()
+                    .subtract(housingIncome.getReturnRentCostSum()))); //存利润  该房纯利润= 房租总和 - 总成本  +退租补缴费用收入 - 返还房租总额
 
             boolean isUpdatehousingIncome = housingIncomeWriteDao
                 .updateByPrimaryKeySelective(housingIncome) > 0;
@@ -473,21 +478,31 @@ public class HouseLeaseModel {
 
         List<HousingLeaseVO> volist = new ArrayList<HousingLeaseVO>();
 
-        //        List<HousingIncome> list = housingIncomeWriteDao.getHousingIncomeList(queryMap, start,
-        //            size);
-        //
-        //        for (HousingIncome cost : list) {
-        //
-        //            HousingResources hr = housingResourcesWriteDao.get(cost.getHouseId());
-        //
-        //            HousingLeaseVO vo = new HousingLeaseVO();
-        //
-        //            PropertyUtils.copyProperties(vo, hr);
-        //
-        //            PropertyUtils.copyProperties(vo, cost);
-        //
-        //            volist.add(vo);
-        //        }
+        List<HousingIncome> list = housingIncomeWriteDao.getHousingIncomeList(queryMap, start,
+            size);
+
+        for (HousingIncome hincome : list) {
+
+            HousingResources hr = housingResourcesWriteDao.get(hincome.getHouseId());
+            HousingCost hc = housingCostWriteDao.selectByHouseId(hincome.getHouseId());
+            HousingLeaseVO vo = new HousingLeaseVO();
+
+            PropertyUtils.copyProperties(vo, hr);
+
+            PropertyUtils.copyProperties(vo, hincome);
+
+            vo.setRenovationCostSum(hc.getRenovationCostSum());
+            vo.setOtherCostSum(hc.getOtherCostSum());
+            vo.setPricesSum(hc.getPricesSum());
+
+            //该房纯利润= 房租总和 - 总成本   +退租补缴费用收入 - 返还房租总额
+            vo.setPureProfitSum(hincome.getAllRentSum()
+                .add(hincome.getRentIncomeAgainSum()
+                    .subtract(hincome.getReturnRentCostSum().subtract(hc.getPricesSum()
+                        .subtract(hc.getRenovationCostSum().subtract(hc.getOtherCostSum()))))));
+            volist.add(vo);
+        }
+
         return volist;
     }
 

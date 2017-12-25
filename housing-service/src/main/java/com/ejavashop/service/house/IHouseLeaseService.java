@@ -33,13 +33,14 @@ public interface IHouseLeaseService {
      * @return
      */
     ServiceResult<Integer> updateHousingLease(HousingLease housingLease);
-   
+
     /**
      * 退租
      * @param HousingLease
      * @return
      */
     ServiceResult<Integer> cancelLeaseHousingLease(HousingLease housingLease);
+
     /**
      * 新增
      * @param HousingLease
@@ -76,14 +77,15 @@ public interface IHouseLeaseService {
     //     */
     //    ServiceResult<Boolean> deleteSellerApply(Integer id, Integer memberId);
 
-    //    /**
-    //     * 根据条件分页查询房源信息，PagerInfo传null取全部数据
-    //     * @param queryMap
-    //     * @param pager
-    //     * @return
-    //     */
-    //    ServiceResult<List<HousingResources>> getHousingResourcesList(Map<String, String> queryMap,
-    //                                                                  PagerInfo pager);
+    /**
+     * 根据条件分页查询房源收入信息，PagerInfo传null取全部数据
+     * @param queryMap
+     * @param pager
+     * @return
+     */
+    ServiceResult<List<HousingLeaseVO>> getHousingIncomeList(Map<String, String> queryMap,
+                                                             PagerInfo pager);
+
     /**
      * 根据条件分页查询租房记录，PagerInfo传null取全部数据
      * @param queryMap

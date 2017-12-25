@@ -39,6 +39,7 @@ $(function(){
 		<div class="form-contbox">
 			<@form.form method="post" class="validForm" id="addForm" name="addForm" enctype="multipart/form-data">
 			<input type="hidden" id="id" name="id" value="${(housingLease.id)!''}">
+			<input type="hidden" id="houseId" name="houseId" value="${(housingLease.houseId)!''}">
 			<dl class="dl-group">
 				<dt class="dt-group"><span class="s-icon"></span>租房信息</dt>
 				<dd class="dd-group">
@@ -49,13 +50,7 @@ $(function(){
 						</p>
 					</div>
 					<br/>
-					 <div class="fluidbox">
-						<p class="p12 p-item">
-							<label class="lab-item"><font class="red">*</font>房源id ：</label>
-							<input class="easyui-validatebox txt w280" type="text" id="houseId" name="houseId" value="${(housingLease.houseId)!''}" data-options="required:true,validType:'length[0,20]'" >
-						</p>
-					</div>
-					<br/>
+
 
 			       <div class="fluidbox">
 						<p class="p12 p-item">

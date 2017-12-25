@@ -13,6 +13,42 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+  
+    <select id="getHousingIncomeCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from housing_income
+		<include refid="getHousingIncomeListCondition" />
+	</select>
+      
+
+
+	<select id="getHousingIncomeList" resultType="com.ejavashop.entity.house.HousingIncome">
+		select * from housing_income
+		<include refid="getHousingIncomeListCondition" />
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+  <sql id="getHousingIncomeListCondition">
+		<where>
+		
+			<if test="queryMap.q_roomCodeNo != null and queryMap.q_roomCodeNo != ''">
+				and `room_code_no` like CONCAT('%',#{queryMap.q_roomCodeNo},'%')
+			</if>
+
+			<if test="queryMap.q_id != null and queryMap.q_id != ''">
+				and `id` like CONCAT('%',#{queryMap.q_id},'%')
+			</if>
+
+		    <if test="queryMap.q_pay_way != null and queryMap.q_pay_way != ''">
+				and `pay_way` =#{queryMap.q_pay_way}
+			</if>
+		    <if test="queryMap.q_lease_state != null and queryMap.q_lease_state != ''">
+				and `status` =#{queryMap.q_lease_state}
+			</if>
+		</where>
+	</sql>
+ 
+ 
+ 
   <sql id="Base_Column_List">
     id, house_id, all_rent_sum, gross_profit_sum, rent_income_again_sum, return_rent_cost_sum, 
     pure_profit_sum, remark, create_time, update_time

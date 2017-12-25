@@ -38,7 +38,8 @@ $(function(){
 		<#--1.addForm----------------->
 		<div class="form-contbox">
 			<@form.form method="post" class="validForm" id="addForm" name="addForm" enctype="multipart/form-data">
-			
+			<input type="hidden" id="houseId" name="houseId" value="${(housingCostDetail.houseId)!''}">
+			<input type="hidden" id="costId" name="costId" value="${(housingCostDetail.costId)!''}">
 			<dl class="dl-group">
 				<dt class="dt-group"><span class="s-icon"></span>房源信息</dt>
 				<dd class="dd-group">
@@ -49,20 +50,8 @@ $(function(){
 						</p>
 					</div>
 					<br/>
-					 <div class="fluidbox">
-						<p class="p12 p-item">
-							<label class="lab-item"><font class="red">*</font>房源id ：</label>
-							<input class="easyui-validatebox txt w280" type="text" id="houseId" name="houseId" value="${(housingCostDetail.houseId)!''}" data-options="required:true,validType:'length[0,20]'" >
-						</p>
-					</div>
-					<br/>
-				    <div class="fluidbox">
-						<p class="p12 p-item">
-							<label class="lab-item"><font class="red">*</font>成本主表id ：</label>
-							<input class="easyui-validatebox txt w280" type="text" id="costId" name="costId" value="${(housingCostDetail.costId)!''}" data-options="required:true,validType:'length[0,20]'" >
-						</p>
-					</div>
-					<br/>
+					
+				 
 					
 					<div class="fluidbox">
 					 <p class="p12 p-item">

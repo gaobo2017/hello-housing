@@ -19,7 +19,7 @@ $(function(){
 		 if (r) {
 		
 				if($("#addForm").form('validate')){
-			 		$("#addForm").attr("action", "${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage/update")
+			 		$("#addForm").attr("action", "${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage/cancelleasedo")
 		  				 .attr("method", "POST")
 		  				 .submit();
 		  		   }		 
@@ -45,6 +45,7 @@ $(function(){
 		<div class="form-contbox">
 			<@form.form method="post" class="validForm" id="addForm" name="addForm" enctype="multipart/form-data">
 			<input type="hidden" id="id" name="id" value="${(housingLease.id)!''}">
+			<input type="hidden" id="houseId" name="houseId" value="${(housingLease.houseId)!''}">
 			<dl class="dl-group">
 				<dt class="dt-group"><span class="s-icon"></span>租房信息</dt>
 				<dd class="dd-group">

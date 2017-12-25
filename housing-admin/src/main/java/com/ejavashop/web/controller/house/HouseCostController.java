@@ -44,7 +44,12 @@ public class HouseCostController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "", method = { RequestMethod.GET })
-    public String index(HttpServletRequest request, Map<String, Object> dataMap) throws Exception {
+    public String index(HttpServletRequest request, Map<String, Object> dataMap,
+                        Integer houseId) throws Exception {
+
+        if (null != houseId) {
+
+        }
         dataMap.put("pageSize", ConstantsEJS.DEFAULT_PAGE_SIZE);
         return "admin/house/cost/costlist";
     }
@@ -79,7 +84,7 @@ public class HouseCostController extends BaseController {
     }
 
     /**
-     * 添加房源页面
+     * 添加
      * @param dataMap
      * @param id
      * @return

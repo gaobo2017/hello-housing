@@ -33,6 +33,35 @@ public class HouseLeaseServiceImpl implements IHouseLeaseService {
     private HouseLeaseModel houseLeaseModel;
 
     @Override
+    public ServiceResult<List<HousingLeaseVO>> getHousingIncomeList(Map<String, String> queryMap,
+                                                                    PagerInfo pager) {
+        ServiceResult<List<HousingLeaseVO>> serviceResult = new ServiceResult<List<HousingLeaseVO>>();
+        try {
+            Integer start = 0, size = 0;
+            if (pager != null) {
+                pager.setRowsCount(houseLeaseModel.getHousingIncomeCount(queryMap));
+                start = pager.getStart();
+                size = pager.getPageSize();
+            }
+
+            List<HousingLeaseVO> list = houseLeaseModel.getHousingIncomeList(queryMap, start, size);
+            serviceResult.setResult(list);
+        } catch (BusinessException e) {
+            serviceResult.setMessage(e.getMessage());
+            serviceResult.setSuccess(Boolean.FALSE);
+            log.error(
+                "[HousingLeaseService][getHousingLeaseList]根据条件分页查询租赁时出现异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR,
+                ConstantsEJS.SERVICE_RESULT_EXCEPTION_SYSERROR);
+            log.error("[HousingLeaseService][getHousingLeaseList] param1:"
+                      + JSON.toJSONString(queryMap) + " &param2:" + JSON.toJSONString(pager));
+            log.error("[HousingLeaseService][getHousingLeaseList] exception:", e);
+        }
+        return serviceResult;
+    }
+
+    @Override
     public ServiceResult<List<HousingLeaseVO>> getHousingLeaseList(Map<String, String> queryMap,
                                                                    PagerInfo pager) {
         ServiceResult<List<HousingLeaseVO>> serviceResult = new ServiceResult<List<HousingLeaseVO>>();
@@ -106,8 +135,7 @@ public class HouseLeaseServiceImpl implements IHouseLeaseService {
         }
         return serviceResult;
     }
-    
-    
+
     @Override
     public ServiceResult<Integer> updateHousingLease(HousingLease housingLease) {
         ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
@@ -123,8 +151,7 @@ public class HouseLeaseServiceImpl implements IHouseLeaseService {
         }
         return serviceResult;
     }
-    
-    
+
     @Override
     public ServiceResult<Integer> cancelLeaseHousingLease(HousingLease housingLease) {
         ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
