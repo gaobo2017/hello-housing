@@ -94,7 +94,7 @@
    
     function proTitle(value,row,index){
         return "<font style='color:blue;cursor:pointer' title='"+
-                value+"' onclick='openwin("+row.id+")'>"+value+"</font>";
+                value+"' onclick='openwin("+row.houseId+")'>"+value+"</font>";
     }
     
  //操作

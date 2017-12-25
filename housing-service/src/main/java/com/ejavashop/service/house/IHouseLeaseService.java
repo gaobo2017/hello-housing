@@ -33,7 +33,13 @@ public interface IHouseLeaseService {
      * @return
      */
     ServiceResult<Integer> updateHousingLease(HousingLease housingLease);
-
+   
+    /**
+     * 退租
+     * @param HousingLease
+     * @return
+     */
+    ServiceResult<Integer> cancelLeaseHousingLease(HousingLease housingLease);
     /**
      * 新增
      * @param HousingLease

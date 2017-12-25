@@ -82,7 +82,7 @@
    
     function proTitle(value,row,index){
         return "<font style='color:blue;cursor:pointer' title='"+
-                value+"' onclick='openwin("+row.id+")'>"+value+"</font>";
+                value+"' onclick='openwin("+row.houseId+")'>"+value+"</font>";
     }
     
     
@@ -90,9 +90,9 @@
     function handler(value,row,index){
         var html ="";
         
-        if(row.isTop==1){
-            html += "<a href='javascript:;' onclick='recommond("+row.id+
-                    ",true,"+row.state+")'>推荐</a>&nbsp;&nbsp;<a href='javascript:;' onclick='del("+
+        if(row.status==1){//租期内
+            html += "<a href='javascript:;' onclick='editRetrunRent("+row.id+
+                    ")'>退租</a>&nbsp;&nbsp;<a href='javascript:;' onclick='del("+
                     row.id+")'>删除";
         } else{
             html += "&nbsp;&nbsp;<a href='javascript:;' onclick='del("+
@@ -102,6 +102,11 @@
         return html;
     }
 
+	function editRetrunRent(id){
+  // window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/edit?id="+selected.id;
+            window.open("${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/rent/manage/cancellease?id="+id);
+    }
+    
     //推荐/取消推荐
     function recommond(id,isRec,status){
         if(status==5){
@@ -213,8 +218,8 @@
 				<th field="rent" width="100" align="center">月租</th>
 				<th field="allRent" width="100" align="center">合同租金总额</th>
 				
-				<th field="leaseStartTime" width="100" align="center">租赁开始时间</th>
-				<th field="leaseEndTime" width="100" align="center">租赁结束时间</th>
+				<th field="leaseStartTime" width="120" align="center">租赁开始时间</th>
+				<th field="leaseEndTime" width="120" align="center">租赁结束时间</th>
 				<th field="contract" width="100" align="center">租赁合同号</th>
    
 				<th field="dayRentCost" width="100" align="center">日租成本</th>

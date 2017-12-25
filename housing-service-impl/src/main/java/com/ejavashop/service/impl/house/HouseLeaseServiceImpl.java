@@ -106,7 +106,8 @@ public class HouseLeaseServiceImpl implements IHouseLeaseService {
         }
         return serviceResult;
     }
-
+    
+    
     @Override
     public ServiceResult<Integer> updateHousingLease(HousingLease housingLease) {
         ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
@@ -119,6 +120,23 @@ public class HouseLeaseServiceImpl implements IHouseLeaseService {
         } catch (Exception e) {
             serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
             log.error("[houseLeaseModel][updateHousingLease]平台修改租赁记录时出现未知异常：", e);
+        }
+        return serviceResult;
+    }
+    
+    
+    @Override
+    public ServiceResult<Integer> cancelLeaseHousingLease(HousingLease housingLease) {
+        ServiceResult<Integer> serviceResult = new ServiceResult<Integer>();
+        try {
+            serviceResult.setResult(houseLeaseModel.cancelLeaseHousingLease(housingLease));
+        } catch (BusinessException e) {
+            serviceResult.setSuccess(false);
+            serviceResult.setMessage(e.getMessage());
+            log.error("[houseLeaseModel][cancelLeaseHousingLease]平台退租租赁记录时出现异常：" + e.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
+            log.error("[houseLeaseModel][cancelLeaseHousingLease]平台修改租赁记录时出现未知异常：", e);
         }
         return serviceResult;
     }

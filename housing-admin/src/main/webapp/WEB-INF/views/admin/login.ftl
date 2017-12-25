@@ -58,7 +58,7 @@ h2{
 	</style>
 </head>
 <body>
-  	<h2>房源 智能管理系统</h2>
+  	<h2>房源租赁 成本管理系统</h2>
 	 <div class="formbox">	
           <h3>用户登录</h3>
           <form action="${domainUrlUtil.EJS_URL_RESOURCES}/admin/doLogin" method="post" onsubmit="return doSubmit();">

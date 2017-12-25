@@ -191,6 +191,52 @@ public class HouseLeaseController extends BaseController {
         return "redirect:/admin/rent/manage";
     }
 
+    @RequestMapping(value = "cancellease", method = { RequestMethod.GET })
+    public String cancellease(Integer id, Map<String, Object> dataMap) {
+        ServiceResult<HousingLease> serviceResult = houseLeaseService.getHousingLeaseById(id);
+
+        if (!serviceResult.getSuccess()) {
+            if (ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR.equals(serviceResult.getCode())) {
+                throw new RuntimeException(serviceResult.getMessage());
+            } else {
+                dataMap.put("pageSize", ConstantsEJS.DEFAULT_PAGE_SIZE);
+                dataMap.put("message", serviceResult.getMessage());
+                return "admin/house/rent/rentlist";
+            }
+        }
+
+        HousingLease housingLease = serviceResult.getResult();
+
+        dataMap.put("housingLease", housingLease);
+
+        return "admin/house/rent/cancellease";
+    }
+    
+    @RequestMapping(value = "cancelleasedo", method = { RequestMethod.POST })
+    public String cancelleasedo(HousingLease housingLease, HttpServletRequest request,
+                         Map<String, Object> dataMap) {
+        Map<String, String> param = new HashMap<>();
+
+        //获取操作人name和id 
+        SystemAdmin systemAdmin = WebAdminSession.getAdminUser(request);
+        housingLease.setOperationId(systemAdmin.getId());
+        housingLease.setOperationName(systemAdmin.getName());
+
+        ServiceResult<Integer> serviceResult = houseLeaseService.cancelLeaseHousingLease(housingLease);
+        if (!serviceResult.getSuccess()) {
+            if (ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR.equals(serviceResult.getCode())) {
+                throw new RuntimeException(serviceResult.getMessage());
+            } else {
+                //                dataMap.put("userName", userName);
+                //                dataMap.put("sellerName", sellerName);
+                dataMap.put("housingLease", housingLease);
+                dataMap.put("message", serviceResult.getMessage());
+
+                return "admin/house/rent/cancellease";
+            }
+        }
+        return "redirect:/admin/rent/manage";
+    }
     /**
      * 删除成本明细
      * @param dataMap
