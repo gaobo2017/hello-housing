@@ -39,6 +39,14 @@
 		<include refid="getHousingResourcesListCondition" />
 	</select>
 
+	<select id="getHousingResourcesListVacancy" resultType="com.ejavashop.entity.house.HousingResources">
+		select <include refid="Base_Column_List" />
+		 from housing_resources
+		where is_sold = 0  and status = 1
+		order by id desc
+		
+	</select>
+
 	<select id="getHousingResourcesList" resultType="com.ejavashop.entity.house.HousingResources">
 		select * from housing_resources
 		<include refid="getHousingResourcesListCondition" />

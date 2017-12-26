@@ -123,7 +123,7 @@
     <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <ref bean="jobSettlementTrigger"/>
+          <!--      <ref bean="jobSettlementTrigger"/>-->
                 <ref bean="jobSystemFinishOrderTrigger"/>
                 <ref bean="jobClearCartTrigger"/>
           <!--      <ref bean="jobSearchSolrTrigger"/>-->

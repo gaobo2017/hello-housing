@@ -47,13 +47,12 @@ public interface IHouseCostService {
      */
     ServiceResult<Boolean> deleteHousingCostDetail(Integer housingCostDetail);
 
-    //
-    //    /**
-    //     * 删除该商家申请,同时删除该商家账号
-    //     * @param id
-    //     * @return
-    //     */
-    //    ServiceResult<Boolean> deleteSellerApply(Integer id, Integer memberId);
+    /**
+     * 定时任务 自动完成 <br>
+     * <li>计算最近一次空置期天数：   对未出租房源 每天进行统计，修改空置期天数
+     * @return
+     */
+    ServiceResult<Boolean> jobSystemVacancyDay();
 
     //    /**
     //     * 根据条件分页查询房源信息，PagerInfo传null取全部数据

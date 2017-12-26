@@ -39,6 +39,12 @@ public interface HousingResourcesWriteDao {
     HousingResources getHousingResourcesByCostId(Integer costId);
 
     /**
+     * 查询遍历 房源， 条件：  1.is_sold=0 未出租，2。 status=1 有效期内   
+     * @return
+     */
+    List<HousingResources> getHousingResourcesListVacancy();
+
+    /**
      * 根据ID查询
      * @param Id
      * @return

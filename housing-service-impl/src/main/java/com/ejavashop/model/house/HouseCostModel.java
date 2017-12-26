@@ -3,6 +3,8 @@ package com.ejavashop.model.house;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import com.ejavashop.core.TimeUtil;
 import com.ejavashop.core.exception.BusinessException;
 import com.ejavashop.dao.shop.write.house.HousingCostDetailWriteDao;
 import com.ejavashop.dao.shop.write.house.HousingCostWriteDao;
@@ -43,6 +46,69 @@ public class HouseCostModel {
         return housingCostWriteDao.getHousingCostCount(queryMap);
     }
 
+    public Boolean jobSystemVacancyDay() {
+
+        //遍历 房源， 条件：  1.is_sold=0 未出租，2。 status=1 有效期内   
+        List<HousingResources> hrlist = housingResourcesWriteDao.getHousingResourcesListVacancy();
+
+        // 获取当前时间
+        Calendar calendar = Calendar.getInstance();
+        Date dNow = calendar.getTime();
+
+        for (HousingResources hr : hrlist) {
+            // 单条数据处理异常不影响其他数据执行
+            // 事务管理
+            DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+            TransactionStatus status = transactionManager.getTransaction(def);
+
+            try {
+                long days = 0;
+
+                if (null == hr.getLastSoldTime()) {//一次未租，新房源
+                    if (dNow.compareTo(hr.getContractStartTime()) > 0) {//如果当前日期大于 合同开始日期， 计算Vacancyday
+                        days = TimeUtil.getDaysBetweenDates(hr.getContractStartTime(), dNow);
+                    }
+                } else {// 如果 已经出租过，   最近一次租房合同结束 +1天，  跟当前时间比较。
+                    days = TimeUtil.getDaysBetweenDates(hr.getLastSoldTime(), dNow) - 1;
+                    if (days < 0) {
+                        days = 0;
+                    }
+                }
+
+                if (days > 0) {//大于0，更新空置期天数
+                    HousingCost hc = housingCostWriteDao.selectByHouseId(hr.getId());
+                    hc.setVacancyDay(Integer.valueOf((int) days));
+                    hc.setUpdateTime(dNow);
+
+                    int cont = housingCostWriteDao.updateByPrimaryKey(hc);
+
+                    if (cont <= 0) {
+                        throw new BusinessException(" 更新空置期天数失败！");
+                    }
+
+                    //                    OrderLog log = new OrderLog(0, "system", orders.getId(), orders.getOrderSn(),
+                    //                        "系统自动取消订单。", new Date());
+                    //
+                    //                    int orderlogCount = orderLogWriteDao.save(log);
+                    //                    if (orderlogCount == 0) {
+                    //                        throw new BusinessException("系统自动取消订单，订单日志保存失败，请重试！");
+                    //                    }
+
+                }
+                transactionManager.commit(status);
+
+            } catch (Exception e) {
+                transactionManager.rollback(status);
+                throw e;
+            }
+
+        }
+
+        return true;
+
+    }
+
     public Integer getHousingCostDetailCount(Map<String, String> queryMap) {
         return housingCostDetailWriteDao.getHousingCostDetailCount(queryMap);
     }
@@ -65,7 +131,8 @@ public class HouseCostModel {
             PropertyUtils.copyProperties(vo, hr);
 
             PropertyUtils.copyProperties(vo, cost);
-            vo.setVacancyFeeSumt(cost.getDayRentCost().multiply(new BigDecimal(cost.getVacancyDays())));
+            vo.setVacancyFeeSumt(
+                cost.getDayRentCost().multiply(new BigDecimal(cost.getVacancyDays())));
             volist.add(vo);
         }
         return volist;
@@ -175,8 +242,6 @@ public class HouseCostModel {
     public HousingCostDetail getHousingCostDetailById(Integer housingCostDetailId) {
         return housingCostDetailWriteDao.selectByPrimaryKey(housingCostDetailId);
     }
-
-
 
     /**
      * 新增成本明细表

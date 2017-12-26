@@ -85,6 +85,7 @@ public class HouseCostServiceImpl implements IHouseCostService {
         }
         return serviceResult;
     }
+
     //    @Override
     //    public ServiceResult<List<HousingResources>> getHousingResourcesList(Map<String, String> queryMap,
     //                                                                         PagerInfo pager) {
@@ -167,8 +168,6 @@ public class HouseCostServiceImpl implements IHouseCostService {
         return serviceResult;
     }
 
-  
-
     @Override
     public ServiceResult<HousingCostDetail> getHousingCostDetailById(Integer id) {
         ServiceResult<HousingCostDetail> serviceResult = new ServiceResult<HousingCostDetail>();
@@ -215,6 +214,22 @@ public class HouseCostServiceImpl implements IHouseCostService {
         } catch (Exception e) {
             serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
             log.error("[HouseCostService][deleteHousingResources]删除房源时出现未知异常：", e);
+        }
+        return serviceResult;
+    }
+
+    @Override
+    public ServiceResult<Boolean> jobSystemVacancyDay() {
+        ServiceResult<Boolean> serviceResult = new ServiceResult<Boolean>();
+        try {
+            serviceResult.setResult(houseCostModel.jobSystemVacancyDay());
+        } catch (BusinessException be) {
+            serviceResult.setSuccess(false);
+            serviceResult.setMessage(be.getMessage());
+            log.error("[HouseCostService][jobSystemVacancyDay]系统统计空置期天数时发生异常:" + be.getMessage());
+        } catch (Exception e) {
+            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
+            log.error("[HouseCostService][jobSystemVacancyDay]系统统计空置期天数时发生异常:", e);
         }
         return serviceResult;
     }

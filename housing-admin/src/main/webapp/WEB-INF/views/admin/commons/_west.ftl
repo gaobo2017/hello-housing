@@ -49,7 +49,7 @@
 		<a id='604' href="javascript:void(0);" onclick="addTab('租房列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage')">租房列表</a>
 		</@shiro.hasPermission>
 	    <@shiro.hasPermission name="/admin/rent/manage/reminder">
-		<a id='605' href="javascript:void(0);" onclick="addTab('收租提醒', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage/reminder')">收租提醒</a>
+		<a id='605' href="javascript:void(0);" onclick="addTab('收租退房提醒', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage/reminder')">收租退房提醒</a>
 		</@shiro.hasPermission>
 	    <@shiro.hasPermission name="/admin/income/manage">
 		<a id='607' href="javascript:void(0);" onclick="addTab('房源收入列表', '${domainUrlUtil.EJS_URL_RESOURCES}/admin/income/manage')">房源收入列表</a>
