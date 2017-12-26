@@ -1,6 +1,7 @@
 package com.ejavashop.model.house;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class HouseCostModel {
             PropertyUtils.copyProperties(vo, hr);
 
             PropertyUtils.copyProperties(vo, cost);
-
+            vo.setVacancyFeeSumt(cost.getDayRentCost().multiply(new BigDecimal(cost.getVacancyDays())));
             volist.add(vo);
         }
         return volist;
@@ -175,14 +176,7 @@ public class HouseCostModel {
         return housingCostDetailWriteDao.selectByPrimaryKey(housingCostDetailId);
     }
 
-    /**
-     * 根据id取得成本信息
-     * @param  housingCostDetailId
-     * @return
-     */
-    public HousingCostDetail getHousingCostDetailByCostId(Integer costId) {
-        return housingCostDetailWriteDao.getHousingCostDetailByCostId(costId);
-    }
+
 
     /**
      * 新增成本明细表

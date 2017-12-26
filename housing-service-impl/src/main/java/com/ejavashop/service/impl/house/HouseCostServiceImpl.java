@@ -167,24 +167,7 @@ public class HouseCostServiceImpl implements IHouseCostService {
         return serviceResult;
     }
 
-    @Override
-    public ServiceResult<HousingCostDetail> getHousingCostDetailByCostId(Integer id) {
-        ServiceResult<HousingCostDetail> serviceResult = new ServiceResult<HousingCostDetail>();
-        try {
-            serviceResult.setResult(houseCostModel.getHousingCostDetailByCostId(id));
-        } catch (BusinessException e) {
-            serviceResult.setSuccess(false);
-            serviceResult.setMessage(e.getMessage());
-            log.error("[HouseCostService][getHousingCostDetailByCostId]根据id[" + id + "]取得成本明细时出现异常："
-                      + e.getMessage());
-        } catch (Exception e) {
-            serviceResult.setError(ConstantsEJS.SERVICE_RESULT_CODE_SYSERROR, "服务异常，请联系系统管理员。");
-            log.error(
-                "[HouseCostService][getHousingCostDetailByCostId]根据id[" + id + "]取得成本明细信息时出现未知异常：",
-                e);
-        }
-        return serviceResult;
-    }
+  
 
     @Override
     public ServiceResult<HousingCostDetail> getHousingCostDetailById(Integer id) {

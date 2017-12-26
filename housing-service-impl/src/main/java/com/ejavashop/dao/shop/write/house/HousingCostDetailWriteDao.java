@@ -19,7 +19,7 @@ public interface HousingCostDetailWriteDao {
 
     HousingCostDetail selectByPrimaryKey(Integer id);
 
-    HousingCostDetail getHousingCostDetailByCostId(Integer costId);
+
 
     int updateByPrimaryKeySelective(HousingCostDetail record);
 

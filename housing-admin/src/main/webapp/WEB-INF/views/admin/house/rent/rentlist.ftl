@@ -59,6 +59,10 @@
 				return;
 			}
 			
+		    if(selected.status !=1) {
+				$.messager.alert('提示','非租期内，请不要修改。');
+				return;
+			}
 	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/rent/manage/edit?id="+selected.id;
 		});
 	});
@@ -154,7 +158,7 @@
 <div id="searchbar" data-options="region:'north'" style="margin:0 auto;"
 	border="false">
 	<h2 class="h2-title">
-		成本详情列表 <span class="s-poar"><a class="a-extend" href="#">收起</a></span>
+		租房列表一览 <span class="s-poar"><a class="a-extend" href="#">收起</a></span>
 	</h2>
 	<div id="searchbox" class="head-seachbox">
 		<div class="w-p99 marauto searchCont">

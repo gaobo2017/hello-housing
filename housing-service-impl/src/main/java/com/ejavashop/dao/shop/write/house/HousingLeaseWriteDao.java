@@ -1,5 +1,6 @@
 package com.ejavashop.dao.shop.write.house;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -48,4 +49,15 @@ public interface HousingLeaseWriteDao {
      */
 
     HousingLease getHousingLeaseSum(Integer houesId);
+    
+    /**
+     * 查询  房源和 该合同开始日期 的  上一条租赁记录    
+     * @param houseId
+     * @param leaseStartTime
+     * @return HousingLease 
+     */
+   
+    HousingLease getPreviousHousingLease(@Param("houseId") Integer houseId,
+                                         @Param("leaseStartTime") Date leaseStartTime);
+    
 }

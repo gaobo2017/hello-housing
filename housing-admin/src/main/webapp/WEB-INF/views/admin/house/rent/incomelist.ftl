@@ -168,19 +168,10 @@
 						<label class="lab-item">房源编号 :</label> <input type="text"
 							class="txt" id="q_roomCodeNo" name="q_roomCodeNo" value="${q_roomCodeNo!''}" />
 					</p>
-		
-					<p class="p4 p-item">
-						<label class="lab-item">租房编号 :</label> <input type="text"
-							class="txt" id="q_id" name="q_id" value="${q_id!''}" />
-					</p>
-					
-					<p class="p4 p-item">
-						<label class="lab-item">缴费方式 :</label> <@cont.select id="q_pay_way"
-						codeDiv="HOUSE_PAY_WAY" name="q_pay_way" style="width:100px"/>
-					</p>
-					<p class="p4 p-item">
-						<label class="lab-item">租赁状态 :</label> <@cont.select id="q_lease_state"
-						codeDiv="HOUSE_LEASE_STATE" name="q_lease_state" style="width:100px"/>
+
+				     <p class="p4 p-item">
+						<label class="lab-item">房源名称 :</label> <input type="text"
+							class="txt" id="q_houseName" name="q_houseName" value="${q_houseName!''}" />
 					</p>
 					
 				</div>
@@ -215,14 +206,15 @@
 
     
 				<th field="allRentSum" width="100" align="center">租金收入总计</th>
-				<th field="rentIncomeAgainSum" width="100" align="center">物损赔偿总计</th>
+				<th field="rentIncomeAgainSum" width="100" align="center">物损收入总计</th>
 
 				<th field="pricesSum" width="100" align="center">房源支出金额</th>
 				<th field="renovationCostSum" width="100" align="center">装修费用总计</th>
 				<th field="otherCostSum" width="100" align="center">其他费用总计</th>
-			<!--	<th field="grossProfitSum" width="100" align="center">毛利润总计</th> -->
+				
 				<th field="returnRentCostSum" width="100" align="center">退租返款总计</th>
-				<th field="pureProfitSum" width="100" align="center">纯利润总计</th>
+				<th field="grossProfitSum" width="100" align="center">毛利润总计</th>
+				<th field="pureProfitSum" width="100" align="center">利润总计</th>
 				
 				
 							

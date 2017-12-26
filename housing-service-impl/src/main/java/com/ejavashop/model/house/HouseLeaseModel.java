@@ -127,11 +127,18 @@ public class HouseLeaseModel {
             housingVacancyDays.setHouseId(housingLease.getHouseId());
             //            housingVacancyDays.setLeaseId(housingLease.getId());
 
-            if (housingResources.getLastSoldTime() == null) {//有问题 应该用 该房的上一次租赁  是否有记录，来判断
-                housingVacancyDays.setVacancyStartTime(housingResources.getContractStartTime());//房源有效期内，出租事件触发。 出租合同开始日期-该房源上次最近租房合同结束日期+1（如果0次出租，从收房合同开始日期计算） 
-            } else {
+            
+           // 查询该房的上一次租赁记录，来判断  ，
+           //如果没有上次租赁，  就是新房源 取房源收房合同开始日期
+           //否则，上次租房合同结束日期+1
+
+            HousingLease hl=housingLeaseWriteDao.getPreviousHousingLease(
+            		housingLease.getHouseId(),housingLease.getLeaseStartTime());
+            if (null == hl) {
+                housingVacancyDays.setVacancyStartTime(housingResources.getContractStartTime()); 
+            }else {
                 housingVacancyDays.setVacancyStartTime(
-                    TimeUtil.getBeforeOrAfterDay(housingResources.getLastSoldTime(), 1));//房源有效期内，出租事件触发。 出租合同开始日期-该房源上次最近租房合同结束日期+1（如果0次出租，从收房合同开始日期计算）
+                        TimeUtil.getBeforeOrAfterDay(hl.getLeaseEndTime(), 1));
             }
 
             housingVacancyDays.setVacancyEndTime(housingLease.getLeaseStartTime());
@@ -144,11 +151,13 @@ public class HouseLeaseModel {
 
             //=========================================================
             //===================修改 cost表  空置期天数 ======================================
-            //房子出租事件, 空置期累加到 空置期总天数,  vacancy_day清零.?????????已经清零重新计算 拿租赁记录计算。统计。
-
-            housingCost.setVacancyDays(housingCost.getVacancyDays() + housingCost.getVacancyDay());
+            //  空置期总天数=拿空置期记录计算,统计。      vacancy_day 已经清零.
+             
+            HousingVacancyDays  hvds = housingVacancyDaysWriteDao.getHousingVacancDaysSumByHouseId(housingLease.getHouseId());
+            housingCost.setVacancyDays(hvds.getVacancyDay());
             housingCost.setVacancyDay(0);
-
+            housingCost.setVacancyFeeSumt(housingCost.getDayRentCost().multiply(new BigDecimal(housingCost.getVacancyDays())));
+            
             boolean isUpdateHousingCost = housingCostWriteDao.updateByPrimaryKey(housingCost) > 0;
 
             //=========================================================
@@ -328,7 +337,7 @@ public class HouseLeaseModel {
                 .updateByPrimaryKeySelective(housingIncome) > 0;
             //=========================================================
 
-            //===================修改空置期表 ======================================
+            //===================空置期表 新增数据 ======================================
 
             HousingResources housingResources = housingResourcesWriteDao
                 .get(housingLease.getHouseId());
@@ -356,7 +365,7 @@ public class HouseLeaseModel {
             //===================修改 cost表  空置期天数 ======================================
             //房子出租事件, 空置期累加到 空置期总天数,  vacancy_day清零.
 
-            housingCost.setVacancyDays(housingCost.getVacancyDays() + housingCost.getVacancyDay());
+            housingCost.setVacancyDays(housingCost.getVacancyDays() + housingVacancyDays.getVacancyDay());
             housingCost.setVacancyDay(0);
 
             boolean isUpdateHousingCost = housingCostWriteDao.updateByPrimaryKey(housingCost) > 0;
@@ -495,11 +504,16 @@ public class HouseLeaseModel {
             vo.setOtherCostSum(hc.getOtherCostSum());
             vo.setPricesSum(hc.getPricesSum());
 
-            //该房纯利润= 房租总和 - 总成本   +退租补缴费用收入 - 返还房租总额
-            vo.setPureProfitSum(hincome.getAllRentSum()
-                .add(hincome.getRentIncomeAgainSum()
-                    .subtract(hincome.getReturnRentCostSum().subtract(hc.getPricesSum()
-                        .subtract(hc.getRenovationCostSum().subtract(hc.getOtherCostSum()))))));
+            //该房纯利润= 房租总和 +退租补缴费用收入 - 总成本   - 返还房租总额
+            BigDecimal tempMoney = hincome.getAllRentSum().add(hincome.getRentIncomeAgainSum());
+            
+            tempMoney=tempMoney.subtract(hc.getPricesSum());
+            tempMoney=tempMoney.subtract(hc.getRenovationCostSum());
+            tempMoney=tempMoney.subtract(hc.getOtherCostSum());
+            tempMoney=tempMoney.subtract(hincome.getReturnRentCostSum());
+            vo.setPureProfitSum(tempMoney);
+            
+                    
             volist.add(vo);
         }
 

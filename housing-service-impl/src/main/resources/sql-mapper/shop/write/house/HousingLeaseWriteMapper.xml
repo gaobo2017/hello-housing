@@ -75,6 +75,17 @@
     seller, contract, operation_name, operation_id, remark, day_rent_cost, day_rent_income, 
     gross_profit,rent_income_again, return_rent_cost,final_leave_time,create_time, update_time
   </sql>
+  
+  <select id="getPreviousHousingLease" resultMap="HousingLeaseResult">
+    select 
+    <include refid="Base_Column_List" />
+    from housing_lease
+    where  house_id= #{houseId,jdbcType=INTEGER} and lease_start_time &lt; #{leaseStartTime,jdbcType=TIMESTAMP}
+    order by lease_start_time DESC
+    limit 0,1
+   
+  </select>
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingLeaseResult">
     select 
     <include refid="Base_Column_List" />

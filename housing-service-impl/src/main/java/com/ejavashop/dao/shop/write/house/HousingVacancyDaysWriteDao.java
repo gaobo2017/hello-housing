@@ -1,5 +1,7 @@
 package com.ejavashop.dao.shop.write.house;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.ejavashop.entity.house.HousingVacancyDays;
@@ -16,6 +18,8 @@ public interface HousingVacancyDaysWriteDao {
 
     HousingVacancyDays selectByLeaseId(Integer leaseId);
 
+    HousingVacancyDays getHousingVacancDaysSumByHouseId(Integer houseId);
+    
     int updateByPrimaryKeySelective(HousingVacancyDays record);
 
     int updateByPrimaryKey(HousingVacancyDays record);

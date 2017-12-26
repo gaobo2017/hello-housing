@@ -27,20 +27,6 @@ public interface IHouseCostService {
     ServiceResult<HousingCostDetail> getHousingCostDetailById(Integer id);
 
     /**
-     * 根据id取得成本明细
-     * @param  costid
-     * @return
-     */
-    ServiceResult<HousingCostDetail> getHousingCostDetailByCostId(Integer costid);
-    //    /**
-    //     * 保存商家申请表
-    //     * @param  sellerApply
-    //     * @return
-    //     */
-    //    ServiceResult<Integer> saveSellerApply(SellerApply sellerApply);
-    //
-
-    /**
      * 新增
      * @param HousingCostDetail
      * @return

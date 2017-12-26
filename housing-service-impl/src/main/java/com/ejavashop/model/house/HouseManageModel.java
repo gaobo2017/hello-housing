@@ -124,20 +124,6 @@ public class HouseManageModel {
             housingCost.setPricesSum(housingResources.getPricesSum());
 
             housingCost.setAllCostSum(housingResources.getPricesSum());
-            //            NumberFormat percent = NumberFormat.getPercentInstance(); //建立百分比格式化用
-            //            percent.setMaximumFractionDigits(2); //百分比小数点最多2位
-            //            for (HousingCostDetail CostDetailSum : housingCostDetailSumlist) {
-            //
-            //                if (HousingCostDetail.COST_TYPE_1 == CostDetailSum.getCostType().intValue()) {
-            //                    housingCost.setRenovationCostSum(CostDetailSum.getMoney());// 装修费统计
-            //                } else {
-            //                    housingCost.setOtherCostSum(CostDetailSum.getMoney()); //其他费用统计
-            //                }
-            //            }
-
-            //            //总成本=装修成本总额+其他成本总额+房源总价
-            //            housingCost.setAllCostSum(housingCost.getRenovationCostSum()
-            //                .add(housingCost.getOtherCostSum()).add(housingCost.getPricesSum()));
 
             boolean isCreateHousingCost = housingCostWriteDao.insertSelective(housingCost) > 0;
 

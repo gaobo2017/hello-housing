@@ -17,6 +17,11 @@
     create_time, update_time
   </sql>
   
+    <select id="getHousingVacancDaysSumByHouseId"  parameterType="java.lang.Integer" resultType="com.ejavashop.entity.house.HousingVacancyDays">
+		  select SUM(vacancy_day) as vacancy_day  
+		  from housing_vacancy_days 
+          where house_id = #{houseId,jdbcType=INTEGER}
+	</select>
   
     <select id="selectByLeaseId" parameterType="java.lang.Integer" resultMap="HousingVacancyDaysResult">
     select 
