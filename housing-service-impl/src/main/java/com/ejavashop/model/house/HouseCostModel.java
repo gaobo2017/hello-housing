@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionDefinition;
@@ -29,6 +31,7 @@ import com.ejavashop.vo.house.HousingCostVO;
 
 @Component(value = "houseCostModel")
 public class HouseCostModel {
+    private static Logger   log = LogManager.getLogger(HouseCostModel.class);
 
     @Resource
     private HousingResourcesWriteDao     housingResourcesWriteDao;
@@ -48,6 +51,8 @@ public class HouseCostModel {
 
     public Boolean jobSystemVacancyDay() {
 
+    	log.info(" 统计房源空置期 开始：");
+    	
         //遍历 房源， 条件：  1.is_sold=0 未出租，2。 status=1 有效期内   
         List<HousingResources> hrlist = housingResourcesWriteDao.getHousingResourcesListVacancy();
 
@@ -80,13 +85,16 @@ public class HouseCostModel {
                     HousingCost hc = housingCostWriteDao.selectByHouseId(hr.getId());
                     hc.setVacancyDay(Integer.valueOf((int) days));
                     hc.setUpdateTime(dNow);
+                    hc.setVacancyFeeSumt(hc.getDayRentCost().multiply(new BigDecimal(hc.getVacancyDays()+hc.getVacancyDay())));
 
                     int cont = housingCostWriteDao.updateByPrimaryKey(hc);
-
+                    
                     if (cont <= 0) {
                         throw new BusinessException(" 更新空置期天数失败！");
                     }
-
+                  
+                    log.info(" 统计房源空置期 成功，房源编号：" +hr.getRoomCodeNo()+ "空置期天数="+days);
+                 
                     //                    OrderLog log = new OrderLog(0, "system", orders.getId(), orders.getOrderSn(),
                     //                        "系统自动取消订单。", new Date());
                     //
@@ -97,6 +105,7 @@ public class HouseCostModel {
 
                 }
                 transactionManager.commit(status);
+                
 
             } catch (Exception e) {
                 transactionManager.rollback(status);
@@ -104,7 +113,8 @@ public class HouseCostModel {
             }
 
         }
-
+        
+        log.info(" 统计房源空置期 结束：");
         return true;
 
     }
@@ -132,8 +142,8 @@ public class HouseCostModel {
 
             PropertyUtils.copyProperties(vo, cost);
             vo.setVacancyFeeSumt(
-                cost.getDayRentCost().multiply(new BigDecimal(cost.getVacancyDays())));
-            volist.add(vo);
+                cost.getDayRentCost().multiply(new BigDecimal(cost.getVacancyDays()+cost.getVacancyDay())));
+            volist.add(vo); 
         }
         return volist;
     }

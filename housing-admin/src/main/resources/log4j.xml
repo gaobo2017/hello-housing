@@ -7,7 +7,7 @@
         </layout>
     </appender>
     <appender name="admin-log" class="org.apache.log4j.DailyMaxRollingFileAppender">
-        <param name="file" value="/opt/tomcat8-8081/logs/housing-admin.log"/>
+        <param name="file" value="/Java/logs/housing-admin.log"/>
         <param name="append" value="true"/>
         <param name="datePattern" value="'.'yyyy-MM-dd"/>
         <param name="maxBackupIndex" value="30"/>

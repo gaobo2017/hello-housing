@@ -141,7 +141,7 @@
 </script>
 	  
     <div data-options="region:'north',split:false" style=" background-color:#dfe8f7; padding:10px 0; height:50px;">
-       <h2 style="font-size: 24px; font-family:'微软雅黑';text-indent:7px; margin:0px; letter-spacing:2px; font-weight:normal; line-height:22px;">ejavashop B2B2C 多商家管理系统平台端</h2>
+       <h2 style="font-size: 24px; font-family:'微软雅黑';text-indent:7px; margin:0px; letter-spacing:2px; font-weight:normal; line-height:22px;">房源租赁 成本管理系统</h2>
        <span style="float:right; height:16px; margin-top:-17px; margin-right:55px;">欢迎：${SESSION_ADMIN_USER.name}</span>
        <a href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/exit" style="float:right; height:16px; margin-top:-17px; padding-right:22px;" title="退出系统"><img src="${(domainUrlUtil.EJS_STATIC_RESOURCES)!}/resources/admin/images/log-out.png" border="0"/></a>
     </div>

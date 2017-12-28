@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import com.ejavashop.core.ServiceResult;
 import com.ejavashop.core.freemarkerutil.DomainUrlUtil;
 import com.ejavashop.service.cart.ICartService;
+import com.ejavashop.service.house.IHouseCostService;
 import com.ejavashop.service.order.IOrdersService;
 import com.ejavashop.service.search.ISolrProductService;
 import com.ejavashop.service.seller.ISellerService;
@@ -23,10 +24,25 @@ public class AdminJob {
     private ICartService        cartService;
     @Resource
     private ISellerService      sellerService;
-
     @Resource
-    private ISolrProductService solrProductService;
-
+    private ISolrProductService solrProductService;   
+    @Resource
+    private IHouseCostService   houseCostService;
+    
+    /**
+     * 统计 空置期天数  <br>
+     * <li> 计算最近一次空置期天数：   对未出租房源 每天进行统计，修改空置期天数 
+     * <li> 租赁记录 正常到期, 租赁记录数据和房源数据 状态处理 。
+     * <li> 房源合同到期,房源数据 处理。
+     */
+    public void jobSystemVacancyDay() {
+        ServiceResult<Boolean> jobResult = houseCostService.jobSystemVacancyDay();
+        if (!jobResult.getSuccess() || jobResult.getResult() == null || !jobResult.getResult()) {
+            log.error("[admin][AdminJob][jobSystemVacancyDay] 系统自动计算最近一次空置期天数时失败："
+                      + jobResult.getMessage());
+        }
+    }
+    
     /**
      * 商家结算账单生成定时任务<br>
      * <li>查询所有商家，每个商家每个结算周期生成一条结算账单
