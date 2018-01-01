@@ -12,15 +12,21 @@ $(function(){
 	$("#back").click(function(){
  		window.location.href="${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage";
 	});
-	$("#add").click(function(){
 
+ $("#add").click(function(){
+		
+		$.messager.confirm('确认', '确定新增租房信息吗?', function(r){
+		 if (r) {
+		
+				if($("#addForm").form('validate')){
+			 		$("#addForm").attr("action", "${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage/create")
+		  				 .attr("method", "POST")
+		  				 .submit();
+		  		   }		 
+		   } 
+	    
+		});
 
-
-		if($("#addForm").form('validate')){
-	 		$("#addForm").attr("action", "${domainUrlUtil.EJS_URL_RESOURCES}/admin/rent/manage/create")
-  				 .attr("method", "POST")
-  				 .submit();
-  		}
 	});
 	
 
@@ -69,14 +75,14 @@ $(function(){
 					<div class="fluidbox">
 						<p class="p12 p-item">
 							<label class="lab-item"><font class="red">*</font>月租：</label>
-							<input class="easyui-validatebox txt w280" type="text" id="rent" name="rent" value="${(housingLease.rent)!''}" data-options="required:true,validType:'length[0,50]'" >
+							<input class="easyui-validatebox txt w280" type="text" id="rent" name="rent" value="${(housingLease.rent)!''}" data-options="required:true,validType:'length[0,10]'" >
 						</p>
 					</div>
 					<br/>								
 					<div class="fluidbox">
 						<p class="p12 p-item">
 							<label class="lab-item"><font class="red">*</font>合同租金总额：</label>
-							<input class="easyui-validatebox txt w280" type="text" id="allRent" name="allRent" value="${(housingLease.allRent)!''}" data-options="required:true,validType:'length[0,50]'" >
+							<input class="easyui-validatebox txt w280" type="text" id="allRent" name="allRent" value="${(housingLease.allRent)!''}" data-options="required:true,validType:'length[0,10]'" >
 						</p>
 					</div>
 					<br/>
@@ -88,6 +94,22 @@ $(function(){
 						 value="${(housingLease.payWay)!''}" codeDiv="HOUSE_PAY_WAY" name="payWay" style="width:100px" mode="1"/>
 					</p>
 					</div>  
+					<br/>
+					
+         			<div class="fluidbox">
+						<p class="p12 p-item">
+							<label class="lab-item"><font class="red">*</font>中介费：</label>
+							<input class="easyui-validatebox txt w280" type="text" id="agencyFee" name="agencyFee" value="${(housingLease.agencyFee)!''}" data-options="required:true,validType:'length[0,10]'" >
+						</p>
+					</div>
+					<br/>
+					
+			        <div class="fluidbox">
+						<p class="p12 p-item">
+							<label class="lab-item"><font class="red">*</font>押金：</label>
+							<input class="easyui-validatebox txt w280" type="text" id="cashPledge" name="cashPledge" value="${(housingLease.cashPledge)!''}" data-options="required:true,validType:'length[0,10]'" >
+						</p>
+					</div>
 					<br/>								
 				    <div class="fluidbox">
 						<p class="p12 p-item">

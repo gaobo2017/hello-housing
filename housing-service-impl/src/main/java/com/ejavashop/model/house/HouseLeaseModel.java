@@ -98,7 +98,7 @@ public class HouseLeaseModel {
             boolean isUpdateHousingLease = housingLeaseWriteDao
                 .updateByPrimaryKeySelective(housingLease) > 0;
             //=====================重新统计 income总表数据====================================
-            //重新统计 income总表数据   all_rent_sum  gross_profit_sum  pure_profit_sum
+            //重新统计 income总表数据   all_rent_sum  AgencyFeeSum  gross_profit_sum  pure_profit_sum
             HousingLease housingLeaseSum = housingLeaseWriteDao
                 .getHousingLeaseSum(housingLease.getHouseId());
 
@@ -109,9 +109,13 @@ public class HouseLeaseModel {
 
             housingIncome.setGrossProfitSum(housingLeaseSum.getGrossProfit()); //毛利润 多次
 
-            housingIncome.setPureProfitSum(housingIncome.getAllRentSum()
-                .subtract(housingCost.getAllCostSum()).add(housingIncome.getRentIncomeAgainSum()
-                    .subtract(housingIncome.getReturnRentCostSum()))); //存利润  该房纯利润= 房租总和 - 总成本   +退租补缴费用收入 - 返还房租总额
+            housingIncome.setAgencyFeeSum(housingLeaseSum.getAgencyFee());
+
+            housingIncome.setPureProfitSum(
+                housingIncome.getAllRentSum().subtract(housingCost.getAllCostSum())
+                    .add(housingIncome.getRentIncomeAgainSum()
+                        .subtract(housingIncome.getReturnRentCostSum()))
+                    .add(housingIncome.getAgencyFeeSum())); //存利润  该房纯利润= 房租总和 - 总成本   +退租补缴费用收入 - 返还房租总额+中介费
 
             boolean isUpdatehousingIncome = housingIncomeWriteDao
                 .updateByPrimaryKeySelective(housingIncome) > 0;
@@ -127,18 +131,17 @@ public class HouseLeaseModel {
             housingVacancyDays.setHouseId(housingLease.getHouseId());
             //            housingVacancyDays.setLeaseId(housingLease.getId());
 
-            
-           // 查询该房的上一次租赁记录，来判断  ，
-           //如果没有上次租赁，  就是新房源 取房源收房合同开始日期
-           //否则，上次租房合同结束日期+1
+            // 查询该房的上一次租赁记录，来判断  ，
+            //如果没有上次租赁，  就是新房源 取房源收房合同开始日期
+            //否则，上次租房合同结束日期+1
 
-            HousingLease hl=housingLeaseWriteDao.getPreviousHousingLease(
-            		housingLease.getHouseId(),housingLease.getLeaseStartTime());
+            HousingLease hl = housingLeaseWriteDao.getPreviousHousingLease(
+                housingLease.getHouseId(), housingLease.getLeaseStartTime());
             if (null == hl) {
-                housingVacancyDays.setVacancyStartTime(housingResources.getContractStartTime()); 
-            }else {
-                housingVacancyDays.setVacancyStartTime(
-                        TimeUtil.getBeforeOrAfterDay(hl.getLeaseEndTime(), 1));
+                housingVacancyDays.setVacancyStartTime(housingResources.getContractStartTime());
+            } else {
+                housingVacancyDays
+                    .setVacancyStartTime(TimeUtil.getBeforeOrAfterDay(hl.getLeaseEndTime(), 1));
             }
 
             housingVacancyDays.setVacancyEndTime(housingLease.getLeaseStartTime());
@@ -152,12 +155,14 @@ public class HouseLeaseModel {
             //=========================================================
             //===================修改 cost表  空置期天数 ======================================
             //  空置期总天数=拿空置期记录计算,统计。      vacancy_day 已经清零.
-             
-            HousingVacancyDays  hvds = housingVacancyDaysWriteDao.getHousingVacancDaysSumByHouseId(housingLease.getHouseId());
+
+            HousingVacancyDays hvds = housingVacancyDaysWriteDao
+                .getHousingVacancDaysSumByHouseId(housingLease.getHouseId());
             housingCost.setVacancyDays(hvds.getVacancyDay());
             housingCost.setVacancyDay(0);
-            housingCost.setVacancyFeeSumt(housingCost.getDayRentCost().multiply(new BigDecimal(housingCost.getVacancyDays())));
-            
+            housingCost.setVacancyFeeSumt(housingCost.getDayRentCost()
+                .multiply(new BigDecimal(housingCost.getVacancyDays())));
+
             boolean isUpdateHousingCost = housingCostWriteDao.updateByPrimaryKey(housingCost) > 0;
 
             //=========================================================
@@ -215,7 +220,7 @@ public class HouseLeaseModel {
                 .updateByPrimaryKeySelective(housingLease) > 0;
 
             //=====================重新统计 income总表数据====================================
-            //重新统计 income总表数据   RentIncomeAgainSum  ReturnRentCostSum  PureProfitSum
+            //重新统计 income总表数据   RentIncomeAgainSum AgencyFeeSum ReturnRentCostSum  PureProfitSum
             HousingCost housingCost = housingCostWriteDao
                 .selectByHouseId(housingLease.getHouseId());
 
@@ -226,9 +231,20 @@ public class HouseLeaseModel {
                 housingIncome.getRentIncomeAgainSum().add(housingLease.getRentIncomeAgain()));//累加
             housingIncome.setReturnRentCostSum(
                 housingIncome.getReturnRentCostSum().add(housingLease.getReturnRentCost()));//累加
-            housingIncome.setPureProfitSum(housingIncome.getAllRentSum()
-                .subtract(housingCost.getAllCostSum()).add(housingIncome.getRentIncomeAgainSum()
-                    .subtract(housingIncome.getReturnRentCostSum()))); //存利润  该房纯利润= 房租总和 - 总成本   +退租补缴费用收入 - 返还房租总额
+            //            housingIncome.setAgencyFeeSum("");  ????????????????
+            //该房纯利润= 房租总和 +退租补缴费用收入+中介费 - 总成本（房源成本+装修费用+其他费用）   - 返还房租总额 
+            BigDecimal tempMoney = housingIncome.getAllRentSum()
+                .add(housingIncome.getRentIncomeAgainSum());
+            tempMoney = tempMoney.add(housingIncome.getAgencyFeeSum());
+            tempMoney = tempMoney.subtract(housingCost.getPricesSum());
+            tempMoney = tempMoney.subtract(housingCost.getRenovationCostSum());
+            tempMoney = tempMoney.subtract(housingCost.getOtherCostSum());
+            tempMoney = tempMoney.subtract(housingIncome.getReturnRentCostSum());
+
+            housingIncome.setPureProfitSum(tempMoney);
+            //            housingIncome.setPureProfitSum(housingIncome.getAllRentSum()
+            //                .subtract(housingCost.getAllCostSum()).add(housingIncome.getRentIncomeAgainSum()
+            //                    .subtract(housingIncome.getReturnRentCostSum())))); //存利润  该房纯利润= 房租总和 - 总成本   +退租补缴费用收入 - 返还房租总额+中介费
 
             boolean isUpdatehousingIncome = housingIncomeWriteDao
                 .updateByPrimaryKeySelective(housingIncome) > 0;
@@ -327,12 +343,26 @@ public class HouseLeaseModel {
 
             housingIncome.setAllRentSum(housingLeaseSum.getAllRent()); //该房 全部租金  多次
 
+            housingIncome.setAgencyFeeSum(housingLeaseSum.getAgencyFee()); //中介费 累计
+
             housingIncome.setGrossProfitSum(housingLeaseSum.getGrossProfit()); //毛利润 多次
 
-            housingIncome.setPureProfitSum(housingIncome.getAllRentSum()
-                .subtract(housingCost.getAllCostSum()).add(housingIncome.getRentIncomeAgainSum()
-                    .subtract(housingIncome.getReturnRentCostSum()))); //存利润  该房纯利润= 房租总和 - 总成本  +退租补缴费用收入 - 返还房租总额
+            //该房纯利润= 房租总和 +退租补缴费用收入+中介费 - 总成本（房源成本+装修费用+其他费用）   - 返还房租总额 
+            BigDecimal tempMoney = housingIncome.getAllRentSum()
+                .add(housingIncome.getRentIncomeAgainSum());
+            tempMoney = tempMoney.add(housingIncome.getAgencyFeeSum());
+            tempMoney = tempMoney.subtract(housingCost.getPricesSum());
+            tempMoney = tempMoney.subtract(housingCost.getRenovationCostSum());
+            tempMoney = tempMoney.subtract(housingCost.getOtherCostSum());
+            tempMoney = tempMoney.subtract(housingIncome.getReturnRentCostSum());
 
+            housingIncome.setPureProfitSum(tempMoney);
+
+            //            housingIncome.setPureProfitSum(
+            //                housingIncome.getAllRentSum().subtract(housingCost.getAllCostSum())
+            //                    .add(housingIncome.getRentIncomeAgainSum()
+            //                        .subtract(housingIncome.getReturnRentCostSum()))
+            //                    .add(housingIncome.getAgencyFeeSum())); 
             boolean isUpdatehousingIncome = housingIncomeWriteDao
                 .updateByPrimaryKeySelective(housingIncome) > 0;
             //=========================================================
@@ -365,7 +395,8 @@ public class HouseLeaseModel {
             //===================修改 cost表  空置期天数 ======================================
             //房子出租事件, 空置期累加到 空置期总天数,  vacancy_day清零.
 
-            housingCost.setVacancyDays(housingCost.getVacancyDays() + housingVacancyDays.getVacancyDay());
+            housingCost
+                .setVacancyDays(housingCost.getVacancyDays() + housingVacancyDays.getVacancyDay());
             housingCost.setVacancyDay(0);
 
             boolean isUpdateHousingCost = housingCostWriteDao.updateByPrimaryKey(housingCost) > 0;
@@ -504,16 +535,16 @@ public class HouseLeaseModel {
             vo.setOtherCostSum(hc.getOtherCostSum());
             vo.setPricesSum(hc.getPricesSum());
 
-            //该房纯利润= 房租总和 +退租补缴费用收入 - 总成本   - 返还房租总额
+            //该房纯利润= 房租总和 +退租补缴费用收入 - 总成本   - 返还房租总额 +中介费
             BigDecimal tempMoney = hincome.getAllRentSum().add(hincome.getRentIncomeAgainSum());
-            
-            tempMoney=tempMoney.subtract(hc.getPricesSum());
-            tempMoney=tempMoney.subtract(hc.getRenovationCostSum());
-            tempMoney=tempMoney.subtract(hc.getOtherCostSum());
-            tempMoney=tempMoney.subtract(hincome.getReturnRentCostSum());
+
+            tempMoney = tempMoney.subtract(hc.getPricesSum());
+            tempMoney = tempMoney.subtract(hc.getRenovationCostSum());
+            tempMoney = tempMoney.subtract(hc.getOtherCostSum());
+            tempMoney = tempMoney.subtract(hincome.getReturnRentCostSum());
+            tempMoney = tempMoney.add(hincome.getAgencyFeeSum());
             vo.setPureProfitSum(tempMoney);
-            
-                    
+
             volist.add(vo);
         }
 

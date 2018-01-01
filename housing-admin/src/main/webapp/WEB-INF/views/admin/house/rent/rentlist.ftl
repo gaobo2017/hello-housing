@@ -217,6 +217,8 @@
 				
 				<th field="rent" width="100" align="center">月租</th>
 				<th field="allRent" width="100" align="center">合同租金总额</th>
+			    <th field="agencyFee" width="100" align="center">中介费</th>
+				<th field="cashPledge" width="100" align="center">押金</th>
 				
 				<th field="leaseStartTime" width="120" align="center">租赁开始时间</th>
 				<th field="leaseEndTime" width="120" align="center">租赁结束时间</th>

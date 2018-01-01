@@ -4,31 +4,35 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class HousingIncome implements Serializable{
+public class HousingIncome implements Serializable {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -8010947957294183267L;
+     * 
+     */
+    private static final long serialVersionUID = -8010947957294183267L;
 
-	private Integer id;
+    private Integer           id;
 
-    private Integer houseId;
+    private Integer           houseId;
 
-    private BigDecimal allRentSum;
+    private BigDecimal        allRentSum;
 
-    private BigDecimal grossProfitSum;
+    private BigDecimal        grossProfitSum;
 
-    private BigDecimal rentIncomeAgainSum;
+    private BigDecimal        rentIncomeAgainSum;
 
-    private BigDecimal returnRentCostSum;
+    private BigDecimal        returnRentCostSum;
 
-    private BigDecimal pureProfitSum;
+    private BigDecimal        pureProfitSum;
 
-    private String remark;
+    private BigDecimal        agencyFeeSum;
 
-    private Date createTime;
+    private BigDecimal        cashPledgeSum;
 
-    private Date updateTime;
+    private String            remark;
+
+    private Date              createTime;
+
+    private Date              updateTime;
 
     public Integer getId() {
         return id;
@@ -109,4 +113,21 @@ public class HousingIncome implements Serializable{
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    public BigDecimal getAgencyFeeSum() {
+        return agencyFeeSum;
+    }
+
+    public void setAgencyFeeSum(BigDecimal agencyFeeSum) {
+        this.agencyFeeSum = agencyFeeSum;
+    }
+
+    public BigDecimal getCashPledgeSum() {
+        return cashPledgeSum;
+    }
+
+    public void setCashPledgeSum(BigDecimal cashPledgeSum) {
+        this.cashPledgeSum = cashPledgeSum;
+    }
+
 }

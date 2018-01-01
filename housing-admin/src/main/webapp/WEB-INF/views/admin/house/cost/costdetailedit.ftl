@@ -12,17 +12,23 @@ $(function(){
 	$("#back").click(function(){
  		window.location.href="${domainUrlUtil.EJS_URL_RESOURCES}/admin/costdetail/manage";
 	});
-	$("#update").click(function(){
 
+    $("#update").click(function(){
+		
+		$.messager.confirm('确认', '确定要修改信息吗?', function(r){
+		 if (r) {
+		
+				if($("#addForm").form('validate')){
+			 		$("#addForm").attr("action", "${domainUrlUtil.EJS_URL_RESOURCES}/admin/costdetail/manage/update")
+		  				 .attr("method", "POST")
+		  				 .submit();
+		  		   }		 
+		   } 
+	    
+		});
 
-
-		if($("#addForm").form('validate')){
-	 		$("#addForm").attr("action", "${domainUrlUtil.EJS_URL_RESOURCES}/admin/costdetail/manage/update")
-  				 .attr("method", "POST")
-  				 .submit();
-  		}
 	});
-	
+
 
 
 	<#if message??>$.messager.progress('close');$.messager.alert('提示','${message}');</#if>

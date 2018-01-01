@@ -36,6 +36,12 @@
     from housing_vacancy_days
     where id = #{id,jdbcType=INTEGER}
   </select>
+        
+  <delete id="deleteByHouseId" parameterType="java.lang.Integer">
+    delete from housing_vacancy_days
+    where house_id = #{houseId,jdbcType=INTEGER}
+  </delete>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from housing_vacancy_days
     where id = #{id,jdbcType=INTEGER}

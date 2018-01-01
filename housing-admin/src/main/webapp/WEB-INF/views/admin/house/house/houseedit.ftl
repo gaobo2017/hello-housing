@@ -9,17 +9,24 @@ $(function(){
 	$("#back").click(function(){
  		window.location.href="${domainUrlUtil.EJS_URL_RESOURCES}/admin/house/manage";
 	});
-	$("#update").click(function(){
 
-
-
-		if($("#addForm").form('validate')){
-	 		$("#addForm").attr("action", "${domainUrlUtil.EJS_URL_RESOURCES}/admin/house/manage/update")
-  				 .attr("method", "POST")
-  				 .submit();
-  		}
-	});
 	
+	 $("#update").click(function(){
+		
+		$.messager.confirm('确认', '确定要修改房源信息吗, 如果价格变化 成本收入会重新计算?', function(r){
+		 if (r) {
+		
+				if($("#addForm").form('validate')){
+			 		$("#addForm").attr("action", "${domainUrlUtil.EJS_URL_RESOURCES}/admin/house/manage/update")
+		  				 .attr("method", "POST")
+		  				 .submit();
+		  		   }		 
+		   } 
+	    
+		});
+
+	});
+
 
 
 	<#if message??>$.messager.progress('close');$.messager.alert('提示','${message}');</#if>

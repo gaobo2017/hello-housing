@@ -206,6 +206,7 @@
 
     
 				<th field="allRentSum" width="100" align="center">租金收入总计</th>
+			    <th field="agencyFeeSum" width="100" align="center">中介费总计</th>
 				<th field="rentIncomeAgainSum" width="100" align="center">物损收入总计</th>
 
 				<th field="pricesSum" width="100" align="center">房源支出金额</th>

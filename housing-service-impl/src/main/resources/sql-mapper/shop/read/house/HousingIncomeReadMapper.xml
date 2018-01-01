@@ -9,13 +9,52 @@
     <result column="rent_income_again_sum" jdbcType="DECIMAL" property="rentIncomeAgainSum" />
     <result column="return_rent_cost_sum" jdbcType="DECIMAL" property="returnRentCostSum" />
     <result column="pure_profit_sum" jdbcType="DECIMAL" property="pureProfitSum" />
+
+    <result column="agency_fee_sum" jdbcType="DECIMAL" property="agencyFeeSum" />
+    <result column="cash_pledge_sum" jdbcType="DECIMAL" property="cashPledgeSum" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+  
+    <select id="getHousingIncomeCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from housing_income
+		<include refid="getHousingIncomeListCondition" />
+	</select>
+      
+
+
+	<select id="getHousingIncomeList" resultType="com.ejavashop.entity.house.HousingIncome">
+		select * from housing_income
+		<include refid="getHousingIncomeListCondition" />
+		order by id desc
+		<if test="size != null and size &gt; 0">limit #{start},#{size}</if>
+	</select>
+  <sql id="getHousingIncomeListCondition">
+		<where>
+		
+			<if test="queryMap.q_roomCodeNo != null and queryMap.q_roomCodeNo != ''">
+				and `room_code_no` like CONCAT('%',#{queryMap.q_roomCodeNo},'%')
+			</if>
+
+			<if test="queryMap.q_id != null and queryMap.q_id != ''">
+				and `id` like CONCAT('%',#{queryMap.q_id},'%')
+			</if>
+
+		    <if test="queryMap.q_pay_way != null and queryMap.q_pay_way != ''">
+				and `pay_way` =#{queryMap.q_pay_way}
+			</if>
+		    <if test="queryMap.q_lease_state != null and queryMap.q_lease_state != ''">
+				and `status` =#{queryMap.q_lease_state}
+			</if>
+		</where>
+	</sql>
+ 
+ 
+
   <sql id="Base_Column_List">
     id, house_id, all_rent_sum, gross_profit_sum, rent_income_again_sum, return_rent_cost_sum, 
-    pure_profit_sum, remark, create_time, update_time
+    pure_profit_sum,agency_fee_sum,cash_pledge_sum, remark, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingIncomeResult">
     select 
@@ -23,6 +62,15 @@
     from housing_income
     where id = #{id,jdbcType=INTEGER}
   </select>
+ 
+  <select id="selectByHouseId" parameterType="java.lang.Integer" resultMap="HousingIncomeResult">
+    select 
+    <include refid="Base_Column_List" />
+    from housing_income
+    where house_id = #{houseId,jdbcType=INTEGER}
+  </select>
+  
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from housing_income
     where id = #{id,jdbcType=INTEGER}
@@ -30,12 +78,12 @@
   <insert id="insert" parameterType="com.ejavashop.entity.house.HousingIncome">
     insert into housing_income (id, house_id, all_rent_sum, 
       gross_profit_sum, rent_income_again_sum, return_rent_cost_sum, 
-      pure_profit_sum, remark, create_time, 
+      pure_profit_sum,agency_fee_sum,cash_pledge_sum, remark, create_time, 
       update_time)
     values (#{id,jdbcType=INTEGER}, #{houseId,jdbcType=INTEGER}, #{allRentSum,jdbcType=DECIMAL}, 
       #{grossProfitSum,jdbcType=DECIMAL}, #{rentIncomeAgainSum,jdbcType=DECIMAL}, #{returnRentCostSum,jdbcType=DECIMAL}, 
-      #{pureProfitSum,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{pureProfitSum,jdbcType=DECIMAL},#{agencyFeeSum,jdbcType=DECIMAL},#{cashPledgeSum,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})      
   </insert>
   <insert id="insertSelective" parameterType="com.ejavashop.entity.house.HousingIncome">
     insert into housing_income
@@ -61,6 +109,13 @@
       <if test="pureProfitSum != null">
         pure_profit_sum,
       </if>
+      <if test="agencyFeeSum != null">
+        agency_fee_sum,
+      </if>
+      <if test="cashPledgeSum != null">
+        cash_pledge_sum,
+      </if>      
+
       <if test="remark != null">
         remark,
       </if>
@@ -93,6 +148,13 @@
       <if test="pureProfitSum != null">
         #{pureProfitSum,jdbcType=DECIMAL},
       </if>
+      <if test="agencyFeeSum != null">
+        #{agencyFeeSum,jdbcType=DECIMAL},
+      </if>
+      <if test="cashPledgeSum != null">
+        #{cashPledgeSum,jdbcType=DECIMAL},
+      </if>                   
+
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
@@ -125,6 +187,13 @@
       <if test="pureProfitSum != null">
         pure_profit_sum = #{pureProfitSum,jdbcType=DECIMAL},
       </if>
+      <if test="agencyFeeSum != null">
+        agency_fee_sum = #{agencyFeeSum,jdbcType=DECIMAL},
+      </if>
+      <if test="cashPledgeSum != null">
+        cash_pledge_sum = #{cashPledgeSum,jdbcType=DECIMAL},
+      </if>
+
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
@@ -145,6 +214,8 @@
       rent_income_again_sum = #{rentIncomeAgainSum,jdbcType=DECIMAL},
       return_rent_cost_sum = #{returnRentCostSum,jdbcType=DECIMAL},
       pure_profit_sum = #{pureProfitSum,jdbcType=DECIMAL},
+      agency_fee_sum = #{agencyFeeSum,jdbcType=DECIMAL},
+      cash_pledge_sum = #{cashPledgeSum,jdbcType=DECIMAL},
       remark = #{remark,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}

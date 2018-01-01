@@ -12,17 +12,23 @@ $(function(){
 	$("#back").click(function(){
  		window.location.href="${domainUrlUtil.EJS_URL_RESOURCES}/admin/costdetail/manage";
 	});
-	$("#add").click(function(){
-
-
-
-		if($("#addForm").form('validate')){
-	 		$("#addForm").attr("action", "${domainUrlUtil.EJS_URL_RESOURCES}/admin/costdetail/manage/create")
-  				 .attr("method", "POST")
-  				 .submit();
-  		}
-	});
 	
+
+	$("#add").click(function(){
+		
+		$.messager.confirm('确认', '确定添加成本明细吗?', function(r){
+		 if (r) {
+		
+				if($("#addForm").form('validate')){
+			 		$("#addForm").attr("action", "${domainUrlUtil.EJS_URL_RESOURCES}/admin/costdetail/manage/create")
+		  				 .attr("method", "POST")
+		  				 .submit();
+		  		   }		 
+		   } 
+	    
+		});
+
+	});
 
 
 	<#if message??>$.messager.progress('close');$.messager.alert('提示','${message}');</#if>

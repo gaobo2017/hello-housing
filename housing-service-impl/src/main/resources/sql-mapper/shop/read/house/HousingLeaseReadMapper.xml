@@ -21,7 +21,9 @@
     <result column="gross_profit" jdbcType="DECIMAL" property="grossProfit" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    
+
+    <result column="agency_fee" jdbcType="DECIMAL" property="agencyFee" />
+    <result column="cash_pledge" jdbcType="DECIMAL" property="cashPledge" />    
     <result column="rent_income_again" jdbcType="DECIMAL" property="rentIncomeAgain" />
     <result column="return_rent_cost" jdbcType="DECIMAL" property="returnRentCost" />
     <result column="final_leave_time" jdbcType="TIMESTAMP" property="finalLeaveTime" />
@@ -67,20 +69,36 @@
 			</if>
 		</where>
 	</sql>
-	
 
    
   <sql id="Base_Column_List"> 
     id, house_id, room_code_no,lease_start_time, lease_end_time, rent, all_rent, status, pay_way, 
     seller, contract, operation_name, operation_id, remark, day_rent_cost, day_rent_income, 
-    gross_profit,rent_income_again, return_rent_cost,final_leave_time,create_time, update_time
+    gross_profit,rent_income_again, return_rent_cost,agency_fee,cash_pledge,final_leave_time,create_time, update_time
   </sql>
+  
+  <select id="getPreviousHousingLease" resultMap="HousingLeaseResult">
+    select 
+    <include refid="Base_Column_List" />
+    from housing_lease
+    where  house_id= #{houseId,jdbcType=INTEGER} and lease_start_time &lt; #{leaseStartTime,jdbcType=TIMESTAMP}
+    order by lease_start_time DESC
+    limit 0,1
+   
+  </select>
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="HousingLeaseResult">
     select 
     <include refid="Base_Column_List" />
     from housing_lease
     where id = #{id,jdbcType=INTEGER}
   </select>
+    
+  <delete id="deleteByHouseId" parameterType="java.lang.Integer">
+    delete from housing_lease
+    where house_id = #{houseId,jdbcType=INTEGER}
+  </delete>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from housing_lease
     where id = #{id,jdbcType=INTEGER}
@@ -91,17 +109,18 @@
       status, pay_way, seller, 
       contract, operation_name, operation_id, 
       remark, day_rent_cost, day_rent_income, 
-      gross_profit, rent_income_again, return_rent_cost,final_leave_time, create_time, update_time
-      )    
+      gross_profit, rent_income_again, return_rent_cost,agency_fee,cash_pledge,final_leave_time, create_time, update_time
+      )   	
     values (#{id,jdbcType=INTEGER}, #{houseId,jdbcType=INTEGER}, #{roomCodeNo,jdbcType=VARCHAR},#{leaseStartTime,jdbcType=TIMESTAMP}, 
       #{leaseEndTime,jdbcType=TIMESTAMP}, #{rent,jdbcType=DECIMAL}, #{allRent,jdbcType=DECIMAL}, 
       #{status,jdbcType=INTEGER}, #{payWay,jdbcType=INTEGER}, #{seller,jdbcType=VARCHAR}, 
       #{contract,jdbcType=VARCHAR}, #{operationName,jdbcType=VARCHAR}, #{operationId,jdbcType=INTEGER}, 
       #{remark,jdbcType=VARCHAR}, #{dayRentCost,jdbcType=DECIMAL}, #{dayRentIncome,jdbcType=DECIMAL}, 
       #{grossProfit,jdbcType=DECIMAL},#{rentIncomeAgain,jdbcType=DECIMAL},#{returnRentCost,jdbcType=DECIMAL}, 
+      #{agencyFee,jdbcType=DECIMAL},#{cashPledge,jdbcType=DECIMAL},
       #{finalLeaveTime,jdbcType=TIMESTAMP},#{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      ) 
-  </insert>
+      )    
+  </insert> 
   <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.ejavashop.entity.house.HousingLease">
     insert into housing_lease
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -163,6 +182,14 @@
       <if test="returnRentCost != null">
         return_rent_cost,
       </if>
+      
+      <if test="agencyFee != null">
+        agency_fee,
+      </if>
+      <if test="cashPledge != null">
+        cash_pledge,
+      </if>
+
       <if test="finalLeaveTime != null">
         final_leave_time,
       </if>
@@ -235,6 +262,13 @@
       <if test="returnRentCost != null">
         #{returnRentCost,jdbcType=DECIMAL},
       </if>
+      
+       <if test="agencyFee != null">
+        #{agencyFee,jdbcType=DECIMAL},
+      </if>
+      <if test="cashPledge != null">
+        #{cashPledge,jdbcType=DECIMAL},
+      </if>
       <if test="finalLeaveTime != null">
         #{finalLeaveTime,jdbcType=TIMESTAMP},
       </if>
@@ -245,9 +279,6 @@
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      
-
-        
         
     </trim>
   </insert>
@@ -299,7 +330,8 @@
       </if>
       <if test="dayRentIncome != null">
         day_rent_income = #{dayRentIncome,jdbcType=DECIMAL},
-      </if>
+      </if> 
+     
       <if test="grossProfit != null">
         gross_profit = #{grossProfit,jdbcType=DECIMAL},
       </if>
@@ -310,6 +342,12 @@
       <if test="returnRentCost != null">
         return_rent_cost = #{returnRentCost,jdbcType=DECIMAL},
       </if>
+      <if test="agencyFee != null">
+        agency_fee = #{agencyFee,jdbcType=DECIMAL},
+      </if>
+      <if test="cashPledge != null">
+        cash_pledge = #{cashPledge,jdbcType=DECIMAL},
+      </if>  
       <if test="finalLeaveTime != null">
         final_leave_time = #{finalLeaveTime,jdbcType=TIMESTAMP},
       </if>      
@@ -320,7 +358,7 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
-
+ 
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -344,10 +382,11 @@
       gross_profit = #{grossProfit,jdbcType=DECIMAL},
       rent_income_again=#{rentIncomeAgain,jdbcType=DECIMAL},
       return_rent_cost=#{returnRentCost,jdbcType=DECIMAL},
+      agency_fee=#{agencyFee,jdbcType=DECIMAL},
+      cash_pledge=#{cashPledge,jdbcType=DECIMAL},        
       final_leave_time= #{finalLeaveTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-
 </mapper>

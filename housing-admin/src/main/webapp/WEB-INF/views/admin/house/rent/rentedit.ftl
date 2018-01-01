@@ -94,7 +94,25 @@ $(function(){
 						 value="${(housingLease.payWay)!''}" codeDiv="HOUSE_PAY_WAY" name="payWay" style="width:100px" mode="1"/>
 					</p>
 					</div>  
-					<br/>								
+					<br/>
+					
+																		
+         			<div class="fluidbox">
+						<p class="p12 p-item">
+							<label class="lab-item"><font class="red">*</font>中介费：</label>
+							<input class="easyui-validatebox txt w280" type="text" id="agencyFee" name="agencyFee" value="${(housingLease.agencyFee)!''}" data-options="required:true,validType:'length[0,10]'" >
+						</p>
+					</div>
+					<br/>
+					
+			        <div class="fluidbox">
+						<p class="p12 p-item">
+							<label class="lab-item"><font class="red">*</font>押金：</label>
+							<input class="easyui-validatebox txt w280" type="text" id="cashPledge" name="cashPledge" value="${(housingLease.cashPledge)!''}" data-options="required:true,validType:'length[0,10]'" >
+						</p>
+					</div>
+					<br/>
+													
 				    <div class="fluidbox">
 						<p class="p12 p-item">
 							<label class="lab-item"><font class="red"></font>租赁合同号：</label>

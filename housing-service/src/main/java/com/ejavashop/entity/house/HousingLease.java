@@ -54,6 +54,10 @@ public class HousingLease implements Serializable {
 
     private BigDecimal        returnRentCost;
 
+    private BigDecimal        agencyFee;
+
+    private BigDecimal        cashPledge;
+
     public Integer getId() {
         return id;
     }
@@ -228,6 +232,22 @@ public class HousingLease implements Serializable {
 
     public void setReturnRentCost(BigDecimal returnRentCost) {
         this.returnRentCost = returnRentCost;
+    }
+
+    public BigDecimal getAgencyFee() {
+        return agencyFee;
+    }
+
+    public void setAgencyFee(BigDecimal agencyFee) {
+        this.agencyFee = agencyFee;
+    }
+
+    public BigDecimal getCashPledge() {
+        return cashPledge;
+    }
+
+    public void setCashPledge(BigDecimal cashPledge) {
+        this.cashPledge = cashPledge;
     }
 
 }

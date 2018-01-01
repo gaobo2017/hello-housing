@@ -29,6 +29,10 @@ public class HousingLeaseVO extends HousingLease {
 
     private BigDecimal        pricesSum;
 
+    private BigDecimal        agencyFeeSum;
+
+    private BigDecimal        cashPledgeSum;
+
     public String getHouseName() {
         return houseName;
     }
@@ -99,6 +103,22 @@ public class HousingLeaseVO extends HousingLease {
 
     public void setPricesSum(BigDecimal pricesSum) {
         this.pricesSum = pricesSum;
+    }
+
+    public BigDecimal getAgencyFeeSum() {
+        return agencyFeeSum;
+    }
+
+    public void setAgencyFeeSum(BigDecimal agencyFeeSum) {
+        this.agencyFeeSum = agencyFeeSum;
+    }
+
+    public BigDecimal getCashPledgeSum() {
+        return cashPledgeSum;
+    }
+
+    public void setCashPledgeSum(BigDecimal cashPledgeSum) {
+        this.cashPledgeSum = cashPledgeSum;
     }
 
 }

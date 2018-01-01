@@ -19,13 +19,29 @@
 		<include refid="getHousingCostListCondition" />
 	</select>
       
-      
+      <!--查询该成本id     两种类型费用统计，结果一定是两条数据，按类型统计，如果没有费用 返回0元。 -->
     <select id="getHousingCostDetailSum"  parameterType="java.lang.Integer" resultType="com.ejavashop.entity.house.HousingCostDetail">
-
-		  select cost_type  , SUM(money) as  money  from housing_cost_detail 
-          where cost_id = #{costId,jdbcType=INTEGER}
-
-          group by cost_type
+         
+		SELECT
+			IFNULL(cost_type, 2) AS cost_type,
+			IFNULL(SUM(money), 0) AS money
+		FROM
+			housing_cost_detail t
+		WHERE
+			cost_id = #{costId,jdbcType=INTEGER}
+		AND cost_type = 2
+		
+		UNION
+		
+			SELECT
+				IFNULL(cost_type, 1) AS cost_type,
+				IFNULL(SUM(money), 0) AS money
+			FROM
+				housing_cost_detail t
+			WHERE
+				cost_id = #{costId,jdbcType=INTEGER}
+			AND cost_type = 1
+	
 	</select>
 
 	<select id="getHousingCostDetailList" resultType="com.ejavashop.entity.house.HousingCostDetail">
@@ -65,6 +81,13 @@
     from housing_cost_detail
     where id = #{id,jdbcType=INTEGER}
   </select>
+  
+    
+  <delete id="deleteByHouseId" parameterType="java.lang.Integer">
+    delete from housing_cost_detail
+    where house_id = #{houseId,jdbcType=INTEGER}
+  </delete>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from housing_cost_detail
     where id = #{id,jdbcType=INTEGER}

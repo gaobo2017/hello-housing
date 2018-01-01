@@ -54,6 +54,23 @@
 		$("#btn-gridAdd").click(function(){
 	 		window.location.href="${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/house/manage/add";
 		});
+				
+		$("#btn-gridAddrent").click(function(){
+		
+		var selected = $('#dataGrid').datagrid('getSelected');
+	 		if(!selected){
+				$.messager.alert('提示','请选择操作行。');
+				return;
+			}
+	 		if (selected.isSold == 1) {
+				$.messager.alert('提示','只能选择未出租的房源。');
+				return;
+			}
+			
+		window.open("${(domainUrlUtil.EJS_URL_RESOURCES)!}/admin/rent/manage/add?houseId="+selected.id);
+		
+	 		
+		});
 		
 		$("#btn-gridEdit").click(function(){
 			var selected = $('#dataGrid').datagrid('getSelected');
@@ -143,7 +160,7 @@
 
     function del(id){
     
-        $.messager.confirm('确认', '确定删除该房源吗？', function(r){
+        $.messager.confirm('确认', '确定删除该房源吗， 会删除该房成本和收入信息 ？', function(r){
             if (r){
                 $.messager.progress({text:"提交中..."});
                 $.ajax({
@@ -254,7 +271,7 @@
 		<a id="btn-gridEdit" href="/admin/house/manage/edit" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
 		</@shiro.hasPermission>
 		<@shiro.hasPermission name="/admin/house/manage/add">
-		<a id="btn-gridAdd" href="/admin/house/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增租房</a>
+		<a id="btn-gridAddrent" href="/admin/house/manage/add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增租房</a>
 		</@shiro.hasPermission>
 		
 		<a id="btn-gridSearch" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
